@@ -46,3 +46,7 @@ $ gpg --gen-key
 $ gpg --clearsign license.txt
 ----
 
+== Documentation
+
+__sphinx-doc__ is included, which contains sphinx source and HTML build. You can view a cached version of the build here: http://asciidoc.sockmonki.com/build
+
