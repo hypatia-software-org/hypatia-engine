@@ -1,0 +1,613 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>tiles &mdash; Untitled Game Engine 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Untitled Game Engine 0.1 documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../engine.html">Untitled Game Engine 0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for tiles</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;tiles: tile-based map management.</span>
+<span class="sd">Lillian Lynn Mahoney &lt;lillian.lynn.mahoney@gmail.com&gt;</span>
+<span class="sd">2014-10-20</span>
+
+<span class="sd">Using &quot;paint by number&quot; as an analogy:</span>
+<span class="sd">  * TileMap is the canvas/picture with number cells (the canvas)</span>
+<span class="sd">  * TileSwatch defines what those numbers correspond to</span>
+<span class="sd">    (the paint palettte)</span>
+
+<span class="sd">Each tile of the first layer in a TileMap has its respective</span>
+<span class="sd">TileProperties object. Every tile in a TileSwatch has default</span>
+<span class="sd">properties defined in its swatch.ini.</span>
+
+<span class="sd">Inspired by OHRRPGCE.</span>
+
+<span class="sd">For more info: http://en.wikipedia.org/wiki/Tile_engine</span>
+
+<span class="sd">Render Notes:</span>
+<span class="sd">  1. TileMap.layers[0] is the ABSOLUTE first thing</span>
+<span class="sd">     to render in the game.</span>
+<span class="sd">  2. TileMap.layers[x] where x &gt; 0 are the ABSOLUTE last things</span>
+<span class="sd">     to render in the game.</span>
+
+<span class="sd">Problems/Incomplete:</span>
+<span class="sd">  * Animations? Should animations be measured in frames?</span>
+
+<span class="sd">      * controlled by render module or effects</span>
+
+<span class="sd">  * TileMap.background</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">string</span>
+<span class="kn">import</span> <span class="nn">pygame</span>
+<span class="kn">import</span> <span class="nn">sqlite3</span>
+<span class="kn">import</span> <span class="nn">cStringIO</span>
+<span class="kn">import</span> <span class="nn">ConfigParser</span>
+
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s">&quot;Lillian Lynn Mahoney&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s">&quot;Copyright 2014, Lillian Lynn Mahoney&quot;</span>
+<span class="n">__credits__</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;Lillian Mahoney&quot;</span><span class="p">]</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s">&quot;Attribution Assurance License&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s">&quot;0.3&quot;</span>
+<span class="n">__maintainer__</span> <span class="o">=</span> <span class="s">&quot;Lillian Mahoney&quot;</span>
+<span class="n">__email__</span> <span class="o">=</span> <span class="s">&quot;lillian.lynn.mahoney@gmail.com&quot;</span>
+<span class="n">__status__</span> <span class="o">=</span> <span class="s">&quot;Development&quot;</span>
+
+
+<span class="n">NEW_SCENE_TILES_WIDE</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">NEW_SCENE_TILES_TALL</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">NEW_SCENE_SWATCH</span> <span class="o">=</span> <span class="s">&#39;debug&#39;</span>
+
+
+<div class="viewcode-block" id="BadTileName"><a class="viewcode-back" href="../index.html#tiles.BadTileName">[docs]</a><span class="k">class</span> <span class="nc">BadTileName</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;KeyError raised when searching for key in the TileSwatch&#39;s</span>
+<span class="sd">    {name: image} dictionary.</span>
+
+<span class="sd">    No tile by name %(key)s.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">swatch_name</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;TileSwatch: no tile by name &quot;</span><span class="si">%s</span><span class="s">&quot;&#39;</span>  <span class="o">%</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">swatch_name</span><span class="p">))</span>
+        <span class="ne">Exception</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="MissingLayerMethod"><a class="viewcode-back" href="../index.html#tiles.MissingLayerMethod">[docs]</a><span class="k">class</span> <span class="nc">MissingLayerMethod</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Occurs when the user does not provide image_layers or</span>
+<span class="sd">    make_layers + swatch.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;TileMap requries image_layers OR make_layers + swatch&#39;</span><span class="p">)</span>
+        <span class="ne">Exception</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+
+</div>
+<span class="k">class</span> <span class="nc">TileMap</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span>
+                 <span class="n">image_layers</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">tile_size</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">make_layers</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">swatch</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span>
+                 <span class="n">properties</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Tile (cell) based map. Each tile of the first layer has</span>
+<span class="sd">        TileProperties, which you can reference by pixel or tile</span>
+<span class="sd">        coordinate.</span>
+
+<span class="sd">        You can either provide the layer images as a list of pygame</span>
+<span class="sd">        surfaces (image_layers), or you can provide a 2D list of tile</span>
+<span class="sd">        names/strings (make_layers) and a TileSwatch, which defines</span>
+<span class="sd">        said names (swatch).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          name (str): will be used for sqlite db and other things</span>
+
+<span class="sd">          image_layers (list|None): 1D list of pygame.Surface objects</span>
+<span class="sd">            to use as the TileMap&#39;s graphical layers.</span>
+<span class="sd">          tile_size (tuple|None): (x, y) in pixels, ONLY USE IF USING</span>
+<span class="sd">            image_layers!</span>
+<span class="sd"> </span>
+<span class="sd">          make_layers (list|None): list of 2D lists, whose elements</span>
+<span class="sd">            are strings referencing a corresponding TileSwatch</span>
+<span class="sd">            tile name.</span>
+<span class="sd">          swatch (TileSwatch|None): TileSwatch which defines the</span>
+<span class="sd">            tile names used in tiles arg. ONLY USE IF USING make_layers!</span>
+
+<span class="sd">          properties (list|None): list of TileProperties (cascade over</span>
+<span class="sd">            defaults)</span>
+
+<span class="sd">        Planned Features:</span>
+<span class="sd">          * plans to implement paralax--effect applied to tilemap.bg</span>
+<span class="sd">            or tilemap.fg?</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">make_layers</span> <span class="ow">and</span> <span class="n">swatch</span><span class="p">:</span>
+            <span class="n">first_layer</span> <span class="o">=</span> <span class="n">make_layers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">tile_size</span> <span class="o">=</span> <span class="n">swatch</span><span class="o">.</span><span class="n">tile_size</span>
+            <span class="n">size</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">first_layer</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">len</span><span class="p">(</span><span class="n">first_layer</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">make_layers</span><span class="p">))</span>
+
+            <span class="n">layer_width</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">first_layer</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">tile_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">layer_height</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">first_layer</span><span class="p">)</span> <span class="o">*</span> <span class="n">tile_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">layer_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">layer_width</span><span class="p">,</span> <span class="n">layer_height</span><span class="p">)</span>
+
+            <span class="c"># properties</span>
+            <span class="n">properties</span> <span class="o">=</span> <span class="p">[</span><span class="n">swatch</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">first_layer</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">y</span><span class="p">]</span>
+
+            <span class="c"># layer first</span>
+            <span class="n">layers</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">z</span><span class="p">,</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">make_layers</span><span class="p">):</span>
+                <span class="n">new_layer</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">Surface</span><span class="p">(</span><span class="n">layer_size</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">y</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">layer</span><span class="p">):</span>
+
+                    <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">tile</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+                        <span class="n">tile_position</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">swatch</span><span class="o">.</span><span class="n">tile_size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                         <span class="n">y</span> <span class="o">*</span> <span class="n">swatch</span><span class="o">.</span><span class="n">tile_size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                        <span class="n">new_layer</span><span class="o">.</span><span class="n">blit</span><span class="p">(</span><span class="n">swatch</span><span class="p">[</span><span class="n">tile</span><span class="p">],</span> <span class="n">tile_position</span><span class="p">)</span>
+
+                <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_layer</span><span class="p">)</span>
+                <span class="n">tile_size</span> <span class="o">=</span> <span class="n">swatch</span><span class="o">.</span><span class="n">tile_size</span>
+                <span class="n">size</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">layer</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">layer</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+        <span class="k">elif</span> <span class="n">image_layers</span><span class="p">:</span>
+            <span class="n">layers</span> <span class="o">=</span> <span class="n">image_layers</span>
+            <span class="n">layers_x</span><span class="p">,</span> <span class="n">layers_y</span> <span class="o">=</span> <span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_size</span><span class="p">()</span>
+            <span class="n">tile_width</span><span class="p">,</span> <span class="n">tile_height</span> <span class="o">=</span> <span class="n">tile_size</span>
+            <span class="n">size</span> <span class="o">=</span> <span class="p">(</span><span class="n">layers_x</span> <span class="o">/</span> <span class="n">tile_width</span><span class="p">,</span> <span class="n">layers_y</span> <span class="o">/</span> <span class="n">tile_height</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="k">raise</span> <span class="n">MissingLayerMethod</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layers</span> <span class="o">=</span> <span class="n">layers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tile_size</span> <span class="o">=</span> <span class="n">tile_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="n">properties</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coord</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fetch TileProperties by tile coordinate.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          coord (tuple): (x, y) coordinate; z always just</span>
+<span class="sd">            z-index (it&#39;s not a pixel value)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          TileProperties</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">coord</span>
+        <span class="n">height</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="n">width</span> <span class="o">*</span> <span class="n">y</span> <span class="o">+</span> <span class="n">x</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">get_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">coord</span><span class="p">,</span> <span class="n">unit_pixel</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fetch TileProperties by tile or pixel coordinate.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          coord (tuple): (x, y) coordinate; z always just</span>
+<span class="sd">            z-index (it&#39;s not a pixel value)</span>
+<span class="sd">          unit_pixel (bool): if True, unit values in coordinate</span>
+<span class="sd">            are pixels, not tiles</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          TileProperties</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">coord</span>
+
+        <span class="k">if</span> <span class="n">unit_pixel</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">pixel_x</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">tile_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">pixel_y</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">tile_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">height</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="n">width</span> <span class="o">*</span> <span class="n">y</span> <span class="o">+</span> <span class="n">x</span><span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">TileSwatch</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">swatch_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Named pygame.Surface instances of tiles in swatch directory.</span>
+
+<span class="sd">        Abstraction of a directory of images</span>
+<span class="sd">        accompanied by a config file.</span>
+
+<span class="sd">        INI defines default tile properties, default tile.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          swatch_name (str): asdf</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">swatch_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&#39;data&#39;</span><span class="p">,</span> <span class="s">&#39;tiles&#39;</span><span class="p">,</span> <span class="s">&#39;swatches&#39;</span><span class="p">,</span>
+                                        <span class="n">swatch_name</span><span class="p">)</span>
+        <span class="n">tile_pattern</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">swatch_directory</span><span class="p">,</span> <span class="s">&#39;*.png&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">swatch</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">swatch_name</span>
+
+        <span class="c"># load default properties for tileswatch</span>
+        <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">swatch_directory</span><span class="p">,</span> <span class="s">&#39;swatch.ini&#39;</span><span class="p">)</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">ConfigParser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">()</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">tile_name</span><span class="p">,</span> <span class="n">properties</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">items</span><span class="p">(</span><span class="s">&#39;tile_properties&#39;</span><span class="p">):</span>
+            <span class="n">props</span> <span class="o">=</span> <span class="n">TileProperties</span><span class="p">([</span><span class="n">p</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">properties</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">)])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="n">tile_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">props</span>
+
+        <span class="c"># set swatch images</span>
+        <span class="k">for</span> <span class="n">full_file_name</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">iglob</span><span class="p">(</span><span class="n">tile_pattern</span><span class="p">):</span>
+            <span class="n">file_name</span><span class="p">,</span> <span class="n">file_ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">full_file_name</span><span class="p">)</span>
+            <span class="n">file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">file_name</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">tile_image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">full_file_name</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tile_size</span> <span class="o">=</span> <span class="n">tile_image</span><span class="o">.</span><span class="n">get_size</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">swatch</span><span class="p">[</span><span class="n">file_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">tile_image</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tile_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return tile corresponding to tile_name.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          tile_name (str): tile/file name of desired tile</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          pygame.Surface: tile image</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">          BadTileName: KeyError; no tile in swatch corresponds to</span>
+<span class="sd">            provided tile_name.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">swatch</span><span class="p">[</span><span class="n">tile_name</span><span class="p">]</span>
+
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+
+            <span class="k">raise</span> <span class="n">BadTileName</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">tile_name</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">TileProperties</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;List of properties.</span>
+
+<span class="sd">        Primarly scaffolding.</span>
+
+<span class="sd">        Supported properties:</span>
+<span class="sd">          * impass_north</span>
+<span class="sd">          * impass_east</span>
+<span class="sd">          * impass_south</span>
+<span class="sd">          * impass_west</span>
+<span class="sd">          * need_boat</span>
+<span class="sd">          * harm_tile</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          properties (list): a list of strings, namely properties as</span>
+<span class="sd">            seen above.</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">          &gt;&gt;&gt; tile_properties = TileProperties([&#39;teleport&#39;, &#39;sticky&#39;])</span>
+<span class="sd">          &gt;&gt;&gt; &quot;teleport&quot; in tile_properties</span>
+<span class="sd">          True</span>
+<span class="sd">          &gt;&gt;&gt; [p for p in tile_properties]</span>
+<span class="sd">          [&#39;teleport&#39;, &#39;sticky&#39;]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">properties</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">properties</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span>
+
+
+<div class="viewcode-block" id="save_tilemap"><a class="viewcode-back" href="../index.html#tiles.save_tilemap">[docs]</a><span class="k">def</span> <span class="nf">save_tilemap</span><span class="p">(</span><span class="n">tilemap</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Pickle TileMap object to SQLITE database.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      tilemap (TileMap): tilemap to save</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      None</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c"># Connect to database, reset database (start fresh)</span>
+    <span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span> <span class="o">=</span> <span class="n">tilemap_connect</span><span class="p">(</span><span class="n">tilemap</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;sql/tilemap-setup.sql&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">sql_file</span><span class="p">:</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">executescript</span><span class="p">(</span><span class="n">sql_file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+
+    <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="c"># insert a bunch of settings</span>
+    <span class="n">sql</span> <span class="o">=</span> <span class="s">&#39;&#39;&#39;</span>
+<span class="s">          INSERT INTO</span>
+<span class="s">              settings (</span>
+<span class="s">                  name,</span>
+<span class="s">                  layer_width,</span>
+<span class="s">                  layer_height,</span>
+<span class="s">                  tile_width,</span>
+<span class="s">                  tile_height</span>
+<span class="s">              )</span>
+<span class="s">          VALUES</span>
+<span class="s">              (?, ?, ?, ?, ?)</span>
+<span class="s">          &#39;&#39;&#39;</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">(</span>
+              <span class="n">tilemap</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+              <span class="n">tilemap</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_size</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span>
+              <span class="n">tilemap</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_size</span><span class="p">()[</span><span class="mi">1</span><span class="p">],</span>
+              <span class="n">tilemap</span><span class="o">.</span><span class="n">tile_size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+              <span class="n">tilemap</span><span class="o">.</span><span class="n">tile_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+             <span class="p">)</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+    <span class="c"># save layers as string with pygame</span>
+    <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">tilemap</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>
+        <span class="n">layer_as_string</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">tostring</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="s">&#39;RGBA&#39;</span><span class="p">)</span>
+        <span class="n">sql</span> <span class="o">=</span> <span class="s">&#39;INSERT INTO layers (image_string) VALUES (?)&#39;</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="p">(</span><span class="n">layer_as_string</span><span class="p">,))</span>
+
+    <span class="c"># save tileproperties</span>
+    <span class="k">for</span> <span class="n">tile_id</span><span class="p">,</span> <span class="n">tile_properties</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tilemap</span><span class="o">.</span><span class="n">properties</span><span class="p">):</span>
+        <span class="n">property_ids</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">flag</span> <span class="ow">in</span> <span class="n">tile_properties</span><span class="p">:</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">sql</span> <span class="o">=</span> <span class="s">&#39;INSERT INTO properties (name) VALUES (?)&#39;</span>
+                <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="p">(</span><span class="n">flag</span><span class="p">,))</span>
+                <span class="n">property_id</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">lastrowid</span>
+
+            <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">IntegrityError</span><span class="p">:</span>
+                <span class="n">sql</span> <span class="o">=</span> <span class="s">&#39;SELECT id FROM properties WHERE name=?&#39;</span>
+                <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="p">(</span><span class="n">flag</span><span class="p">,))</span>
+                <span class="n">property_id</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="n">property_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">property_id</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">property_id</span> <span class="ow">in</span> <span class="n">property_ids</span><span class="p">:</span>
+            <span class="n">sql</span> <span class="o">=</span> <span class="s">&#39;&#39;&#39;</span>
+<span class="s">                  INSERT INTO</span>
+<span class="s">                      tile_properties (</span>
+<span class="s">                          tile_id,</span>
+<span class="s">                          property_id</span>
+<span class="s">                      )</span>
+<span class="s">                  VALUES</span>
+<span class="s">                      (?, ?)</span>
+<span class="s">                  &#39;&#39;&#39;</span>
+            <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="p">(</span><span class="n">tile_id</span><span class="p">,</span> <span class="n">property_id</span><span class="p">,))</span>
+
+    <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="bp">None</span>
+
+</div>
+<div class="viewcode-block" id="load_tilemap"><a class="viewcode-back" href="../index.html#tiles.load_tilemap">[docs]</a><span class="k">def</span> <span class="nf">load_tilemap</span><span class="p">(</span><span class="n">tilemap_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Configure a TileMap object based on specified tilemap name&#39;s</span>
+<span class="sd">    files.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      tilemap_name (str): directory name containing desired configs and</span>
+<span class="sd">        image files.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      TileMap: as defined from an SQLITE3 database. See: save_tilemap.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c"># settings first</span>
+    <span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span> <span class="o">=</span> <span class="n">tilemap_connect</span><span class="p">(</span><span class="n">tilemap_name</span><span class="p">)</span>
+    <span class="n">sql</span> <span class="o">=</span> <span class="s">&#39;SELECT * FROM settings&#39;</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+    <span class="n">setting_names</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;layer_width&#39;</span><span class="p">,</span> <span class="s">&#39;layer_height&#39;</span><span class="p">,</span> <span class="s">&#39;tile_width&#39;</span><span class="p">,</span>
+                     <span class="s">&#39;tile_height&#39;</span><span class="p">)</span>
+    <span class="n">settings</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">setting_names</span><span class="p">,</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()))</span>
+    <span class="n">tilemap_name</span> <span class="o">=</span> <span class="n">settings</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">]</span>
+    <span class="n">layer_width</span> <span class="o">=</span> <span class="n">settings</span><span class="p">[</span><span class="s">&#39;layer_width&#39;</span><span class="p">]</span>
+    <span class="n">layer_height</span> <span class="o">=</span> <span class="n">settings</span><span class="p">[</span><span class="s">&#39;layer_height&#39;</span><span class="p">]</span>
+    <span class="n">layer_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">layer_width</span><span class="p">,</span> <span class="n">layer_height</span><span class="p">)</span>
+    <span class="n">tile_width</span> <span class="o">=</span> <span class="n">settings</span><span class="p">[</span><span class="s">&#39;tile_width&#39;</span><span class="p">]</span>
+    <span class="n">tile_height</span> <span class="o">=</span> <span class="n">settings</span><span class="p">[</span><span class="s">&#39;tile_height&#39;</span><span class="p">]</span>
+    <span class="n">tiles_wide</span> <span class="o">=</span> <span class="n">layer_width</span> <span class="o">/</span> <span class="n">tile_width</span>
+    <span class="n">tiles_tall</span> <span class="o">=</span> <span class="n">layer_height</span> <span class="o">/</span> <span class="n">tile_height</span>
+
+    <span class="c"># layers</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s">&#39;SELECT image_string FROM layers ORDER BY id&#39;</span><span class="p">)</span>
+    <span class="n">image_text_layers</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()]</span>
+    <span class="n">layers</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">image_text</span> <span class="ow">in</span> <span class="n">image_text_layers</span><span class="p">:</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">image_text</span><span class="p">,</span> <span class="n">layer_size</span><span class="p">,</span> <span class="s">&#39;RGBA&#39;</span><span class="p">)</span>
+        <span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+    <span class="n">properties</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">tiles_wide</span> <span class="o">*</span> <span class="n">tiles_tall</span><span class="p">):</span>
+        <span class="n">sql</span> <span class="o">=</span> <span class="s">&#39;&#39;&#39;</span>
+<span class="s">              SELECT</span>
+<span class="s">                  properties.name</span>
+<span class="s">              FROM</span>
+<span class="s">                  tile_properties</span>
+<span class="s">              JOIN</span>
+<span class="s">                  properties on tile_properties.property_id = properties.id</span>
+<span class="s">              WHERE</span>
+<span class="s">                  tile_properties.tile_id=?</span>
+<span class="s">              ORDER BY</span>
+<span class="s">                  tile_properties.tile_id</span>
+<span class="s">              &#39;&#39;&#39;</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span><span class="p">,))</span>
+        <span class="n">tile_properties</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()]</span>
+        <span class="n">tiles_properties</span> <span class="o">=</span> <span class="n">TileProperties</span><span class="p">(</span><span class="n">tile_properties</span><span class="p">)</span>
+        <span class="n">properties</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tile_properties</span><span class="p">)</span>
+
+    <span class="n">tilemap</span> <span class="o">=</span> <span class="n">TileMap</span><span class="p">(</span>
+                      <span class="n">name</span><span class="o">=</span><span class="n">tilemap_name</span><span class="p">,</span>
+                      <span class="n">image_layers</span><span class="o">=</span><span class="n">layers</span><span class="p">,</span>
+                      <span class="n">properties</span><span class="o">=</span><span class="n">properties</span><span class="p">,</span>
+                      <span class="n">tile_size</span><span class="o">=</span><span class="p">(</span><span class="n">tile_width</span><span class="p">,</span> <span class="n">tile_height</span><span class="p">)</span>
+                     <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">tilemap</span>
+
+</div>
+<div class="viewcode-block" id="tilemap_connect"><a class="viewcode-back" href="../index.html#tiles.tilemap_connect">[docs]</a><span class="k">def</span> <span class="nf">tilemap_connect</span><span class="p">(</span><span class="n">tilemap_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;connect to tilemap db by opening related db</span>
+
+<span class="sd">    sanitizes file/tilemap_name</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      tilemap_name (str): name of map (for humans) used for db file name</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      tuple: sqlite.Connection, sqlite.Cursor</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">valid_chars</span> <span class="o">=</span> <span class="s">&quot;-_.() </span><span class="si">%s%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_letters</span><span class="p">,</span> <span class="n">string</span><span class="o">.</span><span class="n">digits</span><span class="p">)</span>
+    <span class="n">tilemap_file_name</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">tilemap_name</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">valid_chars</span><span class="p">)</span>
+    <span class="n">tilemap_file_name</span> <span class="o">=</span> <span class="n">tilemap_name</span> <span class="o">+</span> <span class="s">&#39;.db&#39;</span>
+    <span class="n">tilemap_db_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&#39;data&#39;</span><span class="p">,</span> <span class="s">&#39;tiles&#39;</span><span class="p">,</span> <span class="s">&#39;maps&#39;</span><span class="p">,</span> <span class="n">tilemap_file_name</span><span class="p">)</span>
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">tilemap_db_path</span><span class="p">)</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">text_factory</span> <span class="o">=</span> <span class="nb">str</span>
+
+    <span class="k">return</span> <span class="n">connection</span><span class="p">,</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+</div>
+<div class="viewcode-block" id="new_tilemap"><a class="viewcode-back" href="../index.html#tiles.new_tilemap">[docs]</a><span class="k">def</span> <span class="nf">new_tilemap</span><span class="p">(</span><span class="n">tilemap_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Creates a new sqlite database, i.e., scene.</span>
+
+<span class="sd">    Uses scene_name for file name and scene&#39;s label.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      tilemap_name (str): name of map and sqlite db file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        TileMap: empty/blank TileMap, one layer of default tile</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="c"># create default layer</span>
+    <span class="n">layer</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">NEW_SCENE_TILES_TALL</span><span class="p">):</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;default&#39;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">xrange</span><span class="p">(</span><span class="n">NEW_SCENE_TILES_WIDE</span><span class="p">)]</span>
+        <span class="n">layer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+    <span class="n">layer</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;water&#39;</span>
+    <span class="n">layers</span> <span class="o">=</span> <span class="p">[</span><span class="n">layer</span><span class="p">]</span>
+    <span class="n">tilemap</span> <span class="o">=</span> <span class="n">TileMap</span><span class="p">(</span>
+                      <span class="n">name</span><span class="o">=</span><span class="n">tilemap_name</span><span class="p">,</span>
+                      <span class="n">make_layers</span><span class="o">=</span><span class="n">layers</span><span class="p">,</span>
+                      <span class="n">swatch</span><span class="o">=</span><span class="n">TileSwatch</span><span class="p">(</span><span class="n">NEW_SCENE_SWATCH</span><span class="p">),</span>
+                     <span class="p">)</span>
+    <span class="n">save_tilemap</span><span class="p">(</span><span class="n">tilemap</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">tilemap</span>
+
+
+<span class="c"># debugging purposes</span></div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">doctest</span>
+    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../engine.html">Untitled Game Engine 0.1 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Lillian Lynn Mahoney.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>
