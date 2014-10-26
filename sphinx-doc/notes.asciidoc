@@ -1,4 +1,0 @@
-----
-$ sphinx-apidoc -o apidoc ../engine/
-$ sphinx-build -b html source build
-----

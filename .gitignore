@@ -56,3 +56,6 @@ target/
 
 # VIM
 *.swp
+
+# documentation
+sphinx-doc/
