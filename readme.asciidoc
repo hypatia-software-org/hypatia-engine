@@ -20,6 +20,8 @@ This is a game engine for an untitled game I'm developing. The game is a top-dow
 *Planned features:*
 
   * map editor (GUI)
+  * map backgrounds
+  * map paralax
   * walkabout sprite "anchors"
   ** generate walkabout sprites with different pieces of hair, characteristics (like scars) and the like
   ** equipment sprite anchors
