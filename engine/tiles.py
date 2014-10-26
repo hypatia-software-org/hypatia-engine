@@ -23,7 +23,9 @@ Render Notes:
 
 Problems/Incomplete:
   * Animations? Should animations be measured in frames?
-  ** controlled by render module or effects
+
+      * controlled by render module or effects
+
   * TileMap.background
 
 """
