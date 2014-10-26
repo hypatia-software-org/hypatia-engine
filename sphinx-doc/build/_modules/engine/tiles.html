@@ -47,9 +47,13 @@
           <div class="body">
             
   <h1>Source code for engine.tiles</h1><div class="highlight"><pre>
-<span class="sd">&quot;&quot;&quot;tiles: tile-based map management.</span>
-<span class="sd">Lillian Lynn Mahoney &lt;lillian.lynn.mahoney@gmail.com&gt;</span>
-<span class="sd">2014-10-20</span>
+<span class="c"># engine/tiles.py</span>
+<span class="c"># Lillian Lynn Mahoney &lt;lillian.lynn.mahoney@gmail.com&gt;</span>
+<span class="c">#</span>
+<span class="c"># This module is part of Untitled Game Engine and is released under the</span>
+<span class="c"># Attribution Assurance License: http://opensource.org/licenses/AAL</span>
+
+<span class="sd">&quot;&quot;&quot;tile-based map management.</span>
 
 <span class="sd">Using &quot;paint by number&quot; as an analogy:</span>
 <span class="sd">  * TileMap is the canvas/picture with number cells (the canvas)</span>
@@ -60,25 +64,9 @@
 <span class="sd">TileProperties object. Every tile in a TileSwatch has default</span>
 <span class="sd">properties defined in its swatch.ini.</span>
 
-<span class="sd">Inspired by OHRRPGCE.</span>
-
 <span class="sd">For more info: http://en.wikipedia.org/wiki/Tile_engine</span>
 
-<span class="sd">Render Notes:</span>
-<span class="sd">  1. TileMap.layers[0] is the ABSOLUTE first thing</span>
-<span class="sd">     to render in the game.</span>
-<span class="sd">  2. TileMap.layers[x] where x &gt; 0 are the ABSOLUTE last things</span>
-<span class="sd">     to render in the game.</span>
-
-<span class="sd">Problems/Incomplete:</span>
-<span class="sd">  * Animations? Should animations be measured in frames?</span>
-
-<span class="sd">      * controlled by render module or effects</span>
-
-<span class="sd">  * TileMap.background</span>
-
 <span class="sd">&quot;&quot;&quot;</span>
-
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">glob</span>
@@ -93,7 +81,7 @@
 <span class="n">__copyright__</span> <span class="o">=</span> <span class="s">&quot;Copyright 2014, Lillian Lynn Mahoney&quot;</span>
 <span class="n">__credits__</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;Lillian Mahoney&quot;</span><span class="p">]</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s">&quot;Attribution Assurance License&quot;</span>
-<span class="n">__version__</span> <span class="o">=</span> <span class="s">&quot;0.3&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s">&quot;0.3.1&quot;</span>
 <span class="n">__maintainer__</span> <span class="o">=</span> <span class="s">&quot;Lillian Mahoney&quot;</span>
 <span class="n">__email__</span> <span class="o">=</span> <span class="s">&quot;lillian.lynn.mahoney@gmail.com&quot;</span>
 <span class="n">__status__</span> <span class="o">=</span> <span class="s">&quot;Development&quot;</span>

@@ -1,13 +1,18 @@
+# engine/render.py
+# Lillian Lynn Mahoney <lillian.lynn.mahoney@gmail.com>
+#
+# This module is part of Untitled Game Engine and is released under the
+# Attribution Assurance License: http://opensource.org/licenses/AAL
+
 """render.py: how stuff displays? it puts it all together.
-Lillian Lynn Mahoney <lillian.lynn.mahoney@gmail.com>
-2014-10-20
 
 Visual/aesthetically oriented code.
 
 Worst tagline, ever.
 
-"""
+This is currently hacked together.
 
+"""
 
 from pygame.locals import *
 from PIL import Image
@@ -24,7 +29,7 @@ __author__ = "Lillian Lynn Mahoney"
 __copyright__ = "Copyright 2014, Lillian Lynn Mahoney"
 __credits__ = ["Lillian Mahoney"]
 __license__ = "Attribution Assurance License"
-__version__ = "0.1"
+__version__ = "0.1.1"
 __maintainer__ = "Lillian Mahoney"
 __email__ = "lillian.lynn.mahoney@gmail.com"
 __status__ = "Development"

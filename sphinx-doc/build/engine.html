@@ -23,7 +23,9 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Untitled Game Engine 0.1 documentation" href="index.html" /> 
+    <link rel="top" title="Untitled Game Engine 0.1 documentation" href="index.html" />
+    <link rel="up" title="engine" href="modules.html" />
+    <link rel="prev" title="engine" href="modules.html" /> 
   </head>
   <body>
     <div class="related">
@@ -35,7 +37,11 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">Untitled Game Engine 0.1 documentation</a> &raquo;</li> 
+        <li class="right" >
+          <a href="modules.html" title="engine"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Untitled Game Engine 0.1 documentation</a> &raquo;</li>
+          <li><a href="modules.html" accesskey="U">engine</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -51,9 +57,7 @@
 </div>
 <div class="section" id="module-engine.controllers">
 <span id="engine-controllers-module"></span><h2>engine.controllers module<a class="headerlink" href="#module-engine.controllers" title="Permalink to this headline">¶</a></h2>
-<p>controllers: entity gamepad/input/controller and AI.
-Lillian Lynn Mahoney &lt;<a class="reference external" href="mailto:lillian&#46;lynn&#46;mahoney&#37;&#52;&#48;gmail&#46;com">lillian<span>&#46;</span>lynn<span>&#46;</span>mahoney<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;
-2014-10-25</p>
+<p>controllers: entity gamepad/input/controller and AI.</p>
 <p>Game object/entity &#8220;controller.&#8221; A controller could be a gamepad, or a
 remote player&#8217;s gamepad, or an AI&#8217;s gamepad.</p>
 <dl class="class">
@@ -96,16 +100,7 @@ remote player&#8217;s gamepad, or an AI&#8217;s gamepad.</p>
 </div>
 <div class="section" id="module-engine.entities">
 <span id="engine-entities-module"></span><h2>engine.entities module<a class="headerlink" href="#module-engine.entities" title="Permalink to this headline">¶</a></h2>
-<p>Entities: interactive/dynamic map objects.
-Lillian Lynn Mahoney &lt;<a class="reference external" href="mailto:lillian&#46;lynn&#46;mahoney&#37;&#52;&#48;gmail&#46;com">lillian<span>&#46;</span>lynn<span>&#46;</span>mahoney<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;
-2014-10-20</p>
-<dl class="docutils">
-<dt>Different kinds of entities, namely:</dt>
-<dd><ul class="first last simple">
-<li>Walkabout()</li>
-</ul>
-</dd>
-</dl>
+<p>Entities: interactive/dynamic map objects.</p>
 <dl class="class">
 <dt id="engine.entities.Player">
 <em class="property">class </em><tt class="descclassname">engine.entities.</tt><tt class="descname">Player</tt><big>(</big><em>walkabout=None</em><big>)</big><a class="reference internal" href="_modules/engine/entities.html#Player"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#engine.entities.Player" title="Permalink to this definition">¶</a></dt>
@@ -173,11 +168,10 @@ Lillian Lynn Mahoney &lt;<a class="reference external" href="mailto:lillian&#46;
 </div>
 <div class="section" id="module-engine.render">
 <span id="engine-render-module"></span><h2>engine.render module<a class="headerlink" href="#module-engine.render" title="Permalink to this headline">¶</a></h2>
-<p>render.py: how stuff displays? it puts it all together.
-Lillian Lynn Mahoney &lt;<a class="reference external" href="mailto:lillian&#46;lynn&#46;mahoney&#37;&#52;&#48;gmail&#46;com">lillian<span>&#46;</span>lynn<span>&#46;</span>mahoney<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;
-2014-10-20</p>
+<p>render.py: how stuff displays? it puts it all together.</p>
 <p>Visual/aesthetically oriented code.</p>
 <p>Worst tagline, ever.</p>
+<p>This is currently hacked together.</p>
 <dl class="function">
 <dt id="engine.render.gif_to_pyganim">
 <tt class="descclassname">engine.render.</tt><tt class="descname">gif_to_pyganim</tt><big>(</big><em>gif_path</em><big>)</big><a class="reference internal" href="_modules/engine/render.html#gif_to_pyganim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#engine.render.gif_to_pyganim" title="Permalink to this definition">¶</a></dt>
@@ -238,9 +232,7 @@ gif_path</td>
 </div>
 <div class="section" id="module-engine.tiles">
 <span id="engine-tiles-module"></span><h2>engine.tiles module<a class="headerlink" href="#module-engine.tiles" title="Permalink to this headline">¶</a></h2>
-<p>tiles: tile-based map management.
-Lillian Lynn Mahoney &lt;<a class="reference external" href="mailto:lillian&#46;lynn&#46;mahoney&#37;&#52;&#48;gmail&#46;com">lillian<span>&#46;</span>lynn<span>&#46;</span>mahoney<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;
-2014-10-20</p>
+<p>tile-based map management.</p>
 <dl class="docutils">
 <dt>Using &#8220;paint by number&#8221; as an analogy:</dt>
 <dd><ul class="first last simple">
@@ -253,31 +245,7 @@ Lillian Lynn Mahoney &lt;<a class="reference external" href="mailto:lillian&#46;
 <p>Each tile of the first layer in a TileMap has its respective
 TileProperties object. Every tile in a TileSwatch has default
 properties defined in its swatch.ini.</p>
-<p>Inspired by OHRRPGCE.</p>
 <p>For more info: <a class="reference external" href="http://en.wikipedia.org/wiki/Tile_engine">http://en.wikipedia.org/wiki/Tile_engine</a></p>
-<dl class="docutils">
-<dt>Render Notes:</dt>
-<dd><ol class="first last arabic simple">
-<li>TileMap.layers[0] is the ABSOLUTE first thing
-to render in the game.</li>
-<li>TileMap.layers[x] where x &gt; 0 are the ABSOLUTE last things
-to render in the game.</li>
-</ol>
-</dd>
-<dt>Problems/Incomplete:</dt>
-<dd><ul class="first last">
-<li><p class="first">Animations? Should animations be measured in frames?</p>
-<blockquote>
-<div><ul class="simple">
-<li>controlled by render module or effects</li>
-</ul>
-</div></blockquote>
-</li>
-<li><p class="first">TileMap.background</p>
-</li>
-</ul>
-</dd>
-</dl>
 <dl class="exception">
 <dt id="engine.tiles.BadTileName">
 <em class="property">exception </em><tt class="descclassname">engine.tiles.</tt><tt class="descname">BadTileName</tt><big>(</big><em>swatch_name</em>, <em>key</em><big>)</big><a class="reference internal" href="_modules/engine/tiles.html#BadTileName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#engine.tiles.BadTileName" title="Permalink to this definition">¶</a></dt>
@@ -474,6 +442,9 @@ image files.</td>
 </li>
 </ul>
 
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="modules.html"
+                        title="previous chapter">engine</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/engine.txt"
@@ -505,7 +476,11 @@ image files.</td>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">Untitled Game Engine 0.1 documentation</a> &raquo;</li> 
+        <li class="right" >
+          <a href="modules.html" title="engine"
+             >previous</a> |</li>
+        <li><a href="index.html">Untitled Game Engine 0.1 documentation</a> &raquo;</li>
+          <li><a href="modules.html" >engine</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

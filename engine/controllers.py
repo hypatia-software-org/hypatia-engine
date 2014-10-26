@@ -1,12 +1,15 @@
+# engine/entities.py
+# Lillian Lynn Mahoney <lillian.lynn.mahoney@gmail.com>
+#
+# This module is part of Untitled Game Engine and is released under the
+# Attribution Assurance License: http://opensource.org/licenses/AAL
+
 """controllers: entity gamepad/input/controller and AI.
-Lillian Lynn Mahoney <lillian.lynn.mahoney@gmail.com>
-2014-10-25
 
 Game object/entity "controller." A controller could be a gamepad, or a
 remote player's gamepad, or an AI's gamepad.
 
 """
-
 
 from pygame.locals import *
 import pygame
@@ -17,7 +20,7 @@ __author__ = "Lillian Lynn Mahoney"
 __copyright__ = "Copyright 2014, Lillian Lynn Mahoney"
 __credits__ = ["Lillian Mahoney"]
 __license__ = "Attribution Assurance License"
-__version__ = "0.3"
+__version__ = "0.3.1"
 __maintainer__ = "Lillian Mahoney"
 __email__ = "lillian.lynn.mahoney@gmail.com"
 __status__ = "Development"

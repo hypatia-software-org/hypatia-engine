@@ -1,6 +1,10 @@
-"""tiles: tile-based map management.
-Lillian Lynn Mahoney <lillian.lynn.mahoney@gmail.com>
-2014-10-20
+# engine/tiles.py
+# Lillian Lynn Mahoney <lillian.lynn.mahoney@gmail.com>
+#
+# This module is part of Untitled Game Engine and is released under the
+# Attribution Assurance License: http://opensource.org/licenses/AAL
+
+"""tile-based map management.
 
 Using "paint by number" as an analogy:
   * TileMap is the canvas/picture with number cells (the canvas)
@@ -11,25 +15,9 @@ Each tile of the first layer in a TileMap has its respective
 TileProperties object. Every tile in a TileSwatch has default
 properties defined in its swatch.ini.
 
-Inspired by OHRRPGCE.
-
 For more info: http://en.wikipedia.org/wiki/Tile_engine
 
-Render Notes:
-  1. TileMap.layers[0] is the ABSOLUTE first thing
-     to render in the game.
-  2. TileMap.layers[x] where x > 0 are the ABSOLUTE last things
-     to render in the game.
-
-Problems/Incomplete:
-  * Animations? Should animations be measured in frames?
-
-      * controlled by render module or effects
-
-  * TileMap.background
-
 """
-
 
 import os
 import glob
@@ -44,7 +32,7 @@ __author__ = "Lillian Lynn Mahoney"
 __copyright__ = "Copyright 2014, Lillian Lynn Mahoney"
 __credits__ = ["Lillian Mahoney"]
 __license__ = "Attribution Assurance License"
-__version__ = "0.3"
+__version__ = "0.3.1"
 __maintainer__ = "Lillian Mahoney"
 __email__ = "lillian.lynn.mahoney@gmail.com"
 __status__ = "Development"
