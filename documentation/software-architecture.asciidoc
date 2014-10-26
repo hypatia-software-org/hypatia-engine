@@ -1,0 +1,73 @@
+= Software Architecture
+Lillian Lynn Mahoney <lillian.lynn.mahoney@gmail.com>
+1, 2014-10-11
+
+This document describes the software architecture of the project; file and module structures.
+
+=== tiles.py
+
+Tile-based map management.
+
+==== TileMap
+
+Read-only, for render and tile meta purposes.
+
+  * tilemap.layers: map layers for rendering
+  ** can generate layers from 2d list of tile names from a provided TileSwatch
+  ** A list of layers in ascending order of z index.
+  * tilemap.properties: tile properties (TileProperties)
+
+==== TileSwatch
+
+Tiles used for generating TileMapLayers, like a palette.
+
+The following attributes of TileSwatch are set through its swatch.ini:
+  * default tile properties (per tile)
+  * default tile
+  * tile size; -- this should be automatic, no?
+
+==== TileProperties
+
+List of flags/properties.
+  * can iterate through properties; for properties in TileProperties
+  * fast inclusion tests: if not [p for p in TileProperties if p.startswith('impass_')]
+
+==== save_tilemap
+
+Pickle TileMap to SQLITE3 DB.
+
+==== load_tilemap
+
+Create TileMap from SQLITE3 DB.
+
+==== new_tilemap
+
+Create blank TileMap and save_tilemap.
+
+=== Input
+
+=== Editor
+
+Needs "test game" button/launcher right in the editor
+
+=== Entities
+
+==== Physics Props
+
+==== Doors
+
+=== Render
+
+Order:
+  - TileMap.layer[0]
+  - Entities (a list thereof)
+  - Player (which is, in fact, an entity)
+  - TileMap.layer[1] and above
+
+==== Effects
+
+  * camera effects
+  * clouds
+  * fog
+  * shadows
+  * stars/sparkles/glitter/particles

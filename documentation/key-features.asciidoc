@@ -1,0 +1,21 @@
+Items
+  * Super fun and varied
+  * Leads you down different paths in the game based on item functionality
+  * Tons of variations of item groups
+  * Lots of treasure, item hunting
+  * Questing from NPCs (optional quests)
+  ** Lots of DIFFERENT kinds of quests
+  ** some quests are mini games
+  ** use to remind player sto go back to a old dungeon, you'll be able to access new paths/places with new items with your new equipment loadout
+      * make a lot of items that don't fall into item groups
+
+A really bitching inventory screen
+  * Very well organized
+  * Cards for each item
+  ** you can view each card full-screen; descriptions, good presentation of stats, etc.
+  * multiple items show as stacked cards
+  * button item slots; two activation slots; think of zelda oracle of *
+  ** boots, switch weapon, block, attack
+  ** swap out
+  ** creates interesting loadouts
+

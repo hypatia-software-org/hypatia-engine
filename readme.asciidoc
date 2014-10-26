@@ -1,0 +1,22 @@
+= Untitled Game
+Lillian Lynn Mahoney <lillian.lynn.mahoney@gmail.com>
+1, 2014-10-11
+
+== Setup
+
+There are two methods; either run _setup.py_ or:
+
+----
+pip install -r requirements.txt
+----
+
+== License
+
+See license.txt which is singed by gnu-pg in FreeBSD.
+
+----
+# pkg install gnupg pinentry
+$ gpg --gen-key
+$ gpg --clearsign license.txt
+----
+

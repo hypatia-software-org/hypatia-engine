@@ -1,0 +1,4 @@
+pygame=1.9.1release
+sqlite3=2.6.0
+pyganim=0.9.0
+pil=1.1.7

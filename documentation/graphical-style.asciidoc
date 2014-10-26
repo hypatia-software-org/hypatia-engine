@@ -1,0 +1,6 @@
+== graphics
+
+  * cutesy
+  * eerie
+  * really lively/dynamic maps
+  * lots of paralax/moving between layers/use of layers, esp. animated layers
