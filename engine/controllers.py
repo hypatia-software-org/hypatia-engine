@@ -4,7 +4,7 @@
 # This module is part of Untitled Game Engine and is released under the
 # Attribution Assurance License: http://opensource.org/licenses/AAL
 
-"""controllers: entity gamepad/input/controller and AI.
+"""Controllers manipulate entity state/attributes.
 
 Game object/entity "controller." A controller could be a gamepad, or a
 remote player's gamepad, or an AI's gamepad.
@@ -20,7 +20,7 @@ __author__ = "Lillian Lynn Mahoney"
 __copyright__ = "Copyright 2014, Lillian Lynn Mahoney"
 __credits__ = ["Lillian Mahoney"]
 __license__ = "Attribution Assurance License"
-__version__ = "0.3.1"
+__version__ = "0.3.2"
 __maintainer__ = "Lillian Mahoney"
 __email__ = "lillian.lynn.mahoney@gmail.com"
 __status__ = "Development"
@@ -34,8 +34,10 @@ class Controller(object):
         In the future there will be an event stack (array).
 
         Args:
-          entity (entities.*): the Player being controlled.
-          actions (function): 
+          entity (entities.*): the entity whose state/attributes will
+            be manipulated, as defined in actions.
+          actions (function): maps input to actions (triggers), see:
+            self.update() or WalkaboutActions()
 
         """
 
@@ -43,6 +45,19 @@ class Controller(object):
         self.actions = actions or WalkaboutActions()
 
     def update(self):
+        """Trigger actions based on input (keydown, keyup, ispressed).
+
+        Triggers/actions (defined in self.actions) execute in the order:
+          1. keydown_triggers(key)
+          2. keyup_triggers(key)
+          3. stateful_triggers(self)
+
+        Please read about WalkaboutActions.
+
+        Returns:
+          None
+
+        """
 
         for event in pygame.event.get():
 
@@ -59,9 +74,19 @@ class Controller(object):
         return None
 
 
+class Triggers(object):
+
+    def __init__(self):
+        pass
+
+
 class WalkaboutActions(object):
 
     def __init__(self):
+        """The actions/triggers which correspond to input.
+
+        """
+
         self.key_to_label = {
                              K_ESCAPE: 'escape',
                              K_UP: 'up',
@@ -74,6 +99,16 @@ class WalkaboutActions(object):
             setattr(self, label, False)
 
     def keydown_triggers(self, key):
+        """Actions which trigger on keydown.
+
+        Args:
+          key (str): label corresponding to value in
+            self.key_to_label.
+
+        Returns:
+          None
+
+        """
 
         if key == 'escape':
             pygame.quit()
@@ -85,6 +120,16 @@ class WalkaboutActions(object):
         return None
 
     def keyup_triggers(self, key):
+        """Actions which trigger on keyup.
+
+        Args:
+          key (str): label corresponding to value in
+            self.key_to_label.
+
+        Returns:
+          None
+
+        """
 
         if key in ('up', 'right', 'down', 'left'):
             setattr(self, key, False)
@@ -92,6 +137,17 @@ class WalkaboutActions(object):
         return None
 
     def stateful_triggers(self, controller):
+        """Actions which trigger if key is being pressed.
+
+        Args:
+          controller (Controller): the controller to which these
+            triggers/actions are assigned.
+
+        Returns:
+          None
+
+        """
+
         walkabout = controller.entity.walkabout
 
         # directional keys; movement; up, right, down, left
