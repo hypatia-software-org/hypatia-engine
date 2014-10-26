@@ -4,15 +4,17 @@ Lillian Lynn Mahoney <lillian.lynn.mahoney@gmail.com>
 
 == Setup
 
-There are two methods; either run _setup.py_ or:
+Sorry, there's no __setup.py__, yet.
 
 ----
 pip install -r requirements.txt
 ----
 
-== License
+== License: Attribution Assurance License
 
-See license.txt which is singed by gnu-pg in FreeBSD.
+See __license.txt.asc__ which is singed by gnu-pg in FreeBSD. See __license.txt__ for unsigned license.
+
+Clearsigned in FreeBSD, as so:
 
 ----
 # pkg install gnupg pinentry
