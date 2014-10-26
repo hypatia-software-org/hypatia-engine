@@ -1,6 +1,28 @@
-= Untitled Game
+= Untitled Game Engine
 Lillian Lynn Mahoney <lillian.lynn.mahoney@gmail.com>
 1, 2014-10-11
+
+This is a game engine for an untitled game I'm developing. The game is a top-down 2D tile-based puzzle/action game in the vein of __Zelda: Oracle of Ages__ and __Zelda: Oracle of Seasons__ as well as __Zelda: Link's Awakening__ (TL;DR: all the Capcom Game Boy Zelda games).
+
+*Current features:*
+
+  * controller abstraction
+  * walkabout sprite abstraction
+  ** easy-to-manage walkabout sprites
+  * rudimentary rendering, scaling
+  * tile map, swatch abstractions
+  ** easy-to-manage tile swatches
+  ** save maps
+  ** load maps
+  ** create new maps
+  ** layer support with RGBA
+
+*Planned features:*
+
+  * map editor (GUI)
+  * walkabout sprite "anchors"
+  ** generate walkabout sprites with different pieces of hair, characteristics (like scars) and the like
+  ** equipment sprite anchors
 
 == Setup
 
