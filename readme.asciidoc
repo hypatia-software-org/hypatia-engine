@@ -48,5 +48,5 @@ $ gpg --clearsign license.txt
 
 == Documentation
 
-__sphinx-doc__ is included, which contains sphinx source and HTML build. You can view a cached version of the build here: http://asciidoc.sockmonki.com/build
+__sphinx-doc__ is included, which contains sphinx source and HTML build. You can view a cached version of the build here: http://asciidoc.sockmonki.com/build (link location subject to change, and may not be as up-to-date as github's version).
 
