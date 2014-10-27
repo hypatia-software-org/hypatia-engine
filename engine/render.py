@@ -29,7 +29,7 @@ __author__ = "Lillian Lynn Mahoney"
 __copyright__ = "Copyright 2014, Lillian Lynn Mahoney"
 __credits__ = ["Lillian Mahoney"]
 __license__ = "Attribution Assurance License"
-__version__ = "0.1.1"
+__version__ = "0.2"
 __maintainer__ = "Lillian Mahoney"
 __email__ = "lillian.lynn.mahoney@gmail.com"
 __status__ = "Development"
@@ -51,8 +51,6 @@ def render(map_name):
     pygame.init()
     fps = 30
     clock = pygame.time.Clock()
-    width = 400
-    height = 400
     display_info = pygame.display.Info()
     screen_size = (display_info.current_w, display_info.current_h)
     screen = pygame.display.set_mode(
@@ -63,8 +61,7 @@ def render(map_name):
 
     player = entities.Player()
     tilemap = tiles.load_tilemap('debug')
-    player_controller = controllers.Controller(player)
-    render_order = []
+    player_controller = controllers.Controller(player, tilemap)
 
     # scale layers to screen size
     layers = []
@@ -74,14 +71,15 @@ def render(map_name):
         layers.append(image)
 
     tilemap.layers = layers
-
-    # scale player sprites to screen size
-    sprite_x, sprite_y = screen_size
+    tile_size_x = screen_size[0] / tilemap.tile_size[0]
+    tile_size_y = screen_size[1] / tilemap.tile_size[1]
+    tilemap.tile_size = (tile_size_x, tile_size_y)
+    tilemap.size = screen_size
+    screen_x, screen_y = screen_size
 
     for action, directions in player.walkabout.sprites.items():
 
         for direction, sprite in directions.items():
-            screen_x, screen_y = screen_size
             sprite_x, sprite_y = sprite.getMaxSize()
             new_size = (screen_x / sprite_x, screen_y / sprite_y)
             sprite.scale(new_size)

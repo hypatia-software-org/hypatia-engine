@@ -10,6 +10,7 @@ import os
 import glob
 import render
 import pyganim
+import pygame
 from collections import OrderedDict
 
 
@@ -84,11 +85,13 @@ class Walkabout(object):
         self.position = start_position or (0, 0)  # px values
         self.speed = 20  # one pixel per update
 
-    def move(self, direction):
+    def move(self, direction, tilemap):
         """
 
         Args:
           direction (str): may be one of: up, right, down, left
+          tilemap (tiles.TileMap): tilemap for reference, so we can
+            avoid walking into water and such.
 
         """
 
@@ -105,7 +108,16 @@ class Walkabout(object):
         elif direction == 'left':
             x -= self.speed
 
+        new_position = (x, y)
+        properties = tilemap.get_properties((x, y))
+
+        if 'impass_all' in properties:
+
+            return None
+
         self.position = (x, y)
+
+        return None
 
     def blit(self, screen):
         """Draw the appropriate/active animation to screen.

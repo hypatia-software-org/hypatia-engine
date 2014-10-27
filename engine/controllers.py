@@ -9,6 +9,10 @@
 Game object/entity "controller." A controller could be a gamepad, or a
 remote player's gamepad, or an AI's gamepad.
 
+This is currently kinda messy because there's some scaffolding, and
+a lot of features I'm not using yet. Right now this module is only
+being used for the user/player controller.
+
 """
 
 from pygame.locals import *
@@ -28,7 +32,7 @@ __status__ = "Development"
 
 class Controller(object):
 
-    def __init__(self, entity, actions=None):
+    def __init__(self, entity, tilemap, actions=None):
         """Actions manipulate an entity's attributes/state.
 
         In the future there will be an event stack (array).
@@ -36,13 +40,16 @@ class Controller(object):
         Args:
           entity (entities.*): the entity whose state/attributes will
             be manipulated, as defined in actions.
+          tilemap (tiles.TileMap): tilemap for referencing from
+            action triggers.
           actions (function): maps input to actions (triggers), see:
             self.update() or WalkaboutActions()
 
         """
 
         self.entity = entity
-        self.actions = actions or WalkaboutActions()
+        self.tilemap = tilemap
+        self.actions = actions or WalkaboutActions(self)
 
     def update(self):
         """Trigger actions based on input (keydown, keyup, ispressed).
@@ -69,7 +76,7 @@ class Controller(object):
                 key = self.actions.key_to_label.get(event.key, event.key)
                 self.actions.keyup_triggers(key)
 
-        self.actions.stateful_triggers(self)
+        self.actions.stateful_triggers()
 
         return None
 
@@ -82,11 +89,16 @@ class Triggers(object):
 
 class WalkaboutActions(object):
 
-    def __init__(self):
+    def __init__(self, controller):
         """The actions/triggers which correspond to input.
+
+        Args:
+          controller (Controller): controller these actions
+            are assigned to.
 
         """
 
+        self.controller = controller
         self.key_to_label = {
                              K_ESCAPE: 'escape',
                              K_UP: 'up',
@@ -136,7 +148,7 @@ class WalkaboutActions(object):
 
         return None
 
-    def stateful_triggers(self, controller):
+    def stateful_triggers(self):
         """Actions which trigger if key is being pressed.
 
         Args:
@@ -148,6 +160,7 @@ class WalkaboutActions(object):
 
         """
 
+        controller = self.controller
         walkabout = controller.entity.walkabout
 
         # directional keys; movement; up, right, down, left
@@ -157,16 +170,16 @@ class WalkaboutActions(object):
             return None
 
         if self.up:
-            walkabout.move('up')
+            walkabout.move('up', controller.tilemap)
 
         if self.right:
-            walkabout.move('right')
+            walkabout.move('right', controller.tilemap)
 
         if self.down:
-            walkabout.move('down')
+            walkabout.move('down', controller.tilemap)
 
         if self.left:
-            walkabout.move('left')
+            walkabout.move('left', controller.tilemap)
 
         return None
 

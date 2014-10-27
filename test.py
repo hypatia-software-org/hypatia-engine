@@ -7,7 +7,6 @@ from engine import render
 # ENGINE: tiles
 tiles.new_tilemap('debug')
 tilemap = tiles.load_tilemap('debug')
-assert tilemap[(0, 0)] == ['requires_boat', 'impass_all']
 
 print(tilemap.name)
 print(tilemap.properties[0])

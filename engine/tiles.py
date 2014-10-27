@@ -150,6 +150,22 @@ class TileMap(object):
         self.tile_size = tile_size
         self.properties = properties
 
+        """
+        # rectangles of impassabilities
+        self.impass_rectangles = []
+
+    def make_impass_rectangles(self):
+        pixels_x, pixels_y = self.size
+        tiles_wide = pixels_x / self.tile_size[0]
+        tiles_tall = pixels_y / self.tile_size[1]
+
+        for i, tile_properties in enumerate(self.properties):
+
+            if 'impass_all' in tile_properties:
+                y = i / self.
+                coord = 
+        """
+
     def __getitem__(self, coord):
         """Fetch TileProperties by tile coordinate.
 
@@ -167,29 +183,44 @@ class TileMap(object):
 
         return self.properties[width * y + x]
 
-    def get_properties(self, coord, unit_pixel=False):
-        """Fetch TileProperties by tile or pixel coordinate.
+    def get_properties(self, coord):
+        """Fetch TileProperties by pixel coordinate.
 
         Args:
           coord (tuple): (x, y) coordinate; z always just
             z-index (it's not a pixel value)
-          unit_pixel (bool): if True, unit values in coordinate
-            are pixels, not tiles
 
         Returns:
           TileProperties
 
         """
 
-        x, y = coord
+        tile_width, tile_height = self.tile_size
+        pixel_x, pixel_y = coord
+        tile_x = pixel_x / tile_width
+        tile_y = pixel_y / tile_height
 
-        if unit_pixel:
-            x = pixel_x / self.tile_size[0]
-            y = pixel_y / self.tile_size[1]
+        # round to nearest <tile_Size> 
+        """
+        roundby = lambda x, base: int(base * round(float(x)/base))
+        tile_x = roundby(tile_x, tile_width)
+        tile_y = roundby(tile_y, tile_height)
+        """
 
-        height, width = self.size
+        map_width_in_tiles = (self.size[0] / tile_width)
+        print
+        print
+        print 'pixel coord: %d, %d' % coord
+        print 'map width in tiles: %d' % map_width_in_tiles
+        print 'tile size: %d, %d' % self.tile_size
+        print 'corresponding tile: %d, %d' % (tile_x, tile_y)
 
-        return self.properties[width * y + x]
+        return self.properties[map_width_in_tiles * tile_y + tile_x]
+
+    def scale(self, x, y):
+        """scale to new pixel dimensions"""
+
+        pass
 
 
 class TileSwatch(object):
@@ -491,7 +522,7 @@ def new_tilemap(tilemap_name):
         row = ['default' for x in xrange(NEW_SCENE_TILES_WIDE)]
         layer.append(row)
 
-    layer[0][0] = 'water'
+    layer[1][1] = 'water'
     layers = [layer]
     tilemap = TileMap(
                       name=tilemap_name,
