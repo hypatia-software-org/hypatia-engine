@@ -120,7 +120,7 @@ def gif_to_pyganim(gif_path):
         while 1:
             # must find frame time, create a pygame surface from frame
             gif.putpalette(palette)
-            duration = gif.info['duration'] / 1000
+            duration = gif.info['duration'] / 1000.0
             frame_as_pygame_image = pil_to_pygame(gif, "RGBA")
             frames.append((frame_as_pygame_image, duration))
             frame_index += 1
