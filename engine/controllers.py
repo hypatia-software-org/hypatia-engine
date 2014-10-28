@@ -1,4 +1,4 @@
-# engine/entities.py
+# engine/controllers.py
 # Lillian Lynn Mahoney <lillian.lynn.mahoney@gmail.com>
 #
 # This module is part of Untitled Game Engine and is released under the
