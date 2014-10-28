@@ -150,21 +150,54 @@ class TileMap(object):
         self.tile_size = tile_size
         self.properties = properties
 
-        """
-        # rectangles of impassabilities
-        self.impass_rectangles = []
-
-    def make_impass_rectangles(self):
+    def make_impass_rects(self):
         pixels_x, pixels_y = self.size
-        tiles_wide = pixels_x / self.tile_size[0]
-        tiles_tall = pixels_y / self.tile_size[1]
+        tile_width, tile_height = self.tile_size
+        tiles_wide = pixels_x / tile_width
+        tiles_tall = pixels_y / tile_height
 
         for i, tile_properties in enumerate(self.properties):
+            y = tile_height * max([i / tiles_wide, 0])
+            x = tile_width * (i - max([i / tiles_wide, 0]))
+            top_left = (x, y)
 
             if 'impass_all' in tile_properties:
-                y = i / self.
-                coord = 
+                rect = pygame.Rect(top_left, self.tile_size)
+                tile_properties.rect = rect
+
+        return None
+
+    def scale(self, dimensions):
+        """Scale each layer to specified dimensions.
+
+        Scaling is for fullscreen stretch; after screen has
+        been initialized (dimensions is typically screen resolution).
+
+        Args:
+          dimensions (tuple): (x, y) pixel dimensions to rescale
+            each layer image to.
+
+        Returns:
+          None
+
         """
+
+        layers = []
+
+        for layer in self.layers:
+            image = pygame.transform.scale(layer, dimensions)
+            image.convert()
+            layers.append(image)
+
+        self.layers = layers
+        tile_size_x = dimensions[0] / self.tile_size[0]
+        tile_size_y = dimensions[1] / self.tile_size[1]
+        self.tile_size = (tile_size_x, tile_size_y)
+        self.size = dimensions
+
+        self.make_impass_rects()
+
+        return None
 
     def __getitem__(self, coord):
         """Fetch TileProperties by tile coordinate.
@@ -200,27 +233,10 @@ class TileMap(object):
         tile_x = pixel_x / tile_width
         tile_y = pixel_y / tile_height
 
-        # round to nearest <tile_Size> 
-        """
-        roundby = lambda x, base: int(base * round(float(x)/base))
-        tile_x = roundby(tile_x, tile_width)
-        tile_y = roundby(tile_y, tile_height)
-        """
-
         map_width_in_tiles = (self.size[0] / tile_width)
-        print
-        print
-        print 'pixel coord: %d, %d' % coord
-        print 'map width in tiles: %d' % map_width_in_tiles
-        print 'tile size: %d, %d' % self.tile_size
-        print 'corresponding tile: %d, %d' % (tile_x, tile_y)
+        print map_width_in_tiles
 
         return self.properties[map_width_in_tiles * tile_y + tile_x]
-
-    def scale(self, x, y):
-        """scale to new pixel dimensions"""
-
-        pass
 
 
 class TileSwatch(object):
@@ -287,7 +303,7 @@ class TileSwatch(object):
 
 class TileProperties(object):
 
-    def __init__(self, properties=None):
+    def __init__(self, properties=None, rect=None):
         """List of properties.
 
         Primarly scaffolding.
@@ -303,6 +319,7 @@ class TileProperties(object):
         Args:
           properties (list): a list of strings, namely properties as
             seen above.
+          rect (pygame.Rect): useful if doing collision detection
 
         Examples:
           >>> tile_properties = TileProperties(['teleport', 'sticky'])
@@ -312,6 +329,8 @@ class TileProperties(object):
           ['teleport', 'sticky']
 
         """
+
+        self.rect = rect or None
 
         if properties:
             self.properties = frozenset(properties)
@@ -465,7 +484,7 @@ def load_tilemap(tilemap_name):
               '''
         cursor.execute(sql, (i,))
         tile_properties = [row[0] for row in cursor.fetchall()]
-        tiles_properties = TileProperties(tile_properties)
+        tile_properties = TileProperties(tile_properties)
         properties.append(tile_properties)
 
     tilemap = TileMap(
@@ -522,7 +541,7 @@ def new_tilemap(tilemap_name):
         row = ['default' for x in xrange(NEW_SCENE_TILES_WIDE)]
         layer.append(row)
 
-    layer[1][1] = 'water'
+    layer[0][1] = 'water'
     layers = [layer]
     tilemap = TileMap(
                       name=tilemap_name,

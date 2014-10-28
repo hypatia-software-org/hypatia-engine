@@ -66,12 +66,14 @@ class Walkabout(object):
                                            walkabout_directory)
         sprite_name_pattern = os.path.join(walkabout_directory, '*.gif')
         self.sprites = {}
+        self.size = None
 
         for sprite_path in glob.iglob(sprite_name_pattern):
             file_name, file_ext = os.path.splitext(sprite_path)
             file_name = os.path.split(file_name)[1]
             action, direction = file_name.split('_', 1)
             animation = render.gif_to_pyganim(sprite_path)
+            self.size = animation.getMaxSize()
 
             try:
                 self.sprites[action][direction] = animation
@@ -81,7 +83,31 @@ class Walkabout(object):
         self.action = 'stand'
         self.direction = 'up'
         self.position = start_position or (0, 0)  # px values
-        self.speed = 20  # one pixel per update
+        self.speed = 20  # pixels per update
+
+    def scale(self, dimensions):
+        """Uniform rescale of all the animations.
+
+        Args:
+          dimensions (tuple): (x, y) pixel dimensions to scale all
+            animations to.
+
+        Returns:
+          None
+
+        """
+
+        new_x, new_y = dimensions
+
+        for action, directions in self.sprites.items():
+
+            for direction, sprite in directions.items():
+                sprite_x, sprite_y = sprite.getMaxSize()
+                sprite.scale(dimensions)
+
+        self.size = dimensions
+
+        return None
 
     def move(self, direction, tilemap):
         """
@@ -94,7 +120,6 @@ class Walkabout(object):
         """
 
         self.direction = direction
-        self.action = 'walk'
         x, y = self.position
 
         if direction == 'up':
@@ -106,14 +131,17 @@ class Walkabout(object):
         elif direction == 'left':
             x -= self.speed
 
+        action = 'walk'
         new_position = (x, y)
-        properties = tilemap.get_properties((x, y))
+        properties = tilemap.get_properties(new_position)
+        sprite_rect = pygame.Rect(new_position, self.size)
 
-        if 'impass_all' in properties:
+        if properties.rect and properties.rect.colliderect(sprite_rect):
 
             return None
 
         self.position = (x, y)
+        self.action = action
 
         return None
 

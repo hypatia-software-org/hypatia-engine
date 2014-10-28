@@ -60,29 +60,16 @@ def render(map_name):
     pygame.display.set_caption('Animation')
 
     player = entities.Player()
+    sprite_x, sprite_y = player.walkabout.size
+    screen_x, screen_y = screen_size
+    new_player_size = (screen_x / sprite_x, screen_y / sprite_y)
+    player.walkabout.scale(new_player_size)
+
     tilemap = tiles.load_tilemap('debug')
+    tilemap.scale(screen_size)
     player_controller = controllers.Controller(player, tilemap)
 
-    # scale layers to screen size
-    layers = []
-
-    for layer in tilemap.layers:
-        image = pygame.transform.scale(layer, screen_size).convert()
-        layers.append(image)
-
-    tilemap.layers = layers
-    tile_size_x = screen_size[0] / tilemap.tile_size[0]
-    tile_size_y = screen_size[1] / tilemap.tile_size[1]
-    tilemap.tile_size = (tile_size_x, tile_size_y)
-    tilemap.size = screen_size
     screen_x, screen_y = screen_size
-
-    for action, directions in player.walkabout.sprites.items():
-
-        for direction, sprite in directions.items():
-            sprite_x, sprite_y = sprite.getMaxSize()
-            new_size = (screen_x / sprite_x, screen_y / sprite_y)
-            sprite.scale(new_size)
 
     while True:
         screen.blit(tilemap.layers[0], (0, 0))
