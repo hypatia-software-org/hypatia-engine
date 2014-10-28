@@ -72,8 +72,6 @@ class Walkabout(object):
             file_name = os.path.split(file_name)[1]
             action, direction = file_name.split('_', 1)
             animation = render.gif_to_pyganim(sprite_path)
-            animation.convert()
-            animation.play()
 
             try:
                 self.sprites[action][direction] = animation
