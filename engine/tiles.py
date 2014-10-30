@@ -4,21 +4,25 @@
 # This module is part of Untitled Game Engine and is released under the
 # Attribution Assurance License: http://opensource.org/licenses/AAL
 
-"""tile-based map management.
+"""tile engine for maps.
 
-TileMap consists of graphical tiles from a TileSwatch. It also
-consists of TileProperties which correspond to a tile on the map.
+See: http://en.wikipedia.org/wiki/Tile_engine
 
-Using "paint by number" as an analogy:
-  * TileMap is the canvas/picture with number cells (the canvas)
-  * TileSwatch defines what those numbers correspond to
-    (the paint palettte)
+Uses an abstraction similar to "painting by numbers."
+  * MapBlueprint has list of tile names (the "numbers") and the swatch
+    of tile images (the "colors") which correspond to aforementioned
+    tile names (the "numbers").
+  * A layer image is the completed paint by number image
+  * MapBlueprint used to generate LayerImages, which is a series of
+    layer images in ascending order of z-index.
 
-Each tile of the first layer in a TileMap has its respective
-TileProperties object. Every tile in a TileSwatch has default
-properties defined in its swatch.ini.
+Only the first layer of tiles can/will generate corresponding/default
+TileProperties; this is a 2D system with SOME layering support.
 
-For more info: http://en.wikipedia.org/wiki/Tile_engine
+LayerImages can be generated through a MapBlueprint, which requires a
+swatch directory (of tile images), as well as a 2D tuple representing
+x, y coordinates, consisting of tile names referring to images in the
+aforementioned swatch directory.
 
 """
 
@@ -35,7 +39,7 @@ __author__ = "Lillian Lynn Mahoney"
 __copyright__ = "Copyright 2014, Lillian Lynn Mahoney"
 __credits__ = ["Lillian Mahoney"]
 __license__ = "Attribution Assurance License"
-__version__ = "0.6"
+__version__ = "0.7"
 __maintainer__ = "Lillian Mahoney"
 __email__ = "lillian.lynn.mahoney@gmail.com"
 __status__ = "Development"
@@ -47,76 +51,86 @@ NEW_SCENE_SWATCH = 'debug'
 
 
 class BadTileName(Exception):
-    """KeyError raised when searching for key in the TileSwatch's
-    {name: image} dictionary.
+    """TileSwatch: non-existant tile name referenced"""
 
-    No tile by name %(key)s.
+    def __init__(self, swatch_name, bad_tile_name)
+        """Inform user of which tile name was attempted in vain.
 
-    """
+        Args:
+          swatch_name (str): the name of the swatch used, whereas a
+            lookup for bad_tile_name was performed, but raised KeyError
+          bad_tile_name (str): the tile name which was looked up, but
+            didn't exist/have a corresponding value in swatch.
 
-    def __init__(self, swatch_name, key):
+        """
+
         message = ('TileSwatch: no tile by name "%s"'  % (key, swatch_name))
         Exception.__init__(self, message)
 
 
 class MissingLayerMethod(Exception):
-    """Occurs when the user does not provide image_layers or
-    make_layers + swatch.
+    """TileMap: no supplied method for setting tilemap.layer_images.
+
+    Occurs when the user does not provide layer_images nor
+    map_blueprint.
 
     """
 
     def __init__(self):
-        message = ('TileMap requries image_layers OR make_layers + swatch')
+        message = 'TileMap: must supply layer_images OR map_blueprint'
         Exception.__init__(self, message)
 
 
 class TileMap(object):
+    """Renderable map and its respective tile data.
+
+    Attributes:
+      name (str): this is also used for the SQLITE database file name.
+      layer_images (LayerImages): rendered in ascending order.
+      properties (tuple): 1D tuple whereas each element corresponds to
+        a 2D tile coordinate/tile. Note: there is only one layer of
+        properties, default properties are defined in a TileSwatch.
+      impassability (tuple): tuple of pygame.Rect objects; created
+        using properties; if a TileProperties has a valid self.rect,
+        it'll be in the impassability tuple. You can use this for
+        collision checking, or you can use get_properties, or
+        __getitem__.
+
+    Planned features:
+      * background_layers (BackgroundLayers): this object also has
+        paralax settings.
+
+    """
 
     def __init__(self, name, layer_images=None,
-                 blueprint=None, properties=None):
-        """Tile (cell) based map. Each tile of the first layer has
-        TileProperties, which you can reference by pixel or tile
-        coordinate.
+                 map_blueprint=None, properties=None):
+        """Attributes chiefly extrapolated from map_blueprint or
+        layer_images.
 
-        You can either provide the layer images as a list of pygame
-        surfaces (image_layers), or you can provide a 2D list of tile
-        names/strings (make_layers) and a TileSwatch, which defines
-        said names (swatch).
+        You must either provide layer_images or map_blueprint.
 
         Args:
           name (str): will be used for sqlite db and other things
-
-          image_layers (list|None): 1D list of pygame.Surface objects
-            to use as the TileMap's graphical layers.
-          tile_size (tuple|None): (x, y) in pixels, ONLY USE IF USING
-            image_layers!
- 
-          make_layers (list|None): list of 2D lists, whose elements
-            are strings referencing a corresponding TileSwatch
-            tile name.
-          swatch (TileSwatch|None): TileSwatch which defines the
-            tile names used in tiles arg. ONLY USE IF USING make_layers!
-
+          layer_images (LayerImages|None): provide LayerImages that was
+            ALREADY generated from map_blueprint, thus skipping the
+            LayerImages generation process.
+          map_blueprint (MapBlueprint|None): --
           properties (list|None): list of TileProperties (cascade over
             defaults)
 
-        Planned Features:
-          * plans to implement paralax--effect applied to tilemap.bg
-            or tilemap.fg?
-
         """
 
-        if blueprint:
-            tile_names = blueprint.tile_names
+        if map_blueprint:
+            tile_names = map_blueprint.tile_names
             first_layer = tile_names[0]
-            tile_size = blueprint.swatch.tile_size
+            tile_size = map_blueprint.swatch.tile_size
             size = (len(first_layer[0]), len(first_layer), len(tile_names))
 
             layer_width = len(first_layer[0]) * tile_size[0]
             layer_height = len(first_layer) * tile_size[1]
             layer_size = (layer_width, layer_height)
 
-            swatch = blueprint.swatch
+            swatch = map_blueprint.swatch
             properties = [swatch.properties[x] for y in first_layer for x in y]
             layer_images = []
 
@@ -258,7 +272,7 @@ class LayerImages(object):
         self.height_in_tiles = self.height_in_pixels / self.tile_size[1]
 
 
-class Blueprint(object):
+class MapBlueprint(object):
 
     def __init__(self, tile_names, swatch_name):
         self.tile_names = tile_names
@@ -562,7 +576,7 @@ def new_tilemap(tilemap_name):
 
     layer[0][2] = 'water'
     layers = [layer]
-    blueprint = Blueprint(layers, NEW_SCENE_SWATCH)
+    blueprint = MapBlueprint(layers, NEW_SCENE_SWATCH)
     tilemap = TileMap(
                       name=tilemap_name,
                       blueprint=blueprint
