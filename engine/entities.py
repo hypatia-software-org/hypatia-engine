@@ -87,7 +87,7 @@ class Walkabout(object):
         self.position = start_position or (0, 0)  # px values
         self.speed = 0.25  # pixels per update
 
-    def scale(self, dimensions):
+    def resize(self, dimensions):
         """Uniform rescale of all the animations.
 
         Args:

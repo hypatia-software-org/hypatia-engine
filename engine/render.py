@@ -63,21 +63,21 @@ def render(map_name):
     sprite_x, sprite_y = player.walkabout.size
     screen_x, screen_y = screen_size
     new_player_size = (screen_x / sprite_x, screen_y / sprite_y)
-    player.walkabout.scale(new_player_size)
+    player.walkabout.resize(new_player_size)
 
     tilemap = tiles.load_tilemap('debug')
-    tilemap.scale(screen_size)
+    tilemap.resize(screen_size)
     player_controller = controllers.Controller(player, tilemap)
 
     screen_x, screen_y = screen_size
 
-    tile_width, tile_height = tilemap.tile_size
+    tile_width, tile_height = tilemap.layer_images.tile_size
 
     while True:
-        screen.blit(tilemap.layers[0], (0, 0))
+        screen.blit(tilemap.layer_images.images[0], (0, 0))
         player.walkabout.blit(screen)
 
-        for layer in tilemap.layers[1:]:
+        for layer in tilemap.layer_images.images[1:]:
             screen.blit(layer, (0, 0))
 
         player_controller.update()
