@@ -149,8 +149,11 @@ class TileMap(object):
         self.size = size
         self.tile_size = tile_size
         self.properties = properties
+        self.impassability = []
+        self.make_impassability()
 
-    def make_impass_rects(self):
+    def make_impassability(self):
+        impassability = []
         pixels_x, pixels_y = self.size
         tile_width, tile_height = self.tile_size
         tiles_wide = pixels_x / tile_width
@@ -163,7 +166,10 @@ class TileMap(object):
 
             if 'impass_all' in tile_properties:
                 rect = pygame.Rect(top_left, self.tile_size)
+                impassability.append(rect)
                 tile_properties.rect = rect
+
+        self.impassability = impassability
 
         return None
 
@@ -195,7 +201,7 @@ class TileMap(object):
         self.tile_size = (tile_size_x, tile_size_y)
         self.size = dimensions
 
-        self.make_impass_rects()
+        self.make_impassability()
 
         return None
 
@@ -212,9 +218,10 @@ class TileMap(object):
         """
 
         x, y = coord
-        height, width = self.size
+        __, width = self.size
+        width = width / self.tile_size[0]
 
-        return self.properties[width * y + x]
+        return self.properties[(width * y) + x]
 
     def get_properties(self, coord):
         """Fetch TileProperties by pixel coordinate.
@@ -233,10 +240,7 @@ class TileMap(object):
         tile_x = pixel_x / tile_width
         tile_y = pixel_y / tile_height
 
-        map_width_in_tiles = (self.size[0] / tile_width)
-        print map_width_in_tiles
-
-        return self.properties[map_width_in_tiles * tile_y + tile_x]
+        return self[(tile_x, tile_y)]
 
 
 class TileSwatch(object):
@@ -541,7 +545,7 @@ def new_tilemap(tilemap_name):
         row = ['default' for x in xrange(NEW_SCENE_TILES_WIDE)]
         layer.append(row)
 
-    layer[0][1] = 'water'
+    layer[0][2] = 'water'
     layers = [layer]
     tilemap = TileMap(
                       name=tilemap_name,

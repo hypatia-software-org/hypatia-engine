@@ -133,14 +133,15 @@ class Walkabout(object):
 
         action = 'walk'
         new_position = (x, y)
-        properties = tilemap.get_properties(new_position)
         sprite_rect = pygame.Rect(new_position, self.size)
 
-        if properties.rect and properties.rect.colliderect(sprite_rect):
+        for rect in tilemap.impassability:
 
-            return None
+            if rect and rect.colliderect(sprite_rect):
 
-        self.position = (x, y)
+                return None
+
+        self.position = new_position
         self.action = action
 
         return None

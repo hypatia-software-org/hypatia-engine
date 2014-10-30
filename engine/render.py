@@ -71,6 +71,8 @@ def render(map_name):
 
     screen_x, screen_y = screen_size
 
+    tile_width, tile_height = tilemap.tile_size
+
     while True:
         screen.blit(tilemap.layers[0], (0, 0))
         player.walkabout.blit(screen)
