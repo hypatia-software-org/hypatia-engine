@@ -62,3 +62,4 @@ sphinx-doc/
 
 # misc
 *.core
+*.db
