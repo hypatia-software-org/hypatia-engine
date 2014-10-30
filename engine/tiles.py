@@ -39,7 +39,7 @@ __author__ = "Lillian Lynn Mahoney"
 __copyright__ = "Copyright 2014, Lillian Lynn Mahoney"
 __credits__ = ["Lillian Mahoney"]
 __license__ = "Attribution Assurance License"
-__version__ = "0.7"
+__version__ = "0.7.2"
 __maintainer__ = "Lillian Mahoney"
 __email__ = "lillian.lynn.mahoney@gmail.com"
 __status__ = "Development"
@@ -53,7 +53,7 @@ NEW_SCENE_SWATCH = 'debug'
 class BadTileName(Exception):
     """TileSwatch: non-existant tile name referenced"""
 
-    def __init__(self, swatch_name, bad_tile_name)
+    def __init__(self, swatch_name, bad_tile_name):
         """Inform user of which tile name was attempted in vain.
 
         Args:
@@ -65,20 +65,20 @@ class BadTileName(Exception):
         """
 
         message = ('TileSwatch: no tile by name "%s"'  % (key, swatch_name))
-        Exception.__init__(self, message)
+        super(BatTileName, self).__init__(message)
 
 
 class MissingLayerMethod(Exception):
-    """TileMap: no supplied method for setting tilemap.layer_images.
+    """TileMap: no method provided for setting tilemap.layer_images.
 
-    Occurs when the user does not provide layer_images nor
+    Occurs when the user provides neither layer_images nor
     map_blueprint.
 
     """
 
     def __init__(self):
         message = 'TileMap: must supply layer_images OR map_blueprint'
-        Exception.__init__(self, message)
+        super(MissingLayerMethod, self).__init__(message)
 
 
 class TileMap(object):
@@ -576,10 +576,10 @@ def new_tilemap(tilemap_name):
 
     layer[0][2] = 'water'
     layers = [layer]
-    blueprint = MapBlueprint(layers, NEW_SCENE_SWATCH)
+    map_blueprint = MapBlueprint(layers, NEW_SCENE_SWATCH)
     tilemap = TileMap(
                       name=tilemap_name,
-                      blueprint=blueprint
+                      map_blueprint=map_blueprint
                      )
     save_tilemap(tilemap)
 

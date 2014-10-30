@@ -2,7 +2,7 @@
 Lillian Lynn Mahoney <lillian.lynn.mahoney@gmail.com>
 1, 2014-10-11
 
-This is a game engine for an untitled game I'm developing. The game is a top-down 2D tile-based puzzle/action game in the vein of __Zelda: Oracle of Ages__ and __Zelda: Oracle of Seasons__ as well as __Zelda: Link's Awakening__ (TL;DR: all the Capcom Game Boy Zelda games).
+This is a game engine for an untitled game I'm developing. The game is a top-down 2D tile-based puzzle/action game in the vein of __Zelda: Oracle of Ages__ and __Zelda: Oracle of Seasons__ as well as __Zelda: Link's Awakening__.
 
 Definitely inspired by http://rpg.hamsterrepublic.com/ohrrpgce/Main_Page[Official Hamster Republic Role Playing Game Construction Engine (OHRRPGCE)].
 
