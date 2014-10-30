@@ -56,6 +56,8 @@ class Walkabout(object):
           start_position (tuple): (x, y) coordinates (integers)
             referring to absolute pixel coordinate.
           speed (int): the number of pixels moved per update/frame.
+            Fraction of self.size; 1.0 is self.size,
+            0.5 is self.size / 2.
 
         Unfinished:
           * Anchors: head, hands, feet, torso
@@ -83,7 +85,7 @@ class Walkabout(object):
         self.action = 'stand'
         self.direction = 'up'
         self.position = start_position or (0, 0)  # px values
-        self.speed = 20  # pixels per update
+        self.speed = 0.25  # pixels per update
 
     def scale(self, dimensions):
         """Uniform rescale of all the animations.
@@ -121,15 +123,16 @@ class Walkabout(object):
 
         self.direction = direction
         x, y = self.position
+        speed = self.size[0] * self.speed
 
         if direction == 'up':
-            y -= self.speed
+            y -= speed
         elif direction == 'right':
-            x += self.speed
+            x += speed
         elif direction == 'down':
-            y += self.speed
+            y += speed
         elif direction == 'left':
-            x -= self.speed
+            x -= speed
 
         action = 'walk'
         new_position = (x, y)
