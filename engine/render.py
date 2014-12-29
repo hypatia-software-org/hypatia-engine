@@ -4,16 +4,12 @@
 # This module is part of Untitled Game Engine and is released under the
 # Attribution Assurance License: http://opensource.org/licenses/AAL
 
-"""render.py: how stuff displays? it puts it all together.
+"""render.py: screen presentation and manipulation
 
-Visual/aesthetically oriented code.
+The "view" in the model/view/controller paradigm.
 
 I need to make sure graphics are being converted
 for efficiency at runtime...
-
-This is currently hacked together.
-
-Should have camera control.
 
 """
 
@@ -31,24 +27,25 @@ __author__ = "Lillian Lemmer"
 __copyright__ = "Copyright 2014, Lillian Lemmer"
 __credits__ = ["Lillian Mahoney"]
 __license__ = "Attribution Assurance License"
-__version__ = "0.8"
 __maintainer__ = "Lillian Lemmer"
 __email__ = "lillian.lynn.lemmer@gmail.com"
 __status__ = "Development"
 
 
+FPS = 30
+
 # the viewport width/height in pixels
-VIEWBOX_X = 50
-VIEWBOX_Y = 50
+VIEWPORT_X = 50
+VIEWPORT_Y = 50
 
 
 def render(map_name):
-    """IDK this is a test render job.
+    """Render a map, simulate world.
 
-    Needs so much work. :/
+    Mostly a basic test for development purposes.
 
     Args:
-      map_name: map to render?
+      map_name (tiles.TileMap): tile map to render
 
     Returns:
       None
@@ -56,7 +53,6 @@ def render(map_name):
     """
 
     pygame.init()
-    fps = 30
     clock = pygame.time.Clock()
     display_info = pygame.display.Info()
     screen_size = (display_info.current_w, display_info.current_h)
@@ -64,17 +60,15 @@ def render(map_name):
                                      screen_size,
                                      FULLSCREEN | DOUBLEBUF
                                     )
-    pygame.display.set_caption('Untitled Game')
 
-    viewbox = pygame.Surface((VIEWBOX_X, VIEWBOX_Y))
-    viewbox_start_x = 0
-    viewbox_start_y = 0
-    viewbox_end_x = VIEWBOX_X
-    viewbox_end_y = VIEWBOX_Y
+    viewport = pygame.Surface((VIEWPORT_X, VIEWPORT_Y))
+    viewport_start_x = 0
+    viewport_start_y = 0
+    viewport_end_x = VIEWPORT_X
+    viewport_end_y = VIEWPORT_Y
 
     tilemap = tiles.load_tilemap('debug')
     tilemap.layer_images.convert()
-    tile_width, tile_height = tilemap.layer_images.tile_size
 
     player = entities.Player()
     player_controller = controllers.Controller(player, tilemap)
@@ -83,46 +77,45 @@ def render(map_name):
         player_pos_x, player_pos_y = player.walkabout.rect.center
 
         # if player goes off the right of the screen...
-        if player_pos_x > viewbox_end_x:
-            viewbox_start_x += VIEWBOX_X
-            viewbox_end_x += VIEWBOX_X
+        if player_pos_x > viewport_end_x:
+            viewport_start_x += VIEWPORT_X
+            viewport_end_x += VIEWPORT_X
 
         # if player goes off the left of the screen...
-        elif player_pos_x < viewbox_start_x:
-            viewbox_start_x -= VIEWBOX_X
-            viewbox_end_x -= VIEWBOX_X
+        elif player_pos_x < viewport_start_x:
+            viewport_start_x -= VIEWPORT_X
+            viewport_end_x -= VIEWPORT_X
 
         # if player goes off bottom of screen...
-        elif player_pos_y > viewbox_end_y:
-            viewbox_start_y += VIEWBOX_Y
-            viewbox_end_y += VIEWBOX_Y
+        elif player_pos_y > viewport_end_y:
+            viewport_start_y += VIEWPORT_Y
+            viewport_end_y += VIEWPORT_Y
 
         # if player goes off top of screen...
-        elif player_pos_y < viewbox_start_y:
-            viewbox_start_y -= VIEWBOX_Y
-            viewbox_end_y -= VIEWBOX_Y
+        elif player_pos_y < viewport_start_y:
+            viewport_start_y -= VIEWPORT_Y
+            viewport_end_y -= VIEWPORT_Y
 
-        viewbox.blit(
+        viewport.blit(
                      tilemap.layer_images.images[0],
                      (0, 0),
-                     (viewbox_start_x, viewbox_start_y,
-                      VIEWBOX_X, VIEWBOX_Y)
+                     (viewport_start_x, viewport_start_y,
+                      VIEWPORT_X, VIEWPORT_Y)
                     )
 
         for layer in tilemap.layer_images.images[1:]:
-            viewbox.blit(layer, (0, 0))
+            viewport.blit(layer, (0, 0))
 
         player_controller.update()
-        player.walkabout.blit(viewbox, (viewbox_start_x, viewbox_start_y))
-        pygame.display.update()
+        player.walkabout.blit(viewport, (viewport_start_x, viewport_start_y))
 
-        new = pygame.transform.scale(viewbox, screen_size)
+        scaled_viewport = pygame.transform.scale(viewport, screen_size)
         screen.blit(
-                    new,
+                    scaled_viewport,
                     (0, 0)
                    )
         pygame.display.flip()
-        clock.tick(fps)
+        clock.tick(FPS)
 
     return None
 

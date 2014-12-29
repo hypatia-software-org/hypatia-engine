@@ -1,5 +1,5 @@
 # engine/entities.py
-# Lillian Lemmer <lillian.lynn.lemmer@gmail.com>
+# Lillian Mahoney <lillian.lynn.mahoney@gmail.com>
 #
 # This module is part of Untitled Game Engine and is released under the
 # Attribution Assurance License: http://opensource.org/licenses/AAL
@@ -14,13 +14,12 @@ import pygame
 from collections import OrderedDict
 
 
-__author__ = "Lillian Lemmer"
-__copyright__ = "Copyright 2014, Lillian Lemmer"
-__credits__ = ["Lillian Lemmer"]
+__author__ = "Lillian Mahoney"
+__copyright__ = "Copyright 2014, Lillian Mahoney"
+__credits__ = ["Lillian Mahoney"]
 __license__ = "Attribution Assurance License"
-__version__ = "0.5"
-__maintainer__ = "Lillian Lemmer"
-__email__ = "lillian.lynn.lemmer@gmail.com"
+__maintainer__ = "Lillian Mahoney"
+__email__ = "lillian.lynn.mahoney@gmail.com"
 __status__ = "Development"
 
 
