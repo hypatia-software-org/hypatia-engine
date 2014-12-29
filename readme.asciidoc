@@ -26,6 +26,8 @@ You'll need http://pygame.org/news.html[pygame] and http://www.pythonware.com/pr
 
 == License: Attribution Assurance License
 
+This will probably change to one of the MIT licenses...
+
 See __license.txt.asc__ which is singed by gnu-pg in FreeBSD. See __license.txt__ for unsigned license.
 
 Clearsigned in FreeBSD, as so:
