@@ -23,6 +23,8 @@ There's only a demo for now; run test.py.
 
   * http://pygame.org/news.html[pygame]
   * http://www.pythonware.com/products/pil/[pil]
+  * http://inventwithpython.com/pyganim/[pyganim]
+  * Also Python SQLITE3 module (I had to +pkg install py27-sqlite3+ or something in FreeBSD)
 
 == License: Attribution Assurance License
 
