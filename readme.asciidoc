@@ -13,6 +13,7 @@ Lillian Lynn Mahoney <lillian.lynn.mahoney@gmail.com>
 *Future plans:*
 
   * Procedural generation of various objects
+  * Possibility of multiplayer
   * Game editor; some rudimentary game editing tools. The editor I have in mind is inspired by http://rpg.hamsterrepublic.com/ohrrpgce/Main_Page[Official Hamster Republic Role Playing Game Construction Engine (OHRRPGCE)].
 
 == Setup
