@@ -1,32 +1,18 @@
 = Untitled Game Engine
 Lillian Lynn Mahoney <lillian.lynn.mahoney@gmail.com>
-1, 2014-10-11
+2, 2014-12-29
 
-This is a game engine for an untitled game I'm developing. The game is a top-down 2D tile-based puzzle/action game in the vein of __Zelda: Oracle of Ages__ and __Zelda: Oracle of Seasons__ as well as __Zelda: Link's Awakening__.
+Game engine for a future planned game, which will be a procedurally-generated item-centric top-down 2D tile-based puzzle/action game vein of __Zelda: Oracle of Ages__ and __Zelda: Oracle of Seasons__ as well as __Zelda: Link's Awakening__.
+  * Tile based map rendering and management
+  * Game entity management
+  * Input handling
+  * Resource management
 
-Definitely inspired by http://rpg.hamsterrepublic.com/ohrrpgce/Main_Page[Official Hamster Republic Role Playing Game Construction Engine (OHRRPGCE)].
+Future plans:
+  * Procedural generation of various objects
+  * Game editor; some rudimentary game editing tools. The editor I have in mind is inspired by http://rpg.hamsterrepublic.com/ohrrpgce/Main_Page[Official Hamster Republic Role Playing Game Construction Engine (OHRRPGCE)].
 
-*Current features:*
-
-  * controller abstraction
-  * walkabout sprite abstraction
-  ** easy-to-manage walkabout sprites
-  * rudimentary rendering, scaling
-  * tile map, swatch abstractions
-  ** easy-to-manage tile swatches
-  ** save maps
-  ** load maps
-  ** create new maps
-  ** layer support with RGBA
-
-*Planned features:*
-
-  * map editor (GUI)
-  * map backgrounds
-  * map paralax
-  * walkabout sprite "anchors"
-  ** generate walkabout sprites with different pieces of hair, characteristics (like scars) and the like
-  ** equipment sprite anchors
+See the wiki's features page for more details.
 
 == Setup
 
@@ -35,6 +21,8 @@ Sorry, there's no __setup.py__, yet.
 ----
 pip install -r requirements.txt
 ----
+
+You'll need pygame and pil.
 
 == License: Attribution Assurance License
 
@@ -47,10 +35,3 @@ Clearsigned in FreeBSD, as so:
 $ gpg --gen-key
 $ gpg --clearsign license.txt
 ----
-
-== Documentation
-
-I use Sphinx to autogen the API docs from my Google-style docstrings.
-
-Here's where I'm hosting it, at the moment: http://asciidoc.sockmonki.com/build
-
