@@ -14,7 +14,7 @@ Future plans:
   * Procedural generation of various objects
   * Game editor; some rudimentary game editing tools. The editor I have in mind is inspired by http://rpg.hamsterrepublic.com/ohrrpgce/Main_Page[Official Hamster Republic Role Playing Game Construction Engine (OHRRPGCE)].
 
-For more details please read the wiki's https://github.com/lillian-mahoney/untitled-game-engine/wiki/Current-Features[current features page] for more details.
+For more details please read the wiki's https://github.com/lillian-mahoney/untitled-game-engine/wiki/Current-Features[current features page].
 
 == Setup
 
