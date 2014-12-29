@@ -1,6 +1,6 @@
 = Untitled Game Engine
 Lillian Lynn Mahoney <lillian.lynn.mahoney@gmail.com>
-2, 2014-12-29
+3, 2014-12-29
 
 Game engine for a future planned game, which will be a procedurally-generated item-centric top-down 2D tile-based puzzle/action game vein of __Zelda: Oracle of Ages__ and __Zelda: Oracle of Seasons__ as well as __Zelda: Link's Awakening__.
 
@@ -14,7 +14,7 @@ Future plans:
   * Procedural generation of various objects
   * Game editor; some rudimentary game editing tools. The editor I have in mind is inspired by http://rpg.hamsterrepublic.com/ohrrpgce/Main_Page[Official Hamster Republic Role Playing Game Construction Engine (OHRRPGCE)].
 
-See the wiki's features page for more details.
+See https://github.com/lillian-mahoney/untitled-game-engine/wiki/Current-Features[the wiki's current features page] for more details.
 
 == Setup
 
