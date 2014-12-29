@@ -15,7 +15,7 @@ Lillian Lynn Mahoney <lillian.lynn.mahoney@gmail.com>
   * Procedural generation of various objects
   * Possibility of multiplayer
   * Game editor; some rudimentary game editing tools. The editor I have in mind is inspired by http://rpg.hamsterrepublic.com/ohrrpgce/Main_Page[Official Hamster Republic Role Playing Game Construction Engine (OHRRPGCE)].
-  * For more details please read the wiki's https://github.com/lillian-mahoney/untitled-game-engine/wiki/Planned-Features[planned features].
+  * For more details please read the wiki's https://github.com/lillian-mahoney/untitled-game-engine/wiki/Planned-Features[planned features page].
 
 == Setup
 
