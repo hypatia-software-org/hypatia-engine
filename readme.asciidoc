@@ -16,13 +16,11 @@ See the wiki's features page for more details.
 
 == Setup
 
-Sorry, there's no __setup.py__, yet.
+There's only a demo for now; run test.py.
 
-----
-pip install -r requirements.txt
-----
-
-You'll need http://pygame.org/news.html[pygame] and http://www.pythonware.com/products/pil/[pil].
+*Dependencies:*
+  * http://pygame.org/news.html[pygame]
+  * http://www.pythonware.com/products/pil/[pil]
 
 == License: Attribution Assurance License
 
