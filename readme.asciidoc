@@ -1,8 +1,8 @@
 = Untitled Game Engine
 Lillian Lynn Mahoney <lillian.lynn.mahoney@gmail.com>
-3, 2014-12-29
+4, 2014-12-29
 
-Game engine for a future planned game, which will be a procedurally-generated item-centric top-down 2D tile-based puzzle/action game vein of __Zelda: Oracle of Ages__ and __Zelda: Oracle of Seasons__ as well as __Zelda: Link's Awakening__.
+*Experimental/in early development* game engine for a future planned game: a procedurally-generated item-centric top-down 2D tile-based puzzle/action game vein of __Zelda: Oracle of Ages__ and __Zelda: Oracle of Seasons__ as well as __Zelda: Link's Awakening__.
 
   * Tile based map rendering and management
   * Game entity management
