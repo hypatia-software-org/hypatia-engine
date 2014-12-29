@@ -22,7 +22,7 @@ Sorry, there's no __setup.py__, yet.
 pip install -r requirements.txt
 ----
 
-You'll need pygame and pil.
+You'll need http://pygame.org/news.html[pygame] and http://www.pythonware.com/products/pil/[pil].
 
 == License: Attribution Assurance License
 
