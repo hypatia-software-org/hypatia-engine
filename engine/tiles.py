@@ -45,8 +45,8 @@ __email__ = "lillian.lynn.mahoney@gmail.com"
 __status__ = "Development"
 
 
-NEW_SCENE_TILES_WIDE = 10
-NEW_SCENE_TILES_TALL = 10
+NEW_SCENE_TILES_WIDE = 40
+NEW_SCENE_TILES_TALL = 30
 NEW_SCENE_SWATCH = 'debug'
 
 
@@ -121,41 +121,17 @@ class TileMap(object):
         """
 
         if map_blueprint:
-            tile_names = map_blueprint.tile_names
-            first_layer = tile_names[0]
-            tile_size = map_blueprint.swatch.tile_size
-            size = (len(first_layer[0]), len(first_layer), len(tile_names))
-
-            layer_width = len(first_layer[0]) * tile_size[0]
-            layer_height = len(first_layer) * tile_size[1]
-            layer_size = (layer_width, layer_height)
-
-            swatch = map_blueprint.swatch
-            properties = [swatch.properties[x] for y in first_layer for x in y]
-            layer_images = []
-
-            for z, layer in enumerate(tile_names):
-                new_layer = pygame.Surface(layer_size)
-
-                for y, row in enumerate(layer):
-
-                    for x, tile in enumerate(row):
-                        tile_position = (x * swatch.tile_size[0],
-                                         y * swatch.tile_size[1])
-                        new_layer.blit(swatch[tile], tile_position)
-
-                layer_images.append(new_layer)
-
-            self.layer_images = LayerImages(layer_images, tile_size)
+            self.layer_images, self.properties = map_blueprint.build()
 
         elif layer_images:
             self.layer_images = layer_images
+            self.properties = properties
+
         else:
 
             raise MissingLayerMethod()
 
         self.name = name
-        self.properties = properties
         self.make_impassability()
 
     def make_impassability(self):
@@ -176,27 +152,6 @@ class TileMap(object):
                 tile_properties.rect = rect
 
         self.impassability = impassability
-
-        return None
-
-    def resize(self, dimensions):
-        """Scale each layer to specified dimensions.
-
-        Scaling is for fullscreen stretch; after screen has
-        been initialized (dimensions is typically screen resolution).
-
-        Args:
-          dimensions (tuple): (x, y) pixel dimensions to rescale
-            each layer image to.
-
-        Returns:
-          None
-
-        """
-
-
-        self.layer_images.resize(dimensions)
-        self.make_impassability()
 
         return None
 
@@ -244,24 +199,10 @@ class LayerImages(object):
         self.tile_size = tile_size
         self.set_layer_meta()
 
-    def resize(self, dimensions):
-        """A runtime render operation"""
+    def convert(self):
 
-        images = []
-
-        for layer_image in self.images:
-            image = pygame.transform.scale(layer_image, dimensions)
+        for image in self.images:
             image.convert()
-            images.append(image)
-
-        self.images = images
-        tile_size_x = dimensions[0] / self.tile_size[0]
-        tile_size_y = dimensions[1] / self.tile_size[1]
-        self.tile_size = (tile_size_x, tile_size_y)
-
-        self.set_layer_meta()
-
-        return None
 
     def set_layer_meta(self):
         self.size_in_pixels =  self.images[0].get_size()
@@ -277,6 +218,44 @@ class MapBlueprint(object):
     def __init__(self, tile_names, swatch_name):
         self.tile_names = tile_names
         self.swatch = TileSwatch(swatch_name)
+
+    def build(self):
+        """I'm having fun with this; is this polymorphism?
+
+        Returns:
+          layer_images (LayerImages):
+          properties ():
+
+        """
+
+        tile_names = self.tile_names
+        first_layer = tile_names[0]
+        tile_size = self.swatch.tile_size
+        size = (len(first_layer[0]), len(first_layer), len(tile_names))
+
+        layer_width = len(first_layer[0]) * tile_size[0]
+        layer_height = len(first_layer) * tile_size[1]
+        layer_size = (layer_width, layer_height)
+
+        swatch = self.swatch
+        properties = [swatch.properties[x] for y in first_layer for x in y]
+        layer_images = []
+
+        for z, layer in enumerate(tile_names):
+            new_layer = pygame.Surface(layer_size)
+
+            for y, row in enumerate(layer):
+
+                for x, tile in enumerate(row):
+                    tile_position = (x * swatch.tile_size[0],
+                                     y * swatch.tile_size[1])
+                    new_layer.blit(swatch[tile], tile_position)
+
+            layer_images.append(new_layer)
+
+        layer_images = LayerImages(layer_images, tile_size)
+
+        return layer_images, properties
 
 
 class TileSwatch(object):

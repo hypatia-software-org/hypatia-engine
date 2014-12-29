@@ -8,9 +8,12 @@
 
 Visual/aesthetically oriented code.
 
-Worst tagline, ever.
+I need to make sure graphics are being converted
+for efficiency at runtime...
 
 This is currently hacked together.
+
+Should have camera control.
 
 """
 
@@ -24,15 +27,19 @@ import tiles
 import time
 import sys
 
-
-__author__ = "Lillian Lynn Mahoney"
-__copyright__ = "Copyright 2014, Lillian Lynn Mahoney"
+__author__ = "Lillian Lemmer"
+__copyright__ = "Copyright 2014, Lillian Lemmer"
 __credits__ = ["Lillian Mahoney"]
 __license__ = "Attribution Assurance License"
-__version__ = "0.4"
-__maintainer__ = "Lillian Mahoney"
-__email__ = "lillian.lynn.mahoney@gmail.com"
+__version__ = "0.8"
+__maintainer__ = "Lillian Lemmer"
+__email__ = "lillian.lynn.lemmer@gmail.com"
 __status__ = "Development"
+
+
+# the viewport width/height in pixels
+VIEWBOX_X = 50
+VIEWBOX_Y = 50
 
 
 def render(map_name):
@@ -57,31 +64,64 @@ def render(map_name):
                                      screen_size,
                                      FULLSCREEN | DOUBLEBUF
                                     )
-    pygame.display.set_caption('Animation')
+    pygame.display.set_caption('Untitled Game')
 
-    player = entities.Player()
-    sprite_x, sprite_y = player.walkabout.size
-    screen_x, screen_y = screen_size
-    new_player_size = (screen_x / sprite_x, screen_y / sprite_y)
-    player.walkabout.resize(new_player_size)
+    viewbox = pygame.Surface((VIEWBOX_X, VIEWBOX_Y))
+    viewbox_start_x = 0
+    viewbox_start_y = 0
+    viewbox_end_x = VIEWBOX_X
+    viewbox_end_y = VIEWBOX_Y
 
     tilemap = tiles.load_tilemap('debug')
-    tilemap.resize(screen_size)
-    player_controller = controllers.Controller(player, tilemap)
-
-    screen_x, screen_y = screen_size
-
+    tilemap.layer_images.convert()
     tile_width, tile_height = tilemap.layer_images.tile_size
 
+    player = entities.Player()
+    player_controller = controllers.Controller(player, tilemap)
+
     while True:
-        screen.blit(tilemap.layer_images.images[0], (0, 0))
-        player.walkabout.blit(screen)
+        player_pos_x, player_pos_y = player.walkabout.rect.center
+
+        # if player goes off the right of the screen...
+        if player_pos_x > viewbox_end_x:
+            viewbox_start_x += VIEWBOX_X
+            viewbox_end_x += VIEWBOX_X
+
+        # if player goes off the left of the screen...
+        elif player_pos_x < viewbox_start_x:
+            viewbox_start_x -= VIEWBOX_X
+            viewbox_end_x -= VIEWBOX_X
+
+        # if player goes off bottom of screen...
+        elif player_pos_y > viewbox_end_y:
+            viewbox_start_y += VIEWBOX_Y
+            viewbox_end_y += VIEWBOX_Y
+
+        # if player goes off top of screen...
+        elif player_pos_y < viewbox_start_y:
+            viewbox_start_y -= VIEWBOX_Y
+            viewbox_end_y -= VIEWBOX_Y
+
+        viewbox.blit(
+                     tilemap.layer_images.images[0],
+                     (0, 0),
+                     (viewbox_start_x, viewbox_start_y,
+                      VIEWBOX_X, VIEWBOX_Y)
+                    )
 
         for layer in tilemap.layer_images.images[1:]:
-            screen.blit(layer, (0, 0))
+            viewbox.blit(layer, (0, 0))
 
         player_controller.update()
+        player.walkabout.blit(viewbox, (viewbox_start_x, viewbox_start_y))
         pygame.display.update()
+
+        new = pygame.transform.scale(viewbox, screen_size)
+        screen.blit(
+                    new,
+                    (0, 0)
+                   )
+        pygame.display.flip()
         clock.tick(fps)
 
     return None

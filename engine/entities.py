@@ -1,5 +1,5 @@
 # engine/entities.py
-# Lillian Lynn Mahoney <lillian.lynn.mahoney@gmail.com>
+# Lillian Lemmer <lillian.lynn.lemmer@gmail.com>
 #
 # This module is part of Untitled Game Engine and is released under the
 # Attribution Assurance License: http://opensource.org/licenses/AAL
@@ -14,13 +14,13 @@ import pygame
 from collections import OrderedDict
 
 
-__author__ = "Lillian Lynn Mahoney"
-__copyright__ = "Copyright 2014, Lillian Lynn Mahoney"
-__credits__ = ["Lillian Mahoney"]
+__author__ = "Lillian Lemmer"
+__copyright__ = "Copyright 2014, Lillian Lemmer"
+__credits__ = ["Lillian Lemmer"]
 __license__ = "Attribution Assurance License"
-__version__ = "0.4"
-__maintainer__ = "Lillian Mahoney"
-__email__ = "lillian.lynn.mahoney@gmail.com"
+__version__ = "0.5"
+__maintainer__ = "Lillian Lemmer"
+__email__ = "lillian.lynn.lemmer@gmail.com"
 __status__ = "Development"
 
 
@@ -75,6 +75,7 @@ class Walkabout(object):
             file_name = os.path.split(file_name)[1]
             action, direction = file_name.split('_', 1)
             animation = render.gif_to_pyganim(sprite_path)
+            animation.convert()
             self.size = animation.getMaxSize()
 
             try:
@@ -84,83 +85,82 @@ class Walkabout(object):
 
         self.action = 'stand'
         self.direction = 'up'
-        self.position = start_position or (0, 0)  # px values
-        self.speed = 0.25  # pixels per update
+        self.speed = 3
 
-    def resize(self, dimensions):
-        """Uniform rescale of all the animations.
+        position = start_position or (0, 0)  # px values
+        self.rect = pygame.Rect(position, self.size)
 
-        Args:
-          dimensions (tuple): (x, y) pixel dimensions to scale all
-            animations to.
-
-        Returns:
-          None
-
+    def move(self, direction, tilemap, speed=None):
         """
 
-        new_x, new_y = dimensions
-
-        for action, directions in self.sprites.items():
-
-            for direction, sprite in directions.items():
-                sprite_x, sprite_y = sprite.getMaxSize()
-                sprite.scale(dimensions)
-
-        self.size = dimensions
-
-        return None
-
-    def move(self, direction, tilemap):
-        """
+        Will round down to nearest probable step if full step is impassable.
 
         Args:
           direction (str): may be one of: up, right, down, left
           tilemap (tiles.TileMap): tilemap for reference, so we can
             avoid walking into water and such.
+          speed (int|None): pixels per second or inherent speed.
 
         """
 
         self.direction = direction
-        x, y = self.position
-        speed = self.size[0] * self.speed
+        planned_movement_in_pixels = speed or self.speed
 
-        if direction == 'up':
-            y -= speed
-        elif direction == 'right':
-            x += speed
-        elif direction == 'down':
-            y += speed
-        elif direction == 'left':
-            x -= speed
+        while True:
+            x, y = self.rect.topleft
+            new_position_impossible = False
 
-        action = 'walk'
-        new_position = (x, y)
-        sprite_rect = pygame.Rect(new_position, self.size)
+            if direction == 'up':
+                y -= planned_movement_in_pixels
+            elif direction == 'right':
+                x += planned_movement_in_pixels
+            elif direction == 'down':
+                y += planned_movement_in_pixels
+            elif direction == 'left':
+                x -= planned_movement_in_pixels
 
-        for rect in tilemap.impassability:
+            new_position = (x, y)
+            new_sprite_rect = pygame.Rect(new_position, self.size)
 
-            if rect and rect.colliderect(sprite_rect):
+            # assure new position isn't on an impassable tile
+            for impass_rect in tilemap.impassability:
 
-                return None
+                if impass_rect and impass_rect.colliderect(new_sprite_rect):
+                    new_position_impossible = True
 
-        self.position = new_position
-        self.action = action
+            if new_position_impossible:
+                planned_movement_in_pixels -= 1
+            else:
 
-        return None
+                break
 
-    def blit(self, screen):
+        self.rect = new_sprite_rect
+        self.action = 'walk'
+
+        return True
+
+    def blit(self, screen, offset):
         """Draw the appropriate/active animation to screen.
 
         Args:
           screen (pygame.Surface): the primary display/screen.
+          offset (x, y tuple): the x, y coords of the absolute
+            starting top left corner for the current screen/viewport
+            position.
 
         Returns:
           None
 
         """
 
-        self.sprites[self.action][self.direction].blit(screen, self.position)
+        x, y = self.rect.topleft
+        x -= offset[0]
+        y -= offset[1]
+        position_on_screen = (x, y)
+        self.sprites[self.action][self.direction].blit(
+                                                       screen,
+                                                       position_on_screen
+                                                      )
 
         return None
 
