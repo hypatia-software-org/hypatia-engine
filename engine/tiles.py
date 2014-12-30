@@ -34,7 +34,6 @@ import sqlite3
 import cStringIO
 import ConfigParser
 
-
 __author__ = "Lillian Lynn Mahoney"
 __copyright__ = "Copyright 2014, Lillian Lynn Mahoney"
 __credits__ = ["Lillian Mahoney"]
