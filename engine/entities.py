@@ -4,7 +4,11 @@
 # This module is part of Untitled Game Engine and is released under the
 # Attribution Assurance License: http://opensource.org/licenses/AAL
 
-"""Entities: interactive/dynamic map objects."""
+"""Entities: interactive/dynamic map objects.
+
+Interactive/stateful map stuff.
+
+"""
 
 import os
 import glob
@@ -12,7 +16,6 @@ import render
 import pyganim
 import pygame
 from collections import OrderedDict
-
 
 __author__ = "Lillian Mahoney"
 __copyright__ = "Copyright 2014, Lillian Mahoney"
@@ -24,6 +27,7 @@ __status__ = "Development"
 
 
 class Player(object):
+    """Scaffolding."""
 
     def __init__(self, walkabout=None):
         """NPC or human player; depends on which controller
@@ -90,7 +94,8 @@ class Walkabout(object):
         self.rect = pygame.Rect(position, self.size)
 
     def move(self, direction, tilemap, speed=None):
-        """
+        """Modify positional data to reflect a legitimate player
+        movement operation.
 
         Will round down to nearest probable step if full step is impassable.
 
