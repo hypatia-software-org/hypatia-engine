@@ -17,6 +17,8 @@ Lillian Lynn Mahoney <lillian.lynn.mahoney@gmail.com>
   * Game editor; some rudimentary game editing tools. The editor I have in mind is inspired by http://rpg.hamsterrepublic.com/ohrrpgce/Main_Page[Official Hamster Republic Role Playing Game Construction Engine (OHRRPGCE)].
   * For more details please read the wiki's https://github.com/lillian-mahoney/untitled-game-engine/wiki/Planned-Features[planned features page].
 
+MIT License!
+
 == Setup
 
 There's only a demo for now; run test.py.
@@ -28,16 +30,3 @@ There's only a demo for now; run test.py.
   * http://inventwithpython.com/pyganim/[pyganim]
   * Also Python SQLITE3 module (I had to +pkg install py27-sqlite3+ or something in FreeBSD)
 
-== License: Attribution Assurance License
-
-This will probably change to one of the MIT licenses...
-
-See __license.txt.asc__ which is singed by gnu-pg in FreeBSD. See __license.txt__ for unsigned license.
-
-Clearsigned in FreeBSD, as so:
-
-----
-# pkg install gnupg pinentry
-$ gpg --gen-key
-$ gpg --clearsign license.txt
-----
