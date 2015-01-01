@@ -5,7 +5,7 @@ from engine import render
 
 
 FILENAME = 'debug.tilemap'
-LAYERS = 1
+LAYERS = 2
 ROWS = 10
 WIDTH = 10
 
@@ -30,6 +30,15 @@ for z in xrange(LAYERS):
                 blueprint[z][y][x] = 'water'
             elif y == ROWS - 1:
                 blueprint[z][y][x] = 'water'
+
+            if z > 0:
+                blueprint[z][x][y] = 'air'
+
+
+# showing off layer support with column
+#         z  y  x
+blueprint[0][2][2] = 'block-bottom'
+blueprint[1][1][2] = 'block-top'
 
 tilemap = tiles.TileMap('debug', blueprint)
 tilemap_string = tilemap.to_string()

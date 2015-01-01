@@ -46,8 +46,8 @@ class BadTileName(Exception):
 
         """
 
-        message = ('TileSwatch: no tile by name "%s"'  % (key, swatch_name))
-        super(BatTileName, self).__init__(message)
+        message = ('TileSwatch: no tile by name "%s"'  % bad_tile_name)
+        super(BadTileName, self).__init__(message)
 
 
 class TileMap(object):
@@ -67,19 +67,33 @@ class TileMap(object):
         layer_height = len(first_layer) * swatch.tile_size_y
         layer_size = (layer_width, layer_height)
 
-        tile_properties = [swatch.properties[x]
-                           for y in first_layer for x in y]
+        # bug: does not use master default properties
+        tile_properties = []
+
+        for row_of_image_names in first_layer:
+
+            for image_name in row_of_image_names:
+                properties = swatch.properties[image_name] if image_name in swatch.properties else TileProperties()
+                tile_properties.append(properties)
+
+        # make the layer images
         layer_images = []
 
         for z, layer in enumerate(tile_graphic_names):
-            new_layer = pygame.Surface(layer_size)
+            new_layer = pygame.Surface(layer_size, pygame.SRCALPHA, 32)
+            new_layer.fill([0,0,0,0])
 
             for y, row in enumerate(layer):
 
                 for x, tile in enumerate(row):
+
+                    if tile == 'air':
+
+                        continue
+
                     tile_position = (x * swatch.tile_size_x,
                                      y * swatch.tile_size_y)
-                    new_layer.blit(swatch[tile], tile_position)
+                    new_layer.blit(swatch[tile], tile_position)#, special_flags=pygame.locals.BLEND_RGBA_SUB)
 
             layer_images.append(new_layer)
 
@@ -149,6 +163,7 @@ class TileMap(object):
 
         for image in layer_images:
             image.convert()
+            image.convert_alpha()
 
         return None
 

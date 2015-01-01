@@ -20,8 +20,8 @@ Below a 3D array is created, the +default+ bit refers to the +default+ graphical
 ----
 blueprint = [[['default' for i in xrange(WIDTH)]
                          for i in xrange(ROWS)]
-                         for i in xrange(LAYERS)]$
-#         z  y  x$
+                         for i in xrange(LAYERS)]
+#         z  y  x
 blueprint[0][0][1] = 'water'  # 10, 0, 0
 blueprint[0][0][2] = 'water'
 blueprint[0][1][2] = 'water'

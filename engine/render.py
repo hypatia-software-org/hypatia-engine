@@ -103,11 +103,16 @@ def render(tilemap):
                       VIEWPORT_X, VIEWPORT_Y)
                     )
 
-        for layer in tilemap.layer_images[1:]:
-            viewport.blit(layer, (0, 0))
-
         player_controller.update()
         player.walkabout.blit(viewport, (viewport_start_x, viewport_start_y))
+
+        for layer in tilemap.layer_images[1:]:
+            viewport.blit(
+                          layer,
+                          (0, 0),
+                          (viewport_start_x, viewport_start_y,
+                           VIEWPORT_X, VIEWPORT_Y)
+                         )
 
         scaled_viewport = pygame.transform.scale(viewport, screen_size)
         screen.blit(
