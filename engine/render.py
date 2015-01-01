@@ -6,29 +6,28 @@
 
 """render.py: screen presentation and manipulation
 
-The "view" in the model/view/controller paradigm.
+Needs a lot of work. More of a demo/showcase right now.
 
-I need to make sure graphics are being converted
-for efficiency at runtime...
+Has some utils for managing images and animations.
 
 """
 
-from pygame.locals import *
-from PIL import Image
-import controllers
-import entities
-import pyganim
-import pygame
-import tiles
-import time
 import sys
+import time
+import tiles
+import pygame
+import pyganim
+import entities
+import controllers
+from PIL import Image
+from pygame.locals import *
 
-__author__ = "Lillian Lemmer"
-__copyright__ = "Copyright 2014, Lillian Lemmer"
+__author__ = "Lillian Mahoney"
+__copyright__ = "Copyright 2014, Lillian Mahoney"
 __credits__ = ["Lillian Mahoney"]
 __license__ = "Attribution Assurance License"
-__maintainer__ = "Lillian Lemmer"
-__email__ = "lillian.lynn.lemmer@gmail.com"
+__maintainer__ = "Lillian Mahoney"
+__email__ = "lillian.lynn.mahoney@gmail.com"
 __status__ = "Development"
 
 
@@ -39,13 +38,15 @@ VIEWPORT_X = 50
 VIEWPORT_Y = 50
 
 
-def render(map_name):
+def render(tilemap):
     """Render a map, simulate world.
+
+    Needs to be separate from simulation!
 
     Mostly a basic test for development purposes.
 
     Args:
-      map_name (tiles.TileMap): tile map to render
+      tilemap (tiles.TileMap): tile map to render
 
     Returns:
       None
@@ -67,8 +68,7 @@ def render(map_name):
     viewport_end_x = VIEWPORT_X
     viewport_end_y = VIEWPORT_Y
 
-    tilemap = tiles.load_tilemap('debug')
-    tilemap.layer_images.convert()
+    tilemap.convert_layer_images()
 
     player = entities.Player()
     player_controller = controllers.Controller(player, tilemap)
@@ -97,13 +97,13 @@ def render(map_name):
             viewport_end_y -= VIEWPORT_Y
 
         viewport.blit(
-                     tilemap.layer_images.images[0],
+                     tilemap.layer_images[0],
                      (0, 0),
                      (viewport_start_x, viewport_start_y,
                       VIEWPORT_X, VIEWPORT_Y)
                     )
 
-        for layer in tilemap.layer_images.images[1:]:
+        for layer in tilemap.layer_images[1:]:
             viewport.blit(layer, (0, 0))
 
         player_controller.update()
@@ -152,6 +152,8 @@ def gif_to_pyganim(gif_path):
         pass # end of sequence
 
     animation = pyganim.PygAnimation(frames)
+    animation.anchor(pyganim.CENTER)
+    animation.convert_alpha()
     animation.convert()
     animation.play()
 

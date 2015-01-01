@@ -8,31 +8,20 @@
 
 See: http://en.wikipedia.org/wiki/Tile_engine
 
-Uses an abstraction similar to "painting by numbers."
-  * MapBlueprint has list of tile names (the "numbers") and the swatch
-    of tile images (the "colors") which correspond to aforementioned
-    tile names (the "numbers").
-  * A layer image is the completed paint by number image
-  * MapBlueprint used to generate LayerImages, which is a series of
-    layer images in ascending order of z-index.
+I just rewrote almost everything, so you'll have to wait for more
+documentation...
 
-Only the first layer of tiles can/will generate corresponding/default
-TileProperties; this is a 2D system with SOME layering support.
-
-LayerImages can be generated through a MapBlueprint, which requires a
-swatch directory (of tile images), as well as a 2D tuple representing
-x, y coordinates, consisting of tile names referring to images in the
-aforementioned swatch directory.
+Examples here!
 
 """
 
 import os
 import glob
 import string
-import pygame
-import sqlite3
 import cStringIO
 import ConfigParser
+import sqlite3
+import pygame
 
 __author__ = "Lillian Lynn Mahoney"
 __copyright__ = "Copyright 2014, Lillian Lynn Mahoney"
@@ -41,11 +30,6 @@ __license__ = "Attribution Assurance License"
 __maintainer__ = "Lillian Mahoney"
 __email__ = "lillian.lynn.mahoney@gmail.com"
 __status__ = "Development"
-
-
-NEW_SCENE_TILES_WIDE = 40
-NEW_SCENE_TILES_TALL = 30
-NEW_SCENE_SWATCH = 'debug'
 
 
 class BadTileName(Exception):
@@ -66,92 +50,63 @@ class BadTileName(Exception):
         super(BatTileName, self).__init__(message)
 
 
-class MissingLayerMethod(Exception):
-    """TileMap: no method provided for setting tilemap.layer_images.
-
-    Occurs when the user provides neither layer_images nor
-    map_blueprint.
-
-    """
-
-    def __init__(self):
-        message = 'TileMap: must supply layer_images OR map_blueprint'
-        super(MissingLayerMethod, self).__init__(message)
-
-
 class TileMap(object):
-    """Renderable map and its respective tile data.
+    """Represents a file object?"""
 
-    Attributes:
-      name (str): this is also used for the SQLITE database file name.
-      layer_images (LayerImages): rendered in ascending order.
-      properties (tuple): 1D tuple whereas each element corresponds to
-        a 2D tile coordinate/tile. Note: there is only one layer of
-        properties, default properties are defined in a TileSwatch.
-      impassability (tuple): tuple of pygame.Rect objects; created
-        using properties; if a TileProperties has a valid self.rect,
-        it'll be in the impassability tuple. You can use this for
-        collision checking, or you can use get_properties, or
-        __getitem__.
+    def __init__(self, swatch_name, tile_graphic_names):
+        # create the layer images and tile properties
+        swatch = TileSwatch(swatch_name)
+        first_layer = tile_graphic_names[0]
+        dimensions_in_tiles = (
+                               len(first_layer[0]),
+                               len(first_layer),
+                               len(tile_graphic_names)
+                              )
 
-    Planned features:
-      * background_layers (BackgroundLayers): this object also has
-        paralax settings.
+        layer_width = len(first_layer[0]) * swatch.tile_size_x
+        layer_height = len(first_layer) * swatch.tile_size_y
+        layer_size = (layer_width, layer_height)
 
-    """
+        tile_properties = [swatch.properties[x]
+                           for y in first_layer for x in y]
+        layer_images = []
 
-    def __init__(self, name, layer_images=None,
-                 map_blueprint=None, properties=None):
-        """Attributes chiefly extrapolated from map_blueprint or
-        layer_images.
+        for z, layer in enumerate(tile_graphic_names):
+            new_layer = pygame.Surface(layer_size)
 
-        You must either provide layer_images or map_blueprint.
+            for y, row in enumerate(layer):
 
-        Args:
-          name (str): will be used for sqlite db and other things
-          layer_images (LayerImages|None): provide LayerImages that was
-            ALREADY generated from map_blueprint, thus skipping the
-            LayerImages generation process.
-          map_blueprint (MapBlueprint|None): --
-          properties (list|None): list of TileProperties (cascade over
-            defaults)
+                for x, tile in enumerate(row):
+                    tile_position = (x * swatch.tile_size_x,
+                                     y * swatch.tile_size_y)
+                    new_layer.blit(swatch[tile], tile_position)
 
-        """
+            layer_images.append(new_layer)
 
-        if map_blueprint:
-            self.layer_images, self.properties = map_blueprint.build()
-
-        elif layer_images:
-            self.layer_images = layer_images
-            self.properties = properties
-
-        else:
-
-            raise MissingLayerMethod()
-
-        self.name = name
-        self.make_impassability()
-
-    def make_impassability(self):
+        # impassability
         impassability = []
-        pixels_x, pixels_y = self.layer_images.size_in_pixels
-        tile_width, tile_height = self.layer_images.tile_size
-        tiles_wide = pixels_x / tile_width
-        tiles_tall = pixels_y / tile_height
+        layer_width_px, layer_height_px = layer_images[0].get_size()
+        layer_width_tiles, layer_height_tiles, __ = dimensions_in_tiles
 
-        for i, tile_properties in enumerate(self.properties):
-            y = tile_height * max([i / tiles_wide, 0])
-            x = tile_width * (i - max([i / tiles_wide, 0]))
-            top_left = (x, y)
+        for i, properties in enumerate(tile_properties):
+            tile_x = i % layer_width_tiles
+            tile_y = i / layer_width_tiles
+            y = swatch.tile_size_y * tile_y
+            x = swatch.tile_size_x * tile_x
+            top_left_tile_corner = (x, y)
 
-            if 'impass_all' in tile_properties:
-                rect = pygame.Rect(top_left, self.layer_images.tile_size)
+            if 'impass_all' in properties:
+                rect = pygame.Rect(top_left_tile_corner, swatch.tile_size)
+                properties.rect = rect
                 impassability.append(rect)
-                tile_properties.rect = rect
 
+        # attribs
+        self.swatch = swatch
+        self.tile_graphic_names = tile_graphic_names
+        self.dimensions_in_tiles = dimensions_in_tiles
+        self.layer_images = layer_images
+        self.properties = tile_properties
         self.impassability = impassability
-
-        return None
 
     def __getitem__(self, coord):
         """Fetch TileProperties by tile coordinate.
@@ -189,71 +144,49 @@ class TileMap(object):
 
         return self[(tile_x, tile_y)]
 
+    def convert_layer_images(self):
+        layer_images = self.layer_images
 
-class LayerImages(object):
-
-    def __init__(self, images, tile_size):
-        self.images = images
-        self.tile_size = tile_size
-        self.set_layer_meta()
-
-    def convert(self):
-
-        for image in self.images:
+        for image in layer_images:
             image.convert()
 
-    def set_layer_meta(self):
-        self.size_in_pixels =  self.images[0].get_size()
-        self.width_in_pixels = self.size_in_pixels[0]
-        self.height_in_pixels = self.size_in_pixels[1]
+        return None
 
-        self.width_in_tiles = self.width_in_pixels / self.tile_size[0]
-        self.height_in_tiles = self.height_in_pixels / self.tile_size[1]
+    def to_string(self):
+        """
 
-
-class MapBlueprint(object):
-
-    def __init__(self, tile_names, swatch_name):
-        self.tile_names = tile_names
-        self.swatch = TileSwatch(swatch_name)
-
-    def build(self):
-        """I'm having fun with this; is this polymorphism?
-
-        Returns:
-          layer_images (LayerImages):
-          properties ():
+        1. Define dimensions: map height, width, and layers
+        2. tile names
+        3. Finally, use a compression algo on the resulting string.
 
         """
 
-        tile_names = self.tile_names
-        first_layer = tile_names[0]
-        tile_size = self.swatch.tile_size
-        size = (len(first_layer[0]), len(first_layer), len(tile_names))
+        (width_in_tiles, height_in_tiles,
+         total_layers) = self.dimensions_in_tiles
+        dimensions_string = "%sx%sx%s" % self.dimensions_in_tiles
+        swatch_string = self.swatch.name
+        names = []
 
-        layer_width = len(first_layer[0]) * tile_size[0]
-        layer_height = len(first_layer) * tile_size[1]
-        layer_size = (layer_width, layer_height)
+        for layer in self.tile_graphic_names:
 
-        swatch = self.swatch
-        properties = [swatch.properties[x] for y in first_layer for x in y]
-        layer_images = []
+            for row in layer:
+                names.extend(row)
 
-        for z, layer in enumerate(tile_names):
-            new_layer = pygame.Surface(layer_size)
+        tile_graphic_names = []
 
-            for y, row in enumerate(layer):
+        for layer in self.tile_graphic_names:
 
-                for x, tile in enumerate(row):
-                    tile_position = (x * swatch.tile_size[0],
-                                     y * swatch.tile_size[1])
-                    new_layer.blit(swatch[tile], tile_position)
+            for row in layer:
+                tile_graphic_names.extend(row)
 
-            layer_images.append(new_layer)
+        tile_graphic_names_string = ':'.join(tile_graphic_names)
+        file_string = '\n'.join([
+                                 dimensions_string,
+                                 swatch_string,
+                                 tile_graphic_names_string
+                                ])
 
-        layer_images = LayerImages(layer_images, tile_size)
-
-        return layer_images, properties
+        return file_string
 
 
 class TileSwatch(object):
@@ -292,6 +225,7 @@ class TileSwatch(object):
             file_name = os.path.split(file_name)[1]
             tile_image = pygame.image.load(full_file_name)
             self.tile_size = tile_image.get_size()
+            self.tile_size_x, self.tile_size_y = self.tile_size
             self.swatch[file_name] = tile_image
 
     def __getitem__(self, tile_name):
@@ -356,215 +290,33 @@ class TileProperties(object):
         return item in self.properties
 
 
-def save_tilemap(tilemap):
-    """Pickle TileMap object to SQLITE database.
+def tilemap_from_string(tilemap_string):
+    dimensions, swatch_name, tile_graphic_names = tilemap_string.split('\n')
+    dimensions_in_tiles = dimensions.split('x')
 
-    Args:
-      tilemap (TileMap): tilemap to save
+    width, height, layers = dimensions_in_tiles
+    width = int(width)
+    height = int(height)
+    layers = int(layers)
 
-    Returns:
-      None
+    tile_graphic_names_one_dimension = tile_graphic_names.split(':')
+    tile_graphic_names_three_dimensions = []
 
-    """
+    for layer_i in xrange(layers):
+        layer = []
 
-    # Connect to database, reset database (start fresh)
-    connection, cursor = tilemap_connect(tilemap.name)
+        for row_i in xrange(height):
+            row = []
 
-    with open('sql/tilemap-setup.sql') as sql_file:
-        cursor.executescript(sql_file.read())
+            for width_i in xrange(width):
+                index = width_i + row_i * width + layer_i * width * height
+                tile_graphic_name = tile_graphic_names_one_dimension[index]
+                row.append(tile_graphic_name)
 
-    connection.commit()
+            layer.append(row)
 
-    # insert a bunch of settings
-    sql = '''
-          INSERT INTO
-              settings (
-                  name,
-                  layer_width,
-                  layer_height,
-                  tile_width,
-                  tile_height
-              )
-          VALUES
-              (?, ?, ?, ?, ?)
-          '''
-    params = (
-              tilemap.name,
-              tilemap.layer_images.width_in_pixels,
-              tilemap.layer_images.height_in_pixels,
-              tilemap.layer_images.tile_size[0],
-              tilemap.layer_images.tile_size[1],
-             )
-    cursor.execute(sql, params)
+        tile_graphic_names_three_dimensions.append(layer)
 
-    # save layers as string with pygame
-    for layer in tilemap.layer_images.images:
-        layer_as_string = pygame.image.tostring(layer, 'RGBA')
-        sql = 'INSERT INTO layers (image_string) VALUES (?)'
-        cursor.execute(sql, (layer_as_string,))
+    return TileMap(swatch_name, tile_graphic_names_three_dimensions)
 
-    # save tileproperties
-    for tile_id, tile_properties in enumerate(tilemap.properties):
-        property_ids = []
-
-        for flag in tile_properties:
-
-            try:
-                sql = 'INSERT INTO properties (name) VALUES (?)'
-                cursor.execute(sql, (flag,))
-                property_id = cursor.lastrowid
-
-            except sqlite3.IntegrityError:
-                sql = 'SELECT id FROM properties WHERE name=?'
-                cursor.execute(sql, (flag,))
-                property_id = cursor.fetchone()[0]
-
-            property_ids.append(property_id)
-
-        for property_id in property_ids:
-            sql = '''
-                  INSERT INTO
-                      tile_properties (
-                          tile_id,
-                          property_id
-                      )
-                  VALUES
-                      (?, ?)
-                  '''
-            cursor.execute(sql, (tile_id, property_id,))
-
-    connection.commit()
-    connection.close()
-
-    return None
-
-
-def load_tilemap(tilemap_name):
-    """Configure a TileMap object based on specified tilemap name's
-    files.
-
-    Args:
-      tilemap_name (str): directory name containing desired configs and
-        image files.
-
-    Returns:
-      TileMap: as defined from an SQLITE3 database. See: save_tilemap.
-
-    """
-
-    # settings first
-    connection, cursor = tilemap_connect(tilemap_name)
-    sql = 'SELECT * FROM settings'
-    cursor.execute(sql)
-    setting_names = ('name', 'layer_width', 'layer_height', 'tile_width',
-                     'tile_height')
-    settings = dict(zip(setting_names, cursor.fetchone()))
-    tilemap_name = settings['name']
-    layer_width = settings['layer_width']
-    layer_height = settings['layer_height']
-    layer_size = (layer_width, layer_height)
-    tile_width = settings['tile_width']
-    tile_height = settings['tile_height']
-    tiles_wide = layer_width / tile_width
-    tiles_tall = layer_height / tile_height
-
-    # layers
-    cursor.execute('SELECT image_string FROM layers ORDER BY id')
-    image_text_layers = [row[0] for row in cursor.fetchall()]
-    layers = []
-
-    for image_text in image_text_layers:
-        image = pygame.image.fromstring(image_text, layer_size, 'RGBA')
-        layers.append(image)
-
-    properties = []
-
-    for i in xrange(tiles_wide * tiles_tall):
-        sql = '''
-              SELECT
-                  properties.name
-              FROM
-                  tile_properties
-              JOIN
-                  properties on tile_properties.property_id = properties.id
-              WHERE
-                  tile_properties.tile_id=?
-              ORDER BY
-                  tile_properties.tile_id
-              '''
-        cursor.execute(sql, (i,))
-        tile_properties = [row[0] for row in cursor.fetchall()]
-        tile_properties = TileProperties(tile_properties)
-        properties.append(tile_properties)
-
-    layer_images = LayerImages(layers, (tile_width, tile_height))
-    tilemap = TileMap(
-                      name=tilemap_name,
-                      layer_images=layer_images,
-                      properties=properties
-                     )
-
-    return tilemap
-
-
-def tilemap_connect(tilemap_name):
-    """connect to tilemap db by opening related db
-
-    sanitizes file/tilemap_name
-
-    Args:
-      tilemap_name (str): name of map (for humans) used for db file name
-
-    Returns:
-      tuple: sqlite.Connection, sqlite.Cursor
-
-    """
-
-    valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
-    tilemap_file_name = ''.join(c for c in tilemap_name if c in valid_chars)
-    tilemap_file_name = tilemap_name + '.db'
-    tilemap_db_path = os.path.join('data', 'tiles', 'maps', tilemap_file_name)
-    connection = sqlite3.connect(tilemap_db_path)
-    connection.text_factory = str
-
-    return connection, connection.cursor()
-
-
-def new_tilemap(tilemap_name):
-    """Creates a new sqlite database, i.e., scene.
-
-    Uses scene_name for file name and scene's label.
-
-    Args:
-      tilemap_name (str): name of map and sqlite db file.
-
-    Returns:
-        TileMap: empty/blank TileMap, one layer of default tile
-
-    """
-
-
-    # create default layer
-    layer = []
-
-    for y in xrange(NEW_SCENE_TILES_TALL):
-        row = ['default' for x in xrange(NEW_SCENE_TILES_WIDE)]
-        layer.append(row)
-
-    layer[0][2] = 'water'
-    layers = [layer]
-    map_blueprint = MapBlueprint(layers, NEW_SCENE_SWATCH)
-    tilemap = TileMap(
-                      name=tilemap_name,
-                      map_blueprint=map_blueprint
-                     )
-    save_tilemap(tilemap)
-
-    return tilemap
-
-
-# debugging purposes
-if __name__ == '__main__':
-    import doctest
-    doctest.testmod()
 

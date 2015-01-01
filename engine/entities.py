@@ -38,7 +38,7 @@ class Player(object):
 
         """
 
-        self.walkabout = walkabout or Walkabout('debug')
+        self.walkabout = Walkabout(walkabout or 'debug')
 
 
 class Walkabout(object):

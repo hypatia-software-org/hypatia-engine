@@ -1,32 +1,81 @@
 = Untitled Game Engine
-Lillian Lynn Mahoney <lillian.lynn.mahoney@gmail.com>
-4, 2014-12-29
 
-*Experimental/in early development* game engine for a future planned game: a procedurally-generated item-centric top-down 2D tile-based puzzle/action game vein of __Zelda: Oracle of Ages__ and __Zelda: Oracle of Seasons__ as well as __Zelda: Link's Awakening__.
+*Experimental/in early development* game engine for an item-centric top-down 2D tile-based puzzle/action game vein of __Zelda: Oracle of Ages__,  __Zelda: Oracle of Seasons__, and __Zelda: Link's Awakening__.
 
   * Tile based map rendering and management
   * Game entity management
   * Input handling
   * Resource management
-  * For more details please read the wiki's https://github.com/lillian-mahoney/untitled-game-engine/wiki/Current-Features[current features page].
-
-*Future plans:*
-
-  * Procedural generation of various objects
-  * Possibility of multiplayer
-  * Game editor; some rudimentary game editing tools. The editor I have in mind is inspired by http://rpg.hamsterrepublic.com/ohrrpgce/Main_Page[Official Hamster Republic Role Playing Game Construction Engine (OHRRPGCE)].
-  * For more details please read the wiki's https://github.com/lillian-mahoney/untitled-game-engine/wiki/Planned-Features[planned features page].
+  * For more details please read the wiki's https://github.com/lillian-mahoney/untitled-game-engine/wiki/Current-Features[current features page] and https://github.com/lillian-mahoney/untitled-game-engine/wiki/Planned-Features[planned features page].
+  * See the setup section below!
 
 MIT License!
 
-== Setup
+== Examples
 
-There's only a demo for now; run test.py.
+Edit/run _/test.py_; it shows you how to use the tile system, to an extent. _/engine/render.py_ is definitely worth looking at, too.
+
+Below a 3D array is created, the +default+ bit refers to the +default+ graphical tile in the (later) specified tile swatch. +water+ is just another graphical tile name.
+
+----
+blueprint = [[['default' for i in xrange(WIDTH)]
+                         for i in xrange(ROWS)]
+                         for i in xrange(LAYERS)]$
+#         z  y  x$
+blueprint[0][0][1] = 'water'  # 10, 0, 0
+blueprint[0][0][2] = 'water'
+blueprint[0][1][2] = 'water'
+----
+
+All tiles have default properties, passability, defined by the swatch's configuration file, see +data/tiles/swatches/debug+.
+
+Below we create the tilemap object, using our blueprint from above, and convert it to string so we can write to file, then we later recreate the tilemap from that same string. Finally, we use the demo render to show off the map.
+
+----
+tilemap = tiles.TileMap('debug', blueprint)
+tilemap_string = tilemap.to_string()
+
+with open(FILENAME, 'w') as f:
+    f.write(tilemap_string)
+
+with open(FILENAME) as f:
+    tilemap = tiles.tilemap_from_string(f.read())
+
+render.render(tilemap)
+----
+
+Tilemaps compile each layer's tiles into a single image, producing a list of images (layers). Ergo, you can iterate the images/layers in order to render them in their respective z-order.
+
+----
+pygame.init()
+clock = pygame.time.Clock()
+display_info = pygame.display.Info()
+screen_size = (display_info.current_w, display_info.current_h)
+screen = pygame.display.set_mode(
+                                 screen_size,
+                                 FULLSCREEN | DOUBLEBUF
+                                )
+
+# juicy parts
+tilemap.convert_layer_images()
+
+while True:
+    screen.blit(tilemap.layer_images[0], (0, 0))
+
+    for layer in tilemap.layer_images:
+        screen.blit(layer, (0, 0))
+
+    pygame.display.flip()
+    clock.tick(60)
+----
+
+TileMap also has methods for getting tile properties by tile or pixel coordinate! See: +TileMap.__getitem__()+ and +TileMap.get_properties()+.
+
+== Setup
 
 *Dependencies:*
 
   * http://pygame.org/news.html[pygame]
   * http://www.pythonware.com/products/pil/[pil]
   * http://inventwithpython.com/pyganim/[pyganim]
-  * Also Python SQLITE3 module (I had to +pkg install py27-sqlite3+ or something in FreeBSD)
 
