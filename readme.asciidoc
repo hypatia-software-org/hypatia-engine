@@ -2,12 +2,7 @@
 
 *Experimental/in early development* game engine for an item-centric top-down 2D tile-based puzzle/action game vein of __Zelda: Oracle of Ages__,  __Zelda: Oracle of Seasons__, and __Zelda: Link's Awakening__.
 
-  * Tile based map rendering and management
-  * Game entity management
-  * Input handling
-  * Resource management
-  * For more details please read the wiki's https://github.com/lillian-mahoney/untitled-game-engine/wiki/Current-Features[current features page] and https://github.com/lillian-mahoney/untitled-game-engine/wiki/Planned-Features[planned features page].
-  * See the setup section below!
+For more details please read the wiki's https://github.com/lillian-mahoney/untitled-game-engine/wiki/Current-Features[current features page] and https://github.com/lillian-mahoney/untitled-game-engine/wiki/Planned-Features[planned features page] or check out the _examples_ section below.
 
 MIT License!
 

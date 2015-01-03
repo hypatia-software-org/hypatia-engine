@@ -131,15 +131,14 @@ def render(tilemap):
                                      screen_size,
                                      FULLSCREEN | DOUBLEBUF
                                     )
-
-    viewport = Viewport((VIEWPORT_X, VIEWPORT_Y))
-
     tilemap.convert_layer_images()
+    viewport = Viewport((VIEWPORT_X, VIEWPORT_Y))
 
     player = entities.HumanPlayer()
     player_controller = controllers.Controller(player, tilemap)
 
     while True:
+        # blit first map layer, then player, then rest of the map layers
         viewport.pan_for_entity(player)
         viewport.blit(tilemap.layer_images[0])
 
@@ -149,6 +148,7 @@ def render(tilemap):
         for layer in tilemap.layer_images[1:]:
             viewport.blit(layer)
 
+        # this is such a nice way to rescale to any resolution
         scaled_viewport = pygame.transform.scale(viewport.surface, screen_size)
         screen.blit(
                     scaled_viewport,
