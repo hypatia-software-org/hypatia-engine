@@ -136,10 +136,6 @@ class TileMap(object):
 
         x, y = coord
         width_in_tiles = self.dimensions_in_tiles[0]
-        print (width_in_tiles * y) + x
-        print self.properties[(width_in_tiles * y) + x].properties
-        print
-        print
 
         return self.properties[(width_in_tiles * y) + x]
 
@@ -155,7 +151,6 @@ class TileMap(object):
 
         """
 
-        print "get_properties: " + str(coord)
         tile_width, tile_height = self.layer_images[0].get_size()
         pixel_x, pixel_y = coord
         tile_x = pixel_x / tile_width

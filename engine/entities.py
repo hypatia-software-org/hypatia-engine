@@ -43,7 +43,7 @@ class Player(object):
 
 class Walkabout(object):
 
-    def __init__(self, walkabout_directory, start_position=None, speed=1):
+    def __init__(self, walkabout_directory, start_position=None):
         """Interactive entity which uses a walkabout sprite.
 
         An entity capable of walking about the map. Sprites for
@@ -58,9 +58,6 @@ class Walkabout(object):
             walkabout GIFs. Assumed parent is data/walkabouts/
           start_position (tuple): (x, y) coordinates (integers)
             referring to absolute pixel coordinate.
-          speed (int): the number of pixels moved per update/frame.
-            Fraction of self.size; 1.0 is self.size,
-            0.5 is self.size / 2.
 
         Unfinished:
           * Anchors: head, hands, feet, torso
@@ -93,7 +90,7 @@ class Walkabout(object):
         position = start_position or (0, 0)  # px values
         self.rect = pygame.Rect(position, self.size)
 
-    def move(self, direction, tilemap, speed=None):
+    def move(self, direction, tilemap):
         """Modify positional data to reflect a legitimate player
         movement operation.
 
@@ -103,12 +100,11 @@ class Walkabout(object):
           direction (str): may be one of: up, right, down, left
           tilemap (tiles.TileMap): tilemap for reference, so we can
             avoid walking into water and such.
-          speed (int|None): pixels per second or inherent speed.
 
         """
 
         self.direction = direction
-        planned_movement_in_pixels = speed or self.speed
+        planned_movement_in_pixels = self.speed
 
         for pixels in xrange(planned_movement_in_pixels, 0, -1):
             new_topleft_x, new_topleft_y = self.rect.topleft
@@ -144,11 +140,8 @@ class Walkabout(object):
 
             for impassable_area in tilemap.impassability:
 
-                # from here down the logic isn't sound...
                 if impassable_area and (impassable_area
                                         .colliderect(movement_rectangle)):
-                    # it only tases collision with one rect to know
-                    # the movement is impossible!
                     movement_rectangle_collides = True
                     break
 
@@ -167,52 +160,6 @@ class Walkabout(object):
 
 
                 return True
-
-        """OLD METHOD
-        # bug: needs to draw a rect to dest position
-        x, y = self.rect.topleft
-
-        # this should actually be a for loop
-        # keep readjusting destination closer until it works or until 0 <for loop?>
-
-        while planned_movement_in_pixels:
-            x, y = self.rect.topleft
-            new_position_impossible = False
-
-            if direction == 'up':
-                y -= planned_movement_in_pixels
-            elif direction == 'right':
-                x += planned_movement_in_pixels
-            elif direction == 'down':
-                y += planned_movement_in_pixels
-            elif direction == 'left':
-                x -= planned_movement_in_pixels
-
-            new_position = (x, y)
-            new_sprite_rect = pygame.Rect(new_position, self.size)
-
-            # assure new position isn't on an impassable tile
-            for impass_rect in tilemap.impassability:
-
-                if impass_rect and impass_rect.colliderect(new_sprite_rect):
-                    new_position_impossible = True
-
-            if new_position_impossible:
-                planned_movement_in_pixels -= 1
-            else:
-
-                break
-
-        if planned_movement_in_pixels:
-            self.rect = new_sprite_rect
-            self.action = 'walk'
-
-            return True
-
-        else:
-
-            return False
-        """
 
     def blit(self, screen, offset):
         """Draw the appropriate/active animation to screen.
