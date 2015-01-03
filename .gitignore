@@ -64,3 +64,5 @@ sphinx-doc/
 # misc
 *.core
 *.db
+*.swo
+.tilemap
