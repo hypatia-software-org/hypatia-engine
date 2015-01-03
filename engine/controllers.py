@@ -15,9 +15,10 @@ being used for the user/player controller.
 
 """
 
-from pygame.locals import *
-import pygame
 import sys
+import pygame
+import constants
+from pygame.locals import *
 
 __author__ = "Lillian Lynn Mahoney"
 __copyright__ = "Copyright 2014, Lillian Lynn Mahoney"
@@ -168,16 +169,16 @@ class WalkaboutActions(object):
             return None
 
         if self.up:
-            walkabout.move('up', controller.tilemap)
+            walkabout.move(constants.Up, controller.tilemap)
 
         if self.right:
-            walkabout.move('right', controller.tilemap)
+            walkabout.move(constants.Right, controller.tilemap)
 
         if self.down:
-            walkabout.move('down', controller.tilemap)
+            walkabout.move(constants.Down, controller.tilemap)
 
         if self.left:
-            walkabout.move('left', controller.tilemap)
+            walkabout.move(constants.Left, controller.tilemap)
 
         return None
 

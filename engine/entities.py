@@ -13,6 +13,7 @@ Interactive/stateful map stuff.
 import os
 import glob
 import render
+import constants
 import pyganim
 import pygame
 from collections import OrderedDict
@@ -60,6 +61,7 @@ class Walkabout(object):
             file_name, file_ext = os.path.splitext(sprite_path)
             file_name = os.path.split(file_name)[1]
             action, direction = file_name.split('_', 1)
+            direction = getattr(constants, direction.title())
             animation = render.gif_to_pyganim(sprite_path)
             animation.convert()
             self.size = animation.getMaxSize()
@@ -70,7 +72,7 @@ class Walkabout(object):
                 self.sprites[action] = {direction: animation}
 
         self.action = 'stand'
-        self.direction = 'up'
+        self.direction = constants.Up
         self.speed = 1
 
         position = start_position or (0, 0)  # px values
@@ -116,7 +118,7 @@ class HumanPlayer(Walkabout):
         Will round down to nearest probable step if full step is impassable.
 
         Args:
-          direction (str): may be one of: up, right, down, left
+          direction (constants.Direction): may be one of: up, right, down, left
           tilemap (tiles.TileMap): tilemap for reference, so we can
             avoid walking into water and such.
 
@@ -128,13 +130,13 @@ class HumanPlayer(Walkabout):
         for pixels in xrange(planned_movement_in_pixels, 0, -1):
             new_topleft_x, new_topleft_y = self.rect.topleft
 
-            if direction == 'up':
+            if direction == constants.Up:
                 new_topleft_y -= pixels
-            elif direction == 'right':
+            elif direction == constants.Right:
                 new_topleft_x += pixels
-            elif direction == 'down':
+            elif direction == constants.Down:
                 new_topleft_y += pixels
-            elif direction == 'left':
+            elif direction == constants.Left:
                 new_topleft_x -= pixels
 
             new_bottomright_x = new_topleft_x + self.size[0]
@@ -144,13 +146,13 @@ class HumanPlayer(Walkabout):
             movement_size_y = abs(new_bottomright_y - self.rect.topleft[1])
             movement_area_size = (movement_size_x, movement_size_y)
 
-            if direction == 'up':
+            if direction == constants.Up:
                 new_topleft = (new_topleft_x, new_topleft_y)
-            elif direction == 'right':
+            elif direction == constants.Right:
                 new_topleft = self.rect.topleft
-            elif direction == 'down':
+            elif direction == constants.Down:
                 new_topleft = self.rect.topleft
-            elif direction == 'left':
+            elif direction == constants.Left:
                 new_topleft = (new_topleft_x, new_topleft_y)
 
             movement_rectangle = pygame.Rect(new_topleft,

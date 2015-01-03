@@ -18,6 +18,7 @@ import tiles
 import pygame
 import pyganim
 import entities
+import constants
 import controllers
 from PIL import Image
 from pygame.locals import *
@@ -39,8 +40,27 @@ VIEWPORT_Y = 50
 
 
 class Viewport(object):
+    """Display only a fixed area of a surface.
+
+    Attributes:
+      size (tuple): dimensions of viewport in pixels (int x, int y)
+      surface (pygame.Surface): the "canvas" of the viewport, to which
+        portions of other surfaces are blitted upon.
+      start_x (int): the top-left corner x coordinate
+      start_y (int): the top-left corner y coordinate
+      end_x (int): the bottom-right corner x coorinate
+      end_y (int): the bottom-right corner y coorindate
+
+    """
 
     def __init__(self, size):
+        """
+
+        Args:
+          size (tuple): (int x, int y) pixel dimensions of viewport.
+
+        """
+
         self.size = size
 
         self.surface = pygame.Surface(size)
@@ -50,23 +70,31 @@ class Viewport(object):
         self.end_y = size[1]
 
     def screen_pan(self, direction):
+        """Move viewport in a given direction by one whole viewport
+        in size.
 
-        if direction == 'right':
+        Args:
+          direction (constants.Direction): Move the viewport toward
+            specified direction.
+
+        """
+
+        if direction is constants.Right:
             self.start_x += self.size[0]
             self.end_x += self.size[0]
 
         # if player goes off the left of the screen...
-        elif direction == 'left':
+        elif direction is constants.Left:
             self.start_x -= self.size[0]
             self.end_x -= self.size[0]
 
         # if player goes off bottom of screen...
-        elif direction == 'down':
+        elif direction is constants.Down:
             self.start_y += self.size[1]
             self.end_y += self.size[1]
 
         # if player goes off top of screen...
-        elif direction == 'up':
+        elif direction is constants.Up:
             self.start_y -= self.size[1]
             self.end_y -= self.size[1]
 
@@ -77,27 +105,44 @@ class Viewport(object):
         return None
 
     def pan_for_entity(self, entity):
+        """Check if entity is outside of the viewport, and if so,
+        in which direction?
+
+        Args:
+          entity (entity.Walkabout): something with a pygame.rect
+            attribute. Uses rect.center for coordinates to check.
+
+        """
+
         entity_position_x, entity_position_y = entity.rect.center
 
         # if player goes off the right of the screen...
         if entity_position_x > self.end_x:
-            self.screen_pan('right')
+            self.screen_pan(constants.Right)
 
         # if player goes off the left of the screen...
         elif entity_position_x < self.start_x:
-            self.screen_pan('left')
+            self.screen_pan(constants.Left)
 
         # if player goes off bottom of screen...
         elif entity_position_y > self.end_y:
-            self.screen_pan('down')
+            self.screen_pan(constants.Down)
 
         # if player goes off top of screen...
         elif entity_position_y < self.start_y:
-            self.screen_pan('up')
+            self.screen_pan(constants.Up)
 
         return None
 
     def blit(self, surface):
+        """Draw the correct portion of supplied surface onto viewport.
+
+        Args:
+          surface (pygame.Surface): will only draw the area described
+            by viewport coordinates.
+
+        """
+
         self.surface.blit(
                           surface,
                           (0, 0),
