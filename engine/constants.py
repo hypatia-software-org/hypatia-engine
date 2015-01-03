@@ -1,4 +1,5 @@
 class Direction(object):
+    """Specific to movement of a sprite/surface."""
     pass
 
 
