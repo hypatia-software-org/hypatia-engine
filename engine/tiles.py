@@ -93,7 +93,7 @@ class TileMap(object):
 
                     tile_position = (x * swatch.tile_size_x,
                                      y * swatch.tile_size_y)
-                    new_layer.blit(swatch[tile], tile_position)#, special_flags=pygame.locals.BLEND_RGBA_SUB)
+                    new_layer.blit(swatch[tile], tile_position)
 
             layer_images.append(new_layer)
 
@@ -135,7 +135,11 @@ class TileMap(object):
         """
 
         x, y = coord
-        width_in_tiles = self.layer_images.width_in_tiles
+        width_in_tiles = self.dimensions_in_tiles[0]
+        print (width_in_tiles * y) + x
+        print self.properties[(width_in_tiles * y) + x].properties
+        print
+        print
 
         return self.properties[(width_in_tiles * y) + x]
 
@@ -151,7 +155,8 @@ class TileMap(object):
 
         """
 
-        tile_width, tile_height = self.layer_images.tile_size
+        print "get_properties: " + str(coord)
+        tile_width, tile_height = self.layer_images[0].get_size()
         pixel_x, pixel_y = coord
         tile_x = pixel_x / tile_width
         tile_y = pixel_y / tile_height

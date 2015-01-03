@@ -88,7 +88,7 @@ class Walkabout(object):
 
         self.action = 'stand'
         self.direction = 'up'
-        self.speed = 3
+        self.speed = 1
 
         position = start_position or (0, 0)  # px values
         self.rect = pygame.Rect(position, self.size)
@@ -110,7 +110,72 @@ class Walkabout(object):
         self.direction = direction
         planned_movement_in_pixels = speed or self.speed
 
-        while True:
+        for pixels in xrange(planned_movement_in_pixels, 0, -1):
+            new_topleft_x, new_topleft_y = self.rect.topleft
+
+            if direction == 'up':
+                new_topleft_y -= pixels
+            elif direction == 'right':
+                new_topleft_x += pixels
+            elif direction == 'down':
+                new_topleft_y += pixels
+            elif direction == 'left':
+                new_topleft_x -= pixels
+
+            new_bottomright_x = new_topleft_x + self.size[0]
+            new_bottomright_y = new_topleft_y + self.size[1]
+
+            movement_size_x = abs(new_bottomright_x - self.rect.topleft[0])
+            movement_size_y = abs(new_bottomright_y - self.rect.topleft[1])
+            movement_area_size = (movement_size_x, movement_size_y)
+
+            if direction == 'up':
+                new_topleft = (new_topleft_x, new_topleft_y)
+            elif direction == 'right':
+                new_topleft = self.rect.topleft
+            elif direction == 'down':
+                new_topleft = self.rect.topleft
+            elif direction == 'left':
+                new_topleft = (new_topleft_x, new_topleft_y)
+
+            movement_rectangle = pygame.Rect(new_topleft,
+                                             movement_area_size)
+            movement_rectangle_collides = False
+
+            for impassable_area in tilemap.impassability:
+
+                # from here down the logic isn't sound...
+                if impassable_area and (impassable_area
+                                        .colliderect(movement_rectangle)):
+                    # it only tases collision with one rect to know
+                    # the movement is impossible!
+                    movement_rectangle_collides = True
+                    break
+
+            if movement_rectangle_collides:
+                # done; can't move!
+
+                return False
+
+            else:
+                # we're done, we can move!
+                new_topleft = (new_topleft_x, new_topleft_y)
+                new_sprite_rect = pygame.Rect(new_topleft, self.size)
+
+                self.rect = new_sprite_rect
+                self.action = 'walk'
+
+
+                return True
+
+        """OLD METHOD
+        # bug: needs to draw a rect to dest position
+        x, y = self.rect.topleft
+
+        # this should actually be a for loop
+        # keep readjusting destination closer until it works or until 0 <for loop?>
+
+        while planned_movement_in_pixels:
             x, y = self.rect.topleft
             new_position_impossible = False
 
@@ -138,10 +203,16 @@ class Walkabout(object):
 
                 break
 
-        self.rect = new_sprite_rect
-        self.action = 'walk'
+        if planned_movement_in_pixels:
+            self.rect = new_sprite_rect
+            self.action = 'walk'
 
-        return True
+            return True
+
+        else:
+
+            return False
+        """
 
     def blit(self, screen, offset):
         """Draw the appropriate/active animation to screen.
