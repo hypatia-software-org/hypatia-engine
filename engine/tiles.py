@@ -52,7 +52,20 @@ class BadTileName(Exception):
 
 
 class TileMap(object):
-    """Represents a file object?"""
+    """Layers created from graphical tiles specified in a tile swatch.
+
+    Note:
+      Makes map-specific data accesssible.
+
+    Attributes:
+      swatch:
+      tile_graphic_names:
+      dimensions_in_tiles:
+      layer_images:
+      properties:
+      impassability:
+
+    """
 
     def __init__(self, swatch_name, tile_graphic_names):
         """Stitch tiles from swatch to layer surfaces. 
@@ -207,12 +220,13 @@ class TileMap(object):
         """Create a string which can be used to
         recreate that same tilemap.
 
-        I use this format:
-          Line 1: tilemap height, width, and layers
-          Line 2: swatch name
-          Line 3: tile names
+        Note:
+          The format for the string is such:
+            Line 1: tilemap height, width, and layers
+            Line 2: swatch name
+            Line 3: tile names
 
-        The resulting string is then compressed.
+          The resulting string is then compressed.
 
         Returns:
           str: string which can recreate the TileMap
@@ -252,8 +266,9 @@ class TileSwatch(object):
     def __init__(self, swatch_name):
         """Named pygame.Surface instances of tiles in swatch directory.
 
-        Abstraction of a directory of images
-        accompanied by a config file.
+        Note:
+          Abstraction of a directory of images
+          accompanied by a config file.
 
         INI defines default tile properties, default tile.
 
@@ -314,10 +329,12 @@ class TileSwatch(object):
 class TileProperties(object):
     """Tile info/properties/attributes.
 
-    Currently supported properties: impass_all.
+    Note:
+      Currently supported properties: impass_all.
 
     Attributes:
-      x
+      rect:
+      properties:
 
     """
 

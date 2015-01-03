@@ -33,12 +33,13 @@ class Walkabout(object):
         """Graphical object with directional sprites and their
         movement/positioning/ollision detection.
 
-        The walkabout sprites specified to be therein
-        walkabout_directory, are files with an action__direction.gif
-        filename convention.
+        Note:
+          The walkabout sprites specified to be therein
+          walkabout_directory, are files with an action__direction.gif
+          filename convention.
 
-        ASSUMPTION: walkabout_directory contains sprites for
-        walk AND run actions.
+          ASSUMPTION: walkabout_directory contains sprites for
+          walk AND run actions.
 
         Args:
           walkabout_directory (str): directory containing (animated)
@@ -81,7 +82,8 @@ class Walkabout(object):
     def blit(self, screen, offset):
         """Draw the appropriate/active animation to screen.
 
-        Should go to render module?
+        Note:
+          Should go to render module?
 
         Args:
           screen (pygame.Surface): the primary display/screen.
@@ -115,7 +117,9 @@ class HumanPlayer(Walkabout):
         """Modify positional data to reflect a legitimate player
         movement operation.
 
-        Will round down to nearest probable step if full step is impassable.
+        Note:
+          Will round down to nearest probable step
+          if full step is impassable.
 
         Args:
           direction (constants.Direction): may be one of: up, right, down, left
@@ -178,7 +182,6 @@ class HumanPlayer(Walkabout):
 
                 self.rect = new_sprite_rect
                 self.action = 'walk'
-
 
                 return True
 
