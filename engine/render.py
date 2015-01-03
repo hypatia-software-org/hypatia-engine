@@ -38,6 +38,76 @@ VIEWPORT_X = 50
 VIEWPORT_Y = 50
 
 
+class Viewport(object):
+
+    def __init__(self, size):
+        self.size = size
+
+        self.surface = pygame.Surface(size)
+        self.start_x = 0
+        self.start_y = 0
+        self.end_x = size[0]
+        self.end_y = size[1]
+
+    def screen_pan(self, direction):
+
+        if direction == 'right':
+            self.start_x += self.size[0]
+            self.end_x += self.size[0]
+
+        # if player goes off the left of the screen...
+        elif direction == 'left':
+            self.start_x -= self.size[0]
+            self.end_x -= self.size[0]
+
+        # if player goes off bottom of screen...
+        elif direction == 'down':
+            self.start_y += self.size[1]
+            self.end_y += self.size[1]
+
+        # if player goes off top of screen...
+        elif direction == 'up':
+            self.start_y -= self.size[1]
+            self.end_y -= self.size[1]
+
+        else:
+            # should raise InvalidDirection
+            pass
+
+        return None
+
+    def pan_for_entity(self, entity):
+        entity_position_x, entity_position_y = entity.rect.center
+
+        # if player goes off the right of the screen...
+        if entity_position_x > self.end_x:
+            self.screen_pan('right')
+
+        # if player goes off the left of the screen...
+        elif entity_position_x < self.start_x:
+            self.screen_pan('left')
+
+        # if player goes off bottom of screen...
+        elif entity_position_y > self.end_y:
+            self.screen_pan('down')
+
+        # if player goes off top of screen...
+        elif entity_position_y < self.start_y:
+            self.screen_pan('up')
+
+        return None
+
+    def blit(self, surface):
+        self.surface.blit(
+                          surface,
+                          (0, 0),
+                          (self.start_x, self.start_y,
+                           self.size[0], self.size[1])
+                         )
+
+        return None
+
+
 def render(tilemap):
     """Render a map, simulate world.
 
@@ -62,11 +132,7 @@ def render(tilemap):
                                      FULLSCREEN | DOUBLEBUF
                                     )
 
-    viewport = pygame.Surface((VIEWPORT_X, VIEWPORT_Y))
-    viewport_start_x = 0
-    viewport_start_y = 0
-    viewport_end_x = VIEWPORT_X
-    viewport_end_y = VIEWPORT_Y
+    viewport = Viewport((VIEWPORT_X, VIEWPORT_Y))
 
     tilemap.convert_layer_images()
 
@@ -74,47 +140,16 @@ def render(tilemap):
     player_controller = controllers.Controller(player, tilemap)
 
     while True:
-        player_pos_x, player_pos_y = player.rect.center
-
-        # if player goes off the right of the screen...
-        if player_pos_x > viewport_end_x:
-            viewport_start_x += VIEWPORT_X
-            viewport_end_x += VIEWPORT_X
-
-        # if player goes off the left of the screen...
-        elif player_pos_x < viewport_start_x:
-            viewport_start_x -= VIEWPORT_X
-            viewport_end_x -= VIEWPORT_X
-
-        # if player goes off bottom of screen...
-        elif player_pos_y > viewport_end_y:
-            viewport_start_y += VIEWPORT_Y
-            viewport_end_y += VIEWPORT_Y
-
-        # if player goes off top of screen...
-        elif player_pos_y < viewport_start_y:
-            viewport_start_y -= VIEWPORT_Y
-            viewport_end_y -= VIEWPORT_Y
-
-        viewport.blit(
-                     tilemap.layer_images[0],
-                     (0, 0),
-                     (viewport_start_x, viewport_start_y,
-                      VIEWPORT_X, VIEWPORT_Y)
-                    )
+        viewport.pan_for_entity(player)
+        viewport.blit(tilemap.layer_images[0])
 
         player_controller.update()
-        player.blit(viewport, (viewport_start_x, viewport_start_y))
+        player.blit(viewport.surface, (viewport.start_x, viewport.start_y))
 
         for layer in tilemap.layer_images[1:]:
-            viewport.blit(
-                          layer,
-                          (0, 0),
-                          (viewport_start_x, viewport_start_y,
-                           VIEWPORT_X, VIEWPORT_Y)
-                         )
+            viewport.blit(layer)
 
-        scaled_viewport = pygame.transform.scale(viewport, screen_size)
+        scaled_viewport = pygame.transform.scale(viewport.surface, screen_size)
         screen.blit(
                     scaled_viewport,
                     (0, 0)

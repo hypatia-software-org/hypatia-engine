@@ -29,14 +29,15 @@ __status__ = "Development"
 class Walkabout(object):
 
     def __init__(self, walkabout_directory='debug', start_position=None):
-        """Interactive entity which uses a walkabout sprite.
+        """Graphical object with directional sprites and their
+        movement/positioning/ollision detection.
 
-        An entity capable of walking about the map. Sprites for
-        "walking about" are defined as action__direction.gif therein
-        the specified walkabout_directory.
+        The walkabout sprites specified to be therein
+        walkabout_directory, are files with an action__direction.gif
+        filename convention.
 
         ASSUMPTION: walkabout_directory contains sprites for
-        walk, run actions.
+        walk AND run actions.
 
         Args:
           walkabout_directory (str): directory containing (animated)
@@ -104,6 +105,9 @@ class Walkabout(object):
 
 
 class HumanPlayer(Walkabout):
+    """Manipulation of walkabout specific to the human player.
+
+    """
 
     def move(self, direction, tilemap):
         """Modify positional data to reflect a legitimate player
@@ -175,17 +179,4 @@ class HumanPlayer(Walkabout):
 
 
                 return True
-
-
-def walkabout_generator():
-    """Create the walkabout sprites for a character
-    based off of some info.
-
-    Gender, obvs.
-
-    Why not make this a meta class?
-
-    """
-
-    pass
 
