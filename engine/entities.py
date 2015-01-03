@@ -26,21 +26,6 @@ __email__ = "lillian.lynn.mahoney@gmail.com"
 __status__ = "Development"
 
 
-class Player(object):
-    """Scaffolding."""
-
-    def __init__(self, walkabout=None):
-        """NPC or human player; depends on which controller
-        is assigned.
-
-        Args:
-          walkabout (Walkabout): walkabout settings/sprites
-
-        """
-
-        self.walkabout = Walkabout(walkabout or 'debug')
-
-
 class Walkabout(object):
 
     def __init__(self, walkabout_directory, start_position=None):
@@ -89,6 +74,36 @@ class Walkabout(object):
 
         position = start_position or (0, 0)  # px values
         self.rect = pygame.Rect(position, self.size)
+
+    def blit(self, screen, offset):
+        """Draw the appropriate/active animation to screen.
+
+        Should go to render module?
+
+        Args:
+          screen (pygame.Surface): the primary display/screen.
+          offset (x, y tuple): the x, y coords of the absolute
+            starting top left corner for the current screen/viewport
+            position.
+
+        Returns:
+          None
+
+        """
+
+        x, y = self.rect.topleft
+        x -= offset[0]
+        y -= offset[1]
+        position_on_screen = (x, y)
+        self.sprites[self.action][self.direction].blit(
+                                                       screen,
+                                                       position_on_screen
+                                                      )
+
+        return None
+
+
+class HumanPlayer(Walkabout):
 
     def move(self, direction, tilemap):
         """Modify positional data to reflect a legitimate player
@@ -160,31 +175,6 @@ class Walkabout(object):
 
 
                 return True
-
-    def blit(self, screen, offset):
-        """Draw the appropriate/active animation to screen.
-
-        Args:
-          screen (pygame.Surface): the primary display/screen.
-          offset (x, y tuple): the x, y coords of the absolute
-            starting top left corner for the current screen/viewport
-            position.
-
-        Returns:
-          None
-
-        """
-
-        x, y = self.rect.topleft
-        x -= offset[0]
-        y -= offset[1]
-        position_on_screen = (x, y)
-        self.sprites[self.action][self.direction].blit(
-                                                       screen,
-                                                       position_on_screen
-                                                      )
-
-        return None
 
 
 def walkabout_generator():

@@ -70,7 +70,7 @@ def render(tilemap):
 
     tilemap.convert_layer_images()
 
-    player = entities.Player()
+    player = entities.HumanPlayer()
     player_controller = controllers.Controller(player, tilemap)
 
     while True:
