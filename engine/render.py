@@ -59,6 +59,9 @@ class Viewport(object):
         Args:
           size (tuple): (int x, int y) pixel dimensions of viewport.
 
+        Example:
+          >>> viewport = Viewport((320, 240))
+
         """
 
         self.size = size
@@ -76,6 +79,9 @@ class Viewport(object):
         Args:
           direction (constants.Direction): Move the viewport toward
             specified direction.
+
+        Example:
+          >>> viewport.screen_pan(constants.Up)
 
         """
 
@@ -112,6 +118,9 @@ class Viewport(object):
           entity (entity.Walkabout): something with a pygame.rect
             attribute. Uses rect.center for coordinates to check.
 
+        Example:
+          >>> tilemap_pan_for_entity(player)
+
         """
 
         entity_position_x, entity_position_y = entity.rect.center
@@ -141,6 +150,9 @@ class Viewport(object):
           surface (pygame.Surface): will only draw the area described
             by viewport coordinates.
 
+        Example:
+          >>> viewport.blit(tilemap.layer_images[0])
+
         """
 
         self.surface.blit(
@@ -156,9 +168,9 @@ class Viewport(object):
 def render(tilemap):
     """Render a map, simulate world.
 
-    Needs to be separate from simulation!
-
-    Mostly a basic test for development purposes.
+    Note:
+      * Needs to be separate from simulation!
+      * Mostly a basic test for development purposes.
 
     Args:
       tilemap (tiles.TileMap): tile map to render
@@ -215,6 +227,10 @@ def gif_to_pyganim(gif_path):
       PygAnimation: a PygAnimation based off of the GIF specified in
         gif_path
 
+    Example:
+      >>> gif_to_pyganim('/home/lillian/images/dancing_skeleton.gif')
+      <PygAnim>
+
     """
 
     gif = Image.open(gif_path)
@@ -254,6 +270,10 @@ def pil_to_pygame(pil_image, encoding):
 
     Returns:
       pygame.Surface: the converted image
+
+    Example:
+       >>> pil_to_pygame(gif, "RGBA")
+       <pygame.Surface>
 
     """
 

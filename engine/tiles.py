@@ -34,19 +34,21 @@ __status__ = "Development"
 
 
 class BadTileName(Exception):
-    """TileSwatch: non-existant tile name referenced"""
+    """TileSwatch: non-existant tile name referenced. Inform the user
+    of which tile name was attempted in vain
+
+    Args:
+      swatch_name (str): the name of the swatch used, whereas a
+        lookup for bad_tile_name was performed, but raised KeyError
+      bad_tile_name (str): the tile name which was looked up, but
+        didn't exist/have a corresponding value in swatch.
+
+    Attribs:
+      message:
+
+    """
 
     def __init__(self, swatch_name, bad_tile_name):
-        """Inform user of which tile name was attempted in vain.
-
-        Args:
-          swatch_name (str): the name of the swatch used, whereas a
-            lookup for bad_tile_name was performed, but raised KeyError
-          bad_tile_name (str): the tile name which was looked up, but
-            didn't exist/have a corresponding value in swatch.
-
-        """
-
         message = ('TileSwatch: no tile by name "%s"'  % bad_tile_name)
         super(BadTileName, self).__init__(message)
 
@@ -231,6 +233,12 @@ class TileMap(object):
         Returns:
           str: string which can recreate the TileMap
 
+        Examples:
+           >>> tilemap_string = tilemap.to_string()
+           >>> fh = open('somefile.tilemap', 'w')
+           >>> fh.write(tilemap_string)
+           >>> fh.close()
+
         """
 
         (width_in_tiles, height_in_tiles,
@@ -275,6 +283,9 @@ class TileSwatch(object):
         Args:
           swatch_name (str): asdf
 
+        Examples:
+          >>> tileswatch = TileSwatch('debug')
+
         """
 
         swatch_directory = os.path.join('data', 'tiles', 'swatches',
@@ -314,6 +325,10 @@ class TileSwatch(object):
         Raises:
           BadTileName: KeyError; no tile in swatch corresponds to
             provided tile_name.
+
+        Examples:
+          >>> swatch['water']
+          <pygame.Surface>
 
         """
 
