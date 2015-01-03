@@ -159,7 +159,7 @@ class WalkaboutActions(object):
         """
 
         controller = self.controller
-        walkabout = controller.entity.walkabout
+        walkabout = controller.entity
 
         # directional keys; movement; up, right, down, left
         if not any([self.up, self.right, self.down, self.left]):

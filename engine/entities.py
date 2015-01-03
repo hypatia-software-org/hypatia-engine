@@ -28,7 +28,7 @@ __status__ = "Development"
 
 class Walkabout(object):
 
-    def __init__(self, walkabout_directory, start_position=None):
+    def __init__(self, walkabout_directory='debug', start_position=None):
         """Interactive entity which uses a walkabout sprite.
 
         An entity capable of walking about the map. Sprites for

@@ -74,7 +74,7 @@ def render(tilemap):
     player_controller = controllers.Controller(player, tilemap)
 
     while True:
-        player_pos_x, player_pos_y = player.walkabout.rect.center
+        player_pos_x, player_pos_y = player.rect.center
 
         # if player goes off the right of the screen...
         if player_pos_x > viewport_end_x:
@@ -104,7 +104,7 @@ def render(tilemap):
                     )
 
         player_controller.update()
-        player.walkabout.blit(viewport, (viewport_start_x, viewport_start_y))
+        player.blit(viewport, (viewport_start_x, viewport_start_y))
 
         for layer in tilemap.layer_images[1:]:
             viewport.blit(
