@@ -22,12 +22,12 @@ import tiles
 import render
 import controllers
 
-__author__ = "Lillian Mahoney"
-__copyright__ = "Copyright 2014, Lillian Mahoney"
-__credits__ = ["Lillian Mahoney"]
+__author__ = "Lillian Lemmer"
+__copyright__ = "Copyright 2014, Lillian Lemmer"
+__credits__ = ["Lillian Lemmer"]
 __license__ = "Attribution Assurance License"
-__maintainer__ = "Lillian Mahoney"
-__email__ = "lillian.lynn.mahoney@gmail.com"
+__maintainer__ = "Lillian Lemmer"
+__email__ = "lillian.lynn.lemmer@gmail.com"
 __status__ = "Development"
 
 

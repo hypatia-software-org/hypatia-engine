@@ -1,5 +1,5 @@
 # engine/render.py
-# Lillian Lynn Mahoney <lillian.lynn.mahoney@gmail.com>
+# Lillian Lynn Lemmer <lillian.lynn.lemmer@gmail.com>
 #
 # This module is part of Untitled Game Engine and is released under the
 # Attribution Assurance License: http://opensource.org/licenses/AAL
@@ -23,20 +23,13 @@ import controllers
 from PIL import Image
 from pygame.locals import *
 
-__author__ = "Lillian Mahoney"
-__copyright__ = "Copyright 2014, Lillian Mahoney"
-__credits__ = ["Lillian Mahoney"]
-__license__ = "Attribution Assurance License"
-__maintainer__ = "Lillian Mahoney"
-__email__ = "lillian.lynn.mahoney@gmail.com"
+__author__ = "Lillian Lemmer"
+__copyright__ = "Copyright 2014, Lillian Lemmer"
+__credits__ = ["Lillian Lemmer"]
+__license__ = "MIT"
+__maintainer__ = "Lillian Lemmer"
+__email__ = "lillian.lynn.lemmer@gmail.com"
 __status__ = "Development"
-
-
-FPS = 30
-
-# the viewport width/height in pixels
-VIEWPORT_X = 50
-VIEWPORT_Y = 50
 
 
 class Viewport(object):

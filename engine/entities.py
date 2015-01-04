@@ -1,8 +1,8 @@
 # engine/entities.py
-# Lillian Mahoney <lillian.lynn.mahoney@gmail.com>
+# Lillian Lynn Lemmer <lillian.lynn.lemmer@gmail.com>
 #
 # This module is part of Untitled Game Engine and is released under the
-# Attribution Assurance License: http://opensource.org/licenses/AAL
+# MIT license: http://opensource.org/licenses/MIT
 
 """Entities: interactive/dynamic map objects.
 
@@ -18,12 +18,12 @@ import pyganim
 import pygame
 from collections import OrderedDict
 
-__author__ = "Lillian Mahoney"
-__copyright__ = "Copyright 2014, Lillian Mahoney"
-__credits__ = ["Lillian Mahoney"]
-__license__ = "Attribution Assurance License"
-__maintainer__ = "Lillian Mahoney"
-__email__ = "lillian.lynn.mahoney@gmail.com"
+__author__ = "Lillian Lemmer"
+__copyright__ = "Copyright 2014, Lillian Lemmer"
+__credits__ = ["Lillian Lemmer"]
+__license__ = "MIT"
+__maintainer__ = "Lillian Lemmer"
+__email__ = "lillian.lynn.lemmer@gmail.com"
 __status__ = "Development"
 
 
@@ -83,6 +83,11 @@ class Walkabout(object):
         position = start_position or (0, 0)  # px values
         self.rect = pygame.Rect(position, self.size)
 
+    @property
+    def current_sprite(self):
+
+        return self.sprites[self.action][self.direction]
+
     def blit(self, screen, offset):
         """Draw the appropriate/active animation to screen.
 
@@ -104,10 +109,7 @@ class Walkabout(object):
         x -= offset[0]
         y -= offset[1]
         position_on_screen = (x, y)
-        self.sprites[self.action][self.direction].blit(
-                                                       screen,
-                                                       position_on_screen
-                                                      )
+        self.current_sprite.blit(screen, position_on_screen)
 
         return None
 

@@ -1,8 +1,8 @@
 # engine/controllers.py
-# Lillian Lynn Mahoney <lillian.lynn.mahoney@gmail.com>
+# Lillian Lynn Lemmer <lillian.lynn.lemmer@gmail.com>
 #
 # This module is part of Untitled Game Engine and is released under the
-# Attribution Assurance License: http://opensource.org/licenses/AAL
+# MIT license: http://opensource.org/licenses/MIT
 
 """Controllers manipulate entity state/attributes.
 
@@ -20,12 +20,12 @@ import pygame
 import constants
 from pygame.locals import *
 
-__author__ = "Lillian Lynn Mahoney"
-__copyright__ = "Copyright 2014, Lillian Lynn Mahoney"
-__credits__ = ["Lillian Mahoney"]
-__license__ = "Attribution Assurance License"
-__maintainer__ = "Lillian Mahoney"
-__email__ = "lillian.lynn.mahoney@gmail.com"
+__author__ = "Lillian Lemmer"
+__copyright__ = "Copyright 2014, Lillian Lynn Lemmer"
+__credits__ = ["Lillian Lemmer"]
+__license__ = "MIT"
+__maintainer__ = "Lillian Lemmer"
+__email__ = "lillian.lynn.lemmer@gmail.com"
 __status__ = "Development"
 
 
