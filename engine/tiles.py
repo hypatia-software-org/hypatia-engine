@@ -17,7 +17,6 @@ Examples here!
 
 import os
 import sys
-sys.path.insert(0, '../')
 import glob
 import zlib
 import string
