@@ -16,6 +16,8 @@ Examples here!
 """
 
 import os
+import sys
+sys.path.insert(0, '../')
 import glob
 import zlib
 import string
@@ -288,19 +290,33 @@ class TileSwatch(object):
 
         """
 
-        swatch_directory = os.path.join('data', 'tiles', 'swatches',
-                                        swatch_name)
-        tile_pattern = os.path.join(swatch_directory, '*.png')
+        swatch_directory = os.path.join(
+                                        '../resources',
+                                        'tileswatches',
+                                        swatch_name
+                                       )
+        swatch_directory = os.path.abspath(swatch_directory)
+        tile_pattern = os.path.abspath(os.path.join(swatch_directory, '*.png'))
         self.swatch = {}
         self.properties = {}
         self.name = swatch_name
 
         # load default properties for tileswatch
-        config_path = os.path.join(swatch_directory, 'swatch.ini')
-        config = ConfigParser.RawConfigParser()
-        config.read(config_path)
+        # make sure it's loaded first, I guess
+        config_path = os.path.abspath(os.path.join(
+                                                   swatch_directory,
+                                                   'swatch.ini'
+                                                  )
+                                     )
 
-        for tile_name, properties in config.items('tile_properties'):
+        if not os.path.exists(config_path):
+
+            raise Exception('bad config path: ' + config_path)
+
+        config_file = ConfigParser.RawConfigParser()
+        config_file.read(config_path)
+
+        for tile_name, properties in config_file.items('tile_properties'):
             props = TileProperties([p.strip() for p in properties.split(',')])
             self.properties[tile_name] = props
 

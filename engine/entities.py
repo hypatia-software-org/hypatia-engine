@@ -52,12 +52,16 @@ class Walkabout(object):
 
         """
 
-        walkabout_directory = os.path.join('data', 'walkabouts',
-                                           walkabout_directory)
+        walkabout_directory = os.path.join(
+                                           '../resources',
+                                           'walkabouts',
+                                           walkabout_directory
+                                          )
         sprite_name_pattern = os.path.join(walkabout_directory, '*.gif')
         self.sprites = {}
         self.size = None
 
+        # need to do test if none detected
         for sprite_path in glob.iglob(sprite_name_pattern):
             file_name, file_ext = os.path.splitext(sprite_path)
             file_name = os.path.split(file_name)[1]
