@@ -8,7 +8,7 @@ MIT License!
 
 == Examples
 
-Edit/run _/test.py_; it shows you how to use the tile system, to an extent. _/engine/render.py_ is definitely worth looking at, too.
+Edit/run _/examples/exploremap.py_; it shows you how to use the tile system, to an extent.
 
 Below a 3D array is created, the +default+ bit refers to the +default+ graphical tile in the (later) specified tile swatch. +water+ is just another graphical tile name.
 
