@@ -100,6 +100,7 @@ game_blueprint = gameblueprint.GameBlueprint(
                                              tilemap=tilemap,
                                              human_player=player,
                                              items=items,
+                                             screen=screen,
                                              viewport=viewport
                                             )
 
