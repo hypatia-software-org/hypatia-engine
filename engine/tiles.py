@@ -28,7 +28,7 @@ import pygame
 __author__ = "Lillian Lemmer"
 __copyright__ = "Copyright 2014, Lillian Lemmer"
 __credits__ = ["Lillian Lemmer"]
-__license__ = "Attribution Assurance License"
+__license__ = "MIT"
 __maintainer__ = "Lillian Lemmer"
 __email__ = "lillian.lynn.lemmer@gmail.com"
 __status__ = "Development"

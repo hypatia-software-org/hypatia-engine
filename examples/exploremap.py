@@ -21,11 +21,12 @@ import entities
 import tiles
 import render
 import controllers
+import gameblueprint
 
 __author__ = "Lillian Lemmer"
 __copyright__ = "Copyright 2014, Lillian Lemmer"
 __credits__ = ["Lillian Lemmer"]
-__license__ = "Attribution Assurance License"
+__license__ = "MIT"
 __maintainer__ = "Lillian Lemmer"
 __email__ = "lillian.lynn.lemmer@gmail.com"
 __status__ = "Development"
@@ -39,7 +40,7 @@ WIDTH = 10
 VIEWPORT_X, VIEWPORT_Y = 50, 50
 
 
-# ENGINE: tiles
+# TILEMAP
 blueprint = [[['default' for i in xrange(WIDTH)]
                          for i in xrange(ROWS)]
                          for i in xrange(LAYERS)]
@@ -79,7 +80,7 @@ with open(FILENAME, 'w') as f:
 with open(FILENAME) as f:
     tilemap = tiles.tilemap_from_string(f.read())
 
-# runtime
+# init screen
 pygame.init()
 clock = pygame.time.Clock()
 display_info = pygame.display.Info()
@@ -88,25 +89,34 @@ screen = pygame.display.set_mode(
                                  screen_size,
                                  FULLSCREEN | DOUBLEBUF
                                 )
-tilemap.convert_layer_images()
-viewport = render.Viewport((VIEWPORT_X, VIEWPORT_Y))
 
+# prepare game assets
+items = [entities.ExampleItem((10, 10))]
 player = entities.HumanPlayer()
 player_controller = controllers.Controller(player, tilemap)
+viewport = render.Viewport((VIEWPORT_X, VIEWPORT_Y))
+
+game_blueprint = gameblueprint.GameBlueprint(
+                                             tilemap=tilemap,
+                                             human_player=player,
+                                             items=items,
+                                             viewport=viewport
+                                            )
+
+# runtime
+game_blueprint.init()
 
 while True:
-    # blit first map layer, then player, then rest of the map layers
-    viewport.pan_for_entity(player)
-    viewport.blit(tilemap.layer_images[0])
-
+    game_blueprint.item_check()
     player_controller.update()
-    player.blit(viewport.surface, (viewport.start_x, viewport.start_y))
 
-    for layer in tilemap.layer_images[1:]:
-        viewport.blit(layer)
+    game_blueprint.blit_all()
 
     # this is such a nice way to rescale to any resolution
-    scaled_viewport = pygame.transform.scale(viewport.surface, screen_size)
+    scaled_viewport = pygame.transform.scale(
+                                             viewport.surface,
+                                             screen_size
+                                            )
     screen.blit(
                 scaled_viewport,
                 (0, 0)

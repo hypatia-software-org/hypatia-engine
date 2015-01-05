@@ -28,6 +28,12 @@ __status__ = "Development"
 
 
 class Walkabout(object):
+    """Needs to use internal current_image pointer instead
+    of relying on function. Then, you'll always test
+    current_image.get_rect(), for example. This enables support
+    for walkabout sprites of inconsistent dimensions.
+
+    """
 
     def __init__(self, walkabout_directory='debug', start_position=None):
         """Graphical object with directional sprites and their
@@ -83,6 +89,7 @@ class Walkabout(object):
         position = start_position or (0, 0)  # px values
         self.rect = pygame.Rect(position, self.size)
 
+    # NOT TESTED
     @property
     def current_sprite(self):
 
@@ -190,4 +197,44 @@ class HumanPlayer(Walkabout):
                 self.action = 'walk'
 
                 return True
+
+
+class Item(object):
+    """An item on the ground which can be picked up.
+
+    Note:
+      An equipable item which has a sprite per side just
+      uses Walkabout.
+
+    """
+
+    def __init__(self, position, item_name='debug'):
+        item_image_path = os.path.join(
+                                       '../resources',
+                                       'items',
+                                       item_name + '.png'
+                                      )
+        item_image = pygame.image.load(item_image_path)
+        self.size = item_image.get_size()
+        self.image = item_image
+        self.rect = pygame.Rect(position, self.size)
+        self.position = position
+        sound_path = os.path.join(
+                                  '../resources',
+                                  'sounds',
+                                  'touch-fuzzy.wav'
+                                 )
+        self.pickup_sound =  pygame.mixer.Sound(sound_path)
+
+    def blit(self, surface):
+        surface.blit(self.image, self.position)
+
+
+class ExampleItem(Item):
+    """Plays a sound and cycles the screen tint for a duration.
+
+    """
+
+    def pickup(self):
+        self.pickup_sound.play()
 
