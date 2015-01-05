@@ -1,10 +1,18 @@
+# engine/gameblueprint.py
+# Lillian Lynn Lemmer <lillian.lynn.lemmer@gmail.com>
+#
+# This module is part of Untitled Game Engine and is released under the
+# MIT License: http://opensource.org/licenses/MIT
+
+
 class GameBlueprint(object):
 
-    def __init__(self, screen, tilemap, viewport, human_player, items):
+    def __init__(self, screen, tilemap, viewport, human_player, items=None):
         self.human_player = human_player
         self.tilemap = tilemap
         self.viewport = viewport
-        self.items = items
+        self.items = items or []
+        self.screen = screen
 
     def init(self):
         self.tilemap.convert_layer_images()

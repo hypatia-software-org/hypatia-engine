@@ -2,7 +2,7 @@
 # Lillian Lynn Lemmer <lillian.lynn.lemmer@gmail.com>
 #
 # This module is part of Untitled Game Engine and is released under the
-# Attribution Assurance License: http://opensource.org/licenses/AAL
+# MIT License: http://opensource.org/licenses/MIT
 
 """tile engine for maps.
 
