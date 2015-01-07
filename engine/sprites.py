@@ -4,7 +4,7 @@
 # This module is part of Untitled Game Engine and is released under the
 # MIT license: http://opensource.org/licenses/MIT
 
-"""Entities: interactive/dynamic map objects.
+"""Sprites: sprite manipulation and presentation.
 
 Will rename to sprites.py
 
