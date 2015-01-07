@@ -1,0 +1,13 @@
+= What's new in this commit
+
+  * removed old render function from render.py
+  * fixed incorrect information in render.py's module docstring
+  * implemented sprite/equipment anchors for walkabouts
+  * implemented masks, mask-perfect collision AND anchors
+  * implemented screen effect triggers with items
+  * making it so each sprite consisting a walkabout can have an 
+    arbitrary size with a corresponding rectangle rather than one
+    rectangle for all sprites.
+  * updated resources: debug walkabouts changed to wrap tighter
+    around sprite
+  * cleaned up code, worked on architecture, docstrings

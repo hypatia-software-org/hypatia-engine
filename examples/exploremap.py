@@ -4,12 +4,6 @@ Note:
   * Needs to be separate from simulation!
   * Mostly a basic test for development purposes.
 
-Args:
-  tilemap (tiles.TileMap): tile map to render
-
-Returns:
-  None
-
 """
 
 import os
@@ -91,7 +85,7 @@ screen = pygame.display.set_mode(
                                 )
 
 # prepare game assets
-items = [entities.ExampleItem((10, 10))]
+items = [entities.ExampleItem((40, 40))]
 player = entities.HumanPlayer()
 player_controller = controllers.Controller(player, tilemap)
 viewport = render.Viewport((VIEWPORT_X, VIEWPORT_Y))

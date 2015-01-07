@@ -4,6 +4,27 @@
 # This module is part of Untitled Game Engine and is released under the
 # MIT License: http://opensource.org/licenses/MIT
 
+"""Logic flow for the game.
+
+Note:
+  I have not decided firmly on the approach to take. Expect heavy
+  changes in the future.
+
+  Sorry for the poor documentation, I have not devised an actual
+  architecture for this particular module. I have not decided
+  firmly on the approach to take. Here, I'm sort of imitating
+  Flask's app.
+
+"""
+
+__author__ = "Lillian Lemmer"
+__copyright__ = "Copyright 2015, Lillian Lemmer"
+__credits__ = ["Lillian Lemmer"]
+__license__ = "MIT"
+__maintainer__ = "Lillian Lemmer"
+__email__ = "lillian.lynn.lemmer@gmail.com"
+__status__ = "Development"
+
 
 class GameBlueprint(object):
 
@@ -16,6 +37,7 @@ class GameBlueprint(object):
 
     def init(self):
         self.tilemap.convert_layer_images()
+        self.human_player.init()
 
     def item_check(self):
         ungot_items = []
@@ -23,7 +45,8 @@ class GameBlueprint(object):
         for item in self.items:
 
             if item.rect.colliderect(self.human_player.rect):
-                item.pickup()
+                # should this be player.pickup item? or both?
+                item.pickup(self.human_player)
             else:
                 ungot_items.append(item)
 

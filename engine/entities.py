@@ -19,7 +19,7 @@ import pygame
 from collections import OrderedDict
 
 __author__ = "Lillian Lemmer"
-__copyright__ = "Copyright 2014, Lillian Lemmer"
+__copyright__ = "Copyright 2015, Lillian Lemmer"
 __credits__ = ["Lillian Lemmer"]
 __license__ = "MIT"
 __maintainer__ = "Lillian Lemmer"
@@ -64,36 +64,67 @@ class Walkabout(object):
                                            walkabout_directory
                                           )
         sprite_name_pattern = os.path.join(walkabout_directory, '*.gif')
-        self.sprites = {}
-        self.size = None
+        self.animations = {}
+        self.meta_animations = {}
+        self.size = None  # will be removed in future?
 
         # need to do test if none detected
         for sprite_path in glob.iglob(sprite_name_pattern):
             file_name, file_ext = os.path.splitext(sprite_path)
             file_name = os.path.split(file_name)[1]
-            action, direction = file_name.split('_', 1)
+
+            if file_name.startswith('meta_'):
+                __, action, direction = file_name.split('_', 2)
+                target = self.meta_animations
+            else:
+                action, direction = file_name.split('_', 1)
+                target = self.animations
+
             direction = getattr(constants, direction.title())
-            animation = render.gif_to_pyganim(sprite_path)
-            animation.convert()
-            self.size = animation.getMaxSize()
+
+            animation = render.Animation(sprite_path)
+            self.size = animation.get_max_size()
 
             try:
-                self.sprites[action][direction] = animation
+                target[action][direction] = animation
             except KeyError:
-                self.sprites[action] = {direction: animation}
-
-        self.action = 'stand'
-        self.direction = constants.Up
-        self.speed = 1
+                target[action] = {direction: animation}
 
         position = start_position or (0, 0)  # px values
+
         self.rect = pygame.Rect(position, self.size)
+        self.speed = 1
+        self.action = 'stand'
+        self.direction = constants.Down
 
-    # NOT TESTED
-    @property
-    def current_sprite(self):
+    def current_animation(self):
 
-        return self.sprites[self.action][self.direction]
+        return self.animations[self.action][self.direction]
+
+    def equip(self, pygame_image):
+        """Lazy, temporary method of visualy equipping items.
+
+        Args:
+          pygame_image (pygame.Surface): --
+
+        """
+
+        for action in ('stand', 'walk'):
+
+            for direction in (constants.Up, constants.Down,
+                              constants.Right, constants.Left):
+
+                animation = self.animations[action][direction]
+                meta_animation = self.meta_animations[action][direction]
+                print 'ACTION: %s DIRECTION: %s' % (action, direction)
+                new_animation = render.anchor_to_animation(
+                                                           animation,
+                                                           meta_animation,
+                                                           pygame_image
+                                                          )
+                self.animations[action][direction] = new_animation
+
+        self.init()
 
     def blit(self, screen, offset):
         """Draw the appropriate/active animation to screen.
@@ -107,18 +138,29 @@ class Walkabout(object):
             starting top left corner for the current screen/viewport
             position.
 
-        Returns:
-          None
-
         """
 
         x, y = self.rect.topleft
         x -= offset[0]
         y -= offset[1]
         position_on_screen = (x, y)
-        self.current_sprite.blit(screen, position_on_screen)
+        self.current_animation().pyganim_gif.blit(screen, position_on_screen)
 
-        return None
+    def init(self):
+        actions = ('walk', 'stand')
+        directions = (constants.Up, constants.Down,
+                      constants.Left, constants.Right)
+
+        for action in actions:
+
+            for direction in directions:
+                animated_sprite = (self.animations[action][direction]
+                                   .pyganim_gif)
+                animated_sprite.convert_alpha()
+                animated_sprite.convert()
+
+                # this is me being lazy and impatient
+                animated_sprite.play()
 
 
 class HumanPlayer(Walkabout):
@@ -185,16 +227,16 @@ class HumanPlayer(Walkabout):
 
             if movement_rectangle_collides:
                 # done; can't move!
+                self.action = 'stand'
 
                 return False
 
             else:
                 # we're done, we can move!
                 new_topleft = (new_topleft_x, new_topleft_y)
-                new_sprite_rect = pygame.Rect(new_topleft, self.size)
-
-                self.rect = new_sprite_rect
                 self.action = 'walk'
+                animation = self.current_animation()
+                self.rect = pygame.Rect(new_topleft, animation.get_max_size())
 
                 return True
 
@@ -235,6 +277,9 @@ class ExampleItem(Item):
 
     """
 
-    def pickup(self):
-        self.pickup_sound.play()
+    def pickup(self, player):
+        # my eeearrrrssssss self.pickup_sound.play()
+        hat_image = '../resources/equipment/hat/mask_down.png'
+        hat_image = pygame.image.load(hat_image)
+        player.equip(hat_image)
 

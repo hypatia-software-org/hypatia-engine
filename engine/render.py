@@ -14,6 +14,7 @@ Has some utils for managing images and animations.
 
 import sys
 import time
+import itertools
 import tiles
 import pygame
 import pyganim
@@ -24,7 +25,7 @@ from PIL import Image
 from pygame.locals import *
 
 __author__ = "Lillian Lemmer"
-__copyright__ = "Copyright 2014, Lillian Lemmer"
+__copyright__ = "Copyright 2015, Lillian Lemmer"
 __credits__ = ["Lillian Lemmer"]
 __license__ = "MIT"
 __maintainer__ = "Lillian Lemmer"
@@ -101,8 +102,6 @@ class Viewport(object):
             # should raise InvalidDirection
             pass
 
-        return None
-
     def pan_for_entity(self, entity):
         """Check if entity is outside of the viewport, and if so,
         in which direction?
@@ -134,8 +133,6 @@ class Viewport(object):
         elif entity_position_y < self.start_y:
             self.screen_pan(constants.Up)
 
-        return None
-
     def blit(self, surface):
         """Draw the correct portion of supplied surface onto viewport.
 
@@ -155,107 +152,166 @@ class Viewport(object):
                            self.size[0], self.size[1])
                          )
 
-        return None
 
-
-def render(tilemap):
-    """Render a map, simulate world.
+class Animation(object):
+    """I got sick of converting between pyganim, pygame, and PIL.
 
     Note:
-      * Needs to be separate from simulation!
-      * Mostly a basic test for development purposes.
+      Currently no support for pygame_surfaces to pil_gif. a possible
+      solution is seen below:
 
-    Args:
-      tilemap (tiles.TileMap): tile map to render
+        http://svn.effbot.org/public/pil/Scripts/gifmaker.py
 
-    Returns:
-      None
+      It's not horribly handy to work with PIL once all the
+      animations are assembled, anyway!
 
-    """
+      I need to add support for creating from pygame surfaces, but
+      that hasn't been necessary yet.
 
-    pygame.init()
-    clock = pygame.time.Clock()
-    display_info = pygame.display.Info()
-    screen_size = (display_info.current_w, display_info.current_h)
-    screen = pygame.display.set_mode(
-                                     screen_size,
-                                     FULLSCREEN | DOUBLEBUF
-                                    )
-    tilemap.convert_layer_images()
-    viewport = Viewport((VIEWPORT_X, VIEWPORT_Y))
-
-    player = entities.HumanPlayer()
-    player_controller = controllers.Controller(player, tilemap)
-
-    while True:
-        # blit first map layer, then player, then rest of the map layers
-        viewport.pan_for_entity(player)
-        viewport.blit(tilemap.layer_images[0])
-
-        player_controller.update()
-        player.blit(viewport.surface, (viewport.start_x, viewport.start_y))
-
-        for layer in tilemap.layer_images[1:]:
-            viewport.blit(layer)
-
-        # this is such a nice way to rescale to any resolution
-        scaled_viewport = pygame.transform.scale(viewport.surface, screen_size)
-        screen.blit(
-                    scaled_viewport,
-                    (0, 0)
-                   )
-        pygame.display.flip()
-        clock.tick(FPS)
-
-    return None
-
-
-def gif_to_pyganim(gif_path):
-    """Create PygAnimation from an animated GIF.
-
-    Args:
-      gif_path (str): path to GIF, used for creating PygAnimation
-
-    Returns:
-      PygAnimation: a PygAnimation based off of the GIF specified in
-        gif_path
-
-    Example:
-      >>> gif_to_pyganim('/home/lillian/images/dancing_skeleton.gif')
-      <PygAnim>
+    Attibutes:
+      pygame_surfaces (list):
+      pyganim_gif (PygAnim):
 
     """
 
-    gif = Image.open(gif_path)
-    frame_index = 0
-    palette = gif.getpalette()
-    frames = []  # (pygame.Surface, time in seconds [float])
+    def __init__(self, gif_path=None, pil_gif=None, pyganim_gif=None):
+        """
 
-    try:
+        Args:
+          gif_path (str|None): create animation using a path to a gif
+          pil_gif (PIL.Image): create animation using a PIL Image()
+          pyganim_gif (pyganim.PygAnimation): create animation using a
+            PygAnimation object.
 
-        while 1:
-            # must find frame time, create a pygame surface from frame
-            gif.putpalette(palette)
-            duration = gif.info['duration'] / 1000.0
-            frame_as_pygame_image = pil_to_pygame(gif, "RGBA")
-            frames.append((frame_as_pygame_image, duration))
-            frame_index += 1
-            gif.seek(gif.tell() + 1)
+        """
 
-    except EOFError:
-        pass # end of sequence
+        if gif_path:
+            # open as PIL image
+            pil_gif = Image.open(gif_path)
 
-    animation = pyganim.PygAnimation(frames)
-    animation.anchor(pyganim.CENTER)
-    animation.convert_alpha()
-    animation.convert()
-    animation.play()
+        if pil_gif:
+            pygame_surfaces = self.pil_to_surfaces(pil_gif)
+            pyganim_gif = pyganim.PygAnimation(pygame_surfaces)
+            pyganim_gif.anchor(pyganim.CENTER)
 
-    return animation
+        elif pyganim_gif:
+            pygame_surfaces = self.pyganim_to_surfaces(pyganim_gif)
+
+        self.pyganim_gif = pyganim_gif
+        self.pygame_surfaces = pygame_surfaces
+
+    def pyganim_to_surfaces(self, pyganim_gif):
+        """Create a list of pygame surfaces with corresponding
+        frame durations, from a PygAnimation.
+
+        Args:
+          pyganim_gif (pyganim.PygAnimation): extract the surfaces
+            from this animation.
+
+        Returns:
+          list: a list of (pygame surface, frame duration) representing
+            the frames from supplied pyganim_gif.
+
+        """
+
+        pygame_surfaces = zip(pyganim_gif._images, pyganim_gif._durations)
+
+        return pygame_surfaces
+
+    def pil_to_surfaces(self, pil_gif):
+        """PIL Image() to list of pygame surfaces (surface, duration).
+
+        Args:
+          gif_path (str): GIF to open and load into a list
+            of pygame surfaces.
+
+        Returns:
+          list: [(frame surface, duration), (frame, duration)]
+
+        """
+
+        frame_index = 0
+        frames = []
+
+        try:
+
+            while 1:
+                duration = pil_gif.info['duration'] / 1000.0
+                frame_as_pygame_image = pil_to_pygame(pil_gif, "RGBA")
+                frames.append((frame_as_pygame_image, duration))
+                frame_index += 1
+                pil_gif.seek(pil_gif.tell() + 1)
+
+        except EOFError:
+
+            pass # end of sequence
+
+        return frames
+
+    def get_max_size(self):
+        """Boilerplate for consistency.
+
+        Returns:
+          tuple: (int x, int y) representing the pixel dimensions of
+            the largest frame.
+
+        """
+
+        return self.pyganim_gif.getMaxSize()
+
+
+def anchor_to_animation(animation, animation_mask, pygame_image):
+    """Afix a pygame image to the right point per frame in an
+    animation.
+
+    Args:
+      pygame_image (pygame.image): pygame.image.load('hat.png')
+      alt_target (PygAnim): --
+
+    Note:
+      Precisely superimpose a surface by anchor onto each frame
+      of an animation.
+
+    Returns:
+      pyganim.PygAnimation: --
+
+    """
+
+    gif_surfaces = animation.pygame_surfaces
+    gif_mask_surfaces = animation_mask.pygame_surfaces
+
+    gif_x, gif_y = gif_surfaces[0][0].get_size()
+    pygame_image_anchor = find_anchors(pygame_image)
+    pygame_image_anchor_x, pygame_image_anchor_y = pygame_image_anchor
+    new_surfaces = []
+
+    for i, frame in enumerate(gif_mask_surfaces):
+        surface, duration = frame
+        head_anchor = find_anchors(surface)
+
+        if head_anchor:
+            head_anchor_x, head_anchor_y = head_anchor
+            new_x = head_anchor_x - pygame_image_anchor_x
+            new_y = head_anchor_y - pygame_image_anchor_y
+            new_topleft = (new_x, new_y)
+
+            gif_surfaces[i][0].blit(pygame_image, new_topleft)
+
+        else:
+
+            raise Exception('this should be an UnfoundAnchor error')
+
+
+    pyganim_gif = pyganim.PygAnimation(gif_surfaces)
+
+    return Animation(pyganim_gif=pyganim_gif)
 
 
 def pil_to_pygame(pil_image, encoding):
     """Convert PIL Image() to pygame Surface.
+
+    Note:
+      NOT for animations, use Animation() for that!
 
     Args:
       pil_image (Image): image to convert to pygame.Surface().
@@ -277,5 +333,37 @@ def pil_to_pygame(pil_image, encoding):
                                    pil_image.size,
                                    'RGBA'
                                   )
+
+
+def find_anchors(surface):
+    """Return the coordinates for specified anchors in surface.
+
+    Note:
+      An "anchor" is simply a pixel which matches a specified color.
+
+      I created this for adding equipment to sprites.
+
+    Returns:
+      tuple|None: returns None if no anchors found on surface. Returns
+        a tuple (int x, int y) corresponding to the location of the
+        anchor/color on supplied surface.
+
+    Examples:
+      >>> find_anchors(some_character_sprite)
+      (2, 4)
+
+    """
+
+    head_anchor_color = pygame.Color(255, 136, 255)
+    x, y = surface.get_size()
+
+    for coordinates in itertools.product(xrange(0, x), xrange(0, y)):
+        color = surface.get_at(coordinates)
+
+        if color == head_anchor_color:
+
+            return coordinates
+
+    return None
 
 

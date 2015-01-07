@@ -21,7 +21,7 @@ import constants
 from pygame.locals import *
 
 __author__ = "Lillian Lemmer"
-__copyright__ = "Copyright 2014, Lillian Lynn Lemmer"
+__copyright__ = "Copyright 2015, Lillian Lynn Lemmer"
 __credits__ = ["Lillian Lemmer"]
 __license__ = "MIT"
 __maintainer__ = "Lillian Lemmer"
