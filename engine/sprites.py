@@ -6,6 +6,8 @@
 
 """Entities: interactive/dynamic map objects.
 
+Will rename to sprites.py
+
 Interactive/stateful map stuff.
 
 """
@@ -116,7 +118,6 @@ class Walkabout(object):
 
                 animation = self.animations[action][direction]
                 meta_animation = self.meta_animations[action][direction]
-                print 'ACTION: %s DIRECTION: %s' % (action, direction)
                 new_animation = render.anchor_to_animation(
                                                            animation,
                                                            meta_animation,
@@ -268,8 +269,12 @@ class Item(object):
                                  )
         self.pickup_sound =  pygame.mixer.Sound(sound_path)
 
-    def blit(self, surface):
-        surface.blit(self.image, self.position)
+    def blit(self, surface, viewport_offset=None):
+        x, y = self.position
+        x -= viewport_offset[0]
+        y -= viewport_offset[1]
+        position_on_screen = (x, y)
+        surface.blit(self.image, position_on_screen)
 
 
 class ExampleItem(Item):

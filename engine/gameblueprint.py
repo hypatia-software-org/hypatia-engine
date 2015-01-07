@@ -57,7 +57,8 @@ class GameBlueprint(object):
         self.viewport.blit(self.tilemap.layer_images[0])
 
         for item in self.items:
-            item.blit(self.viewport.surface)
+            item.blit(self.viewport.surface,
+                      (self.viewport.start_x, self.viewport.start_y))
 
         self.human_player.blit(
                                self.viewport.surface,

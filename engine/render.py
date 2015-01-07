@@ -18,7 +18,7 @@ import itertools
 import tiles
 import pygame
 import pyganim
-import entities
+import sprites
 import constants
 import controllers
 from PIL import Image

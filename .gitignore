@@ -66,3 +66,4 @@ sphinx-doc/
 *.db
 *.swo
 *.tilemap
+*.swn

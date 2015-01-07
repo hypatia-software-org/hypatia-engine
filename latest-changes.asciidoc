@@ -1,0 +1,3 @@
+  * cleaned up some stuff left over from debugging
+  * entities.py renamed to sprites.py
+  * fixed bug, re: static positioning of item

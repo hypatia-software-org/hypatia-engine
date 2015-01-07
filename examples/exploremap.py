@@ -11,7 +11,7 @@ import sys
 sys.path.insert(0, '../engine')
 import pygame
 from pygame.locals import *
-import entities
+import sprites
 import tiles
 import render
 import controllers
@@ -85,8 +85,8 @@ screen = pygame.display.set_mode(
                                 )
 
 # prepare game assets
-items = [entities.ExampleItem((40, 40))]
-player = entities.HumanPlayer()
+items = [sprites.ExampleItem((40, 40))]
+player = sprites.HumanPlayer()
 player_controller = controllers.Controller(player, tilemap)
 viewport = render.Viewport((VIEWPORT_X, VIEWPORT_Y))
 
