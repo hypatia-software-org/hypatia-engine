@@ -1,2 +1,1 @@
-  * removed unnecessary file
-  * updating module level docstring for sprites
+  * testing branch
