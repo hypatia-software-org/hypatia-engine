@@ -1,4 +1,4 @@
-# engine/entities.py
+# engine/sprites.py
 # Lillian Lynn Lemmer <lillian.lynn.lemmer@gmail.com>
 #
 # This module is part of Untitled Game Engine and is released under the
@@ -6,9 +6,8 @@
 
 """Sprites: sprite manipulation and presentation.
 
-Will rename to sprites.py
-
-Interactive/stateful map stuff.
+Again: presentation, really--think of it like CSS. Herein defines
+the graphical counterpart to all aspects of the game which have one.
 
 """
 
@@ -223,7 +222,9 @@ class HumanPlayer(Walkabout):
 
                 if impassable_area and (impassable_area
                                         .colliderect(movement_rectangle)):
+
                     movement_rectangle_collides = True
+
                     break
 
             if movement_rectangle_collides:
@@ -249,9 +250,13 @@ class Item(object):
       An equipable item which has a sprite per side just
       uses Walkabout.
 
+      Also: sprites don't have sounds! I'll later be adding
+      an items.py.
+
     """
 
     def __init__(self, position, item_name='debug'):
+        #self.game = game
         item_image_path = os.path.join(
                                        '../resources',
                                        'items',
@@ -280,11 +285,21 @@ class Item(object):
 class ExampleItem(Item):
     """Plays a sound and cycles the screen tint for a duration.
 
+    Note:
+      This has too manny features for a "sprite."
+
+      Items role in the sprites module needs to be completely
+      grounded in the graphical manipulation and presentation
+      of items.
+
     """
 
     def pickup(self, player):
-        # my eeearrrrssssss self.pickup_sound.play()
+        self.pickup_sound.play()
         hat_image = '../resources/equipment/hat/mask_down.png'
         hat_image = pygame.image.load(hat_image)
         player.equip(hat_image)
+
+        #if screen_effect:
+        #    screen...
 

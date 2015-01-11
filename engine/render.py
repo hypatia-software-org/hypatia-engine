@@ -262,7 +262,7 @@ class Animation(object):
 
 def anchor_to_animation(animation, animation_mask, pygame_image):
     """Afix a pygame image to the right point per frame in an
-    animation.
+    animation. Merge surfaces at their anchors.
 
     Args:
       pygame_image (pygame.image): pygame.image.load('hat.png')
@@ -365,5 +365,16 @@ def find_anchors(surface):
             return coordinates
 
     return None
+
+
+def cycle_palette(surface):
+    scaled_viewport = scaled_viewport.convert(8)
+
+    if first_time:
+        palette = collections.deque(scaled_viewport.get_palette())
+        first_time = False
+    else:
+        palette.rotate(1)
+        scaled_viewport.set_palette(palette)
 
 

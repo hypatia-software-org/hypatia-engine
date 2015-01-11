@@ -15,7 +15,11 @@ Note:
   firmly on the approach to take. Here, I'm sort of imitating
   Flask's app.
 
+  Rename to "game.py".
+
 """
+
+import pygame
 
 __author__ = "Lillian Lemmer"
 __copyright__ = "Copyright 2015, Lillian Lemmer"
@@ -26,7 +30,10 @@ __email__ = "lillian.lynn.lemmer@gmail.com"
 __status__ = "Development"
 
 
-class GameBlueprint(object):
+class Game(object):
+    """One simple object for referencing all of the game's features.
+
+    """
 
     def __init__(self, screen, tilemap, viewport, human_player, items=None):
         self.human_player = human_player

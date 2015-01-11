@@ -1,1 +1,1 @@
-  * testing branch
+  * spent some time working on module headers, docstrings. sprites.py had some really bad/outdated info

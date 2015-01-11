@@ -8,6 +8,7 @@ Note:
 
 import os
 import sys
+import collections
 sys.path.insert(0, '../engine')
 import pygame
 from pygame.locals import *
@@ -90,16 +91,17 @@ player = sprites.HumanPlayer()
 player_controller = controllers.Controller(player, tilemap)
 viewport = render.Viewport((VIEWPORT_X, VIEWPORT_Y))
 
-game_blueprint = gameblueprint.GameBlueprint(
-                                             tilemap=tilemap,
-                                             human_player=player,
-                                             items=items,
-                                             screen=screen,
-                                             viewport=viewport
-                                            )
+game_blueprint = gameblueprint.Game(
+                                    tilemap=tilemap,
+                                    human_player=player,
+                                    items=items,
+                                    screen=screen,
+                                    viewport=viewport
+                                   )
 
 # runtime
 game_blueprint.init()
+first_time = True
 
 while True:
     game_blueprint.item_check()
@@ -112,6 +114,18 @@ while True:
                                              viewport.surface,
                                              screen_size
                                             )
+    #transparent_rect = pygame.Surface(screen_size, pygame.SRCALPHA)  # tint
+    #transparent_rect.fill((255,190,255,63))  # tint
+    #scaled_viewport.blit(transparent_rect, (0, 0))  # tint
+    scaled_viewport = scaled_viewport.convert(8)
+
+    if first_time:
+        palette = collections.deque(scaled_viewport.get_palette())
+        first_time = False
+    else:
+        palette.rotate(1)
+        scaled_viewport.set_palette(palette)
+
     screen.blit(
                 scaled_viewport,
                 (0, 0)
