@@ -1,7 +1,7 @@
 # engine/sprites.py
-# Lillian Lynn Lemmer <lillian.lynn.lemmer@gmail.com>
+# Lillian Lemmer <lillian.lynn.lemmer@gmail.com>
 #
-# This module is part of Untitled Game Engine and is released under the
+# This module is part of Hypatia and is released under the
 # MIT license: http://opensource.org/licenses/MIT
 
 """Sprites: sprite manipulation and presentation.

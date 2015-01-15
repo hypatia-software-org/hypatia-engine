@@ -1,7 +1,7 @@
 # engine/tiles.py
-# Lillian Lynn Lemmer <lillian.lynn.lemmer@gmail.com>
+# Lillian Lemmer <lillian.lynn.lemmer@gmail.com>
 #
-# This module is part of Untitled Game Engine and is released under the
+# This module is part of Hypatia and is released under the
 # MIT License: http://opensource.org/licenses/MIT
 
 """tile engine for maps.
@@ -26,7 +26,7 @@ import sqlite3
 import pygame
 
 __author__ = "Lillian Lemmer"
-__copyright__ = "Copyright 2014, Lillian Lemmer"
+__copyright__ = "Copyright 2015, Lillian Lemmer"
 __credits__ = ["Lillian Lemmer"]
 __license__ = "MIT"
 __maintainer__ = "Lillian Lemmer"
