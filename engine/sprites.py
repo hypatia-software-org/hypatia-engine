@@ -186,7 +186,7 @@ class HumanPlayer(Walkabout):
         self.direction = direction
         planned_movement_in_pixels = self.speed
 
-        for pixels in xrange(planned_movement_in_pixels, 0, -1):
+        for pixels in range(planned_movement_in_pixels, 0, -1):
             new_topleft_x, new_topleft_y = self.rect.topleft
 
             if direction == constants.Up:
@@ -238,7 +238,13 @@ class HumanPlayer(Walkabout):
                 new_topleft = (new_topleft_x, new_topleft_y)
                 self.action = 'walk'
                 animation = self.current_animation()
-                self.rect = pygame.Rect(new_topleft, animation.get_max_size())
+                self.size = animation.get_max_size()
+                self.rect = pygame.Rect(new_topleft, self.size)
+                print(self.action)
+                print(self.direction)
+                print(self.rect)
+                print()
+                print()
 
                 return True
 

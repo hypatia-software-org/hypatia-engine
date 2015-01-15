@@ -357,7 +357,7 @@ def find_anchors(surface):
     head_anchor_color = pygame.Color(255, 136, 255)
     x, y = surface.get_size()
 
-    for coordinates in itertools.product(xrange(0, x), xrange(0, y)):
+    for coordinates in itertools.product(range(0, x), range(0, y)):
         color = surface.get_at(coordinates)
 
         if color == head_anchor_color:

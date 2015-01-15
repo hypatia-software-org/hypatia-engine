@@ -20,9 +20,13 @@ import sys
 import glob
 import zlib
 import string
-import cStringIO
-import ConfigParser
 import sqlite3
+
+try:
+    import ConfigParser as configparser
+except ImportError:
+    import configparser
+
 import pygame
 
 __author__ = "Lillian Lemmer"
@@ -139,7 +143,7 @@ class TileMap(object):
 
         for i, properties in enumerate(tile_properties):
             tile_x = i % layer_width_tiles
-            tile_y = i / layer_width_tiles
+            tile_y = i // layer_width_tiles
             y = swatch.tile_size_y * tile_y
             x = swatch.tile_size_x * tile_x
             top_left_tile_corner = (x, y)
@@ -201,8 +205,8 @@ class TileMap(object):
 
         tile_width, tile_height = self.layer_images[0].get_size()
         pixel_x, pixel_y = coord
-        tile_x = pixel_x / tile_width
-        tile_y = pixel_y / tile_height
+        tile_x = pixel_x // tile_width
+        tile_y = pixel_y // tile_height
 
         return self[(tile_x, tile_y)]
 
@@ -267,7 +271,7 @@ class TileMap(object):
                                  tile_graphic_names_string
                                 ])
 
-        return zlib.compress(file_string, 9)
+        return zlib.compress(file_string.encode('ascii'), 9)
 
 
 class TileSwatch(object):
@@ -312,7 +316,7 @@ class TileSwatch(object):
 
             raise Exception('bad config path: ' + config_path)
 
-        config_file = ConfigParser.RawConfigParser()
+        config_file = configparser.RawConfigParser()
         config_file.read(config_path)
 
         for tile_name, properties in config_file.items('tile_properties'):
@@ -413,9 +417,9 @@ def tilemap_from_string(tilemap_string):
 
     """
 
-    tilemap_string_decompressed = zlib.decompress(tilemap_string)
-    dimensions, swatch_name, tile_graphic_names = (tilemap_string_decompressed
-                                                   .split('\n'))
+    tilemap_decompressed = zlib.decompress(tilemap_string)
+    tilemap_string = tilemap_decompressed.decode('ascii')
+    dimensions, swatch_name, tile_graphic_names = tilemap_string.split('\n')
     dimensions_in_tiles = dimensions.split('x')
 
     width, height, layers = dimensions_in_tiles
@@ -426,13 +430,13 @@ def tilemap_from_string(tilemap_string):
     tile_graphic_names_one_dimension = tile_graphic_names.split(':')
     tile_graphic_names_three_dimensions = []
 
-    for layer_i in xrange(layers):
+    for layer_i in range(layers):
         layer = []
 
-        for row_i in xrange(height):
+        for row_i in range(height):
             row = []
 
-            for width_i in xrange(width):
+            for width_i in range(width):
                 index = width_i + row_i * width + layer_i * width * height
                 tile_graphic_name = tile_graphic_names_one_dimension[index]
                 row.append(tile_graphic_name)
