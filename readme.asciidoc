@@ -1,4 +1,4 @@
-= Hypatia Engine: for tile-based adventure games
+= Hypatia Engine: 2D adventure games
 
 *Experimental/in early development* game engine for an item-centric top-down 2D tile-based puzzle/action game vein of __Zelda: Oracle of Ages__,  __Zelda: Oracle of Seasons__, and __Zelda: Link's Awakening__.
 

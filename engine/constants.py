@@ -18,3 +18,15 @@ class Down(Direction):
 class Left(Direction):
     pass
 
+
+class Action(object):
+    pass
+
+
+class Walk(Action):
+    pass
+
+
+class Stand(Action):
+    pass
+

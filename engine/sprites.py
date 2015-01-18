@@ -17,6 +17,7 @@ import render
 import constants
 import pyganim
 import pygame
+from PIL import Image
 from collections import OrderedDict
 
 __author__ = "Lillian Lemmer"
@@ -28,25 +29,137 @@ __email__ = "lillian.lynn.lemmer@gmail.com"
 __status__ = "Development"
 
 
+class Animation(object):
+    """I got sick of converting between pyganim, pygame, and PIL.
+
+    Note:
+      Currently no support for pygame_surfaces to pil_gif. a possible
+      solution is seen below:
+
+        http://svn.effbot.org/public/pil/Scripts/gifmaker.py
+
+      It's not horribly handy to work with PIL once all the
+      animations are assembled, anyway!
+
+      I need to add support for creating from pygame surfaces, but
+      that hasn't been necessary yet.
+
+    Attibutes:
+      pygame_surfaces (list):
+      pyganim_gif (PygAnim):
+
+    """
+
+    def __init__(self, gif_path=None, pil_gif=None, pyganim_gif=None):
+        """
+
+        Args:
+          gif_path (str|None): create animation using a path to a gif
+          pil_gif (PIL.Image): create animation using a PIL Image()
+          pyganim_gif (pyganim.PygAnimation): create animation using a
+            PygAnimation object.
+
+        """
+
+        if gif_path:
+            # open as PIL image
+            pil_gif = Image.open(gif_path)
+
+        if pil_gif:
+            pygame_surfaces = self.pil_to_surfaces(pil_gif)
+            pyganim_gif = pyganim.PygAnimation(pygame_surfaces)
+            pyganim_gif.anchor(pyganim.CENTER)
+
+        elif pyganim_gif:
+            pygame_surfaces = self.pyganim_to_surfaces(pyganim_gif)
+
+        self.pyganim_gif = pyganim_gif
+        self.pygame_surfaces = pygame_surfaces
+
+    def pyganim_to_surfaces(self, pyganim_gif):
+        """Create a list of pygame surfaces with corresponding
+        frame durations, from a PygAnimation.
+
+        Args:
+          pyganim_gif (pyganim.PygAnimation): extract the surfaces
+            from this animation.
+
+        Returns:
+          list: a list of (pygame surface, frame duration) representing
+            the frames from supplied pyganim_gif.
+
+        """
+
+        pygame_surfaces = zip(pyganim_gif._images, pyganim_gif._durations)
+
+        return pygame_surfaces
+
+    def pil_to_surfaces(self, pil_gif):
+        """PIL Image() to list of pygame surfaces (surface, duration).
+
+        Args:
+          gif_path (str): GIF to open and load into a list
+            of pygame surfaces.
+
+        Returns:
+          list: [(frame surface, duration), (frame, duration)]
+
+        """
+
+        frame_index = 0
+        frames = []
+
+        try:
+
+            while 1:
+                duration = pil_gif.info['duration'] / 1000.0
+                frame_as_pygame_image = render.pil_to_pygame(pil_gif, "RGBA")
+                frames.append((frame_as_pygame_image, duration))
+                frame_index += 1
+                pil_gif.seek(pil_gif.tell() + 1)
+
+        except EOFError:
+
+            pass # end of sequence
+
+        return frames
+
+    def get_max_size(self):
+        """Boilerplate for consistency.
+
+        Returns:
+          tuple: (int x, int y) representing the pixel dimensions of
+            the largest frame.
+
+        """
+
+        return self.pyganim_gif.getMaxSize()
+
+
 class Walkabout(object):
-    """Needs to use internal current_image pointer instead
-    of relying on function. Then, you'll always test
-    current_image.get_rect(), for example. This enables support
-    for walkabout sprites of inconsistent dimensions.
+    """Sprite animations for a character which walks around.
+
+    Note:
+      The walkabout sprites specified to be therein
+      walkabout_directory, are files with an action__direction.gif
+      filename convention.
+
+      ASSUMPTION: walkabout_directory contains sprites for
+      walk AND run actions.
+
+    Attributes:
+      animations (dict): --
+      meta_animations (dict): --
+      rect (pygame.Rect): --
+      size (tuple): --
+      action (constants.Action): --
+      direction (constnts.Direction): --
 
     """
 
     def __init__(self, walkabout_directory='debug', start_position=None):
-        """Graphical object with directional sprites and their
-        movement/positioning/ollision detection.
-
-        Note:
-          The walkabout sprites specified to be therein
-          walkabout_directory, are files with an action__direction.gif
-          filename convention.
-
-          ASSUMPTION: walkabout_directory contains sprites for
-          walk AND run actions.
+        """a description about reading animations from directory into
+        object
 
         Args:
           walkabout_directory (str): directory containing (animated)
@@ -54,22 +167,23 @@ class Walkabout(object):
           start_position (tuple): (x, y) coordinates (integers)
             referring to absolute pixel coordinate.
 
-        Unfinished:
-          * Anchors: head, hands, feet, torso
-
         """
 
+        # the attributes we're generating
+        self.animations = {}
+        self.meta_animations = {}
+        self.size = None  # will be removed in future?
+
+        # specify the files to load
         walkabout_directory = os.path.join(
                                            '../resources',
                                            'walkabouts',
                                            walkabout_directory
                                           )
         sprite_name_pattern = os.path.join(walkabout_directory, '*.gif')
-        self.animations = {}
-        self.meta_animations = {}
-        self.size = None  # will be removed in future?
 
-        # need to do test if none detected
+        # get all the animations in this directory
+        # what about if no sprites in directory? what if no such match?
         for sprite_path in glob.iglob(sprite_name_pattern):
             file_name, file_ext = os.path.splitext(sprite_path)
             file_name = os.path.split(file_name)[1]
@@ -82,20 +196,22 @@ class Walkabout(object):
                 target = self.animations
 
             direction = getattr(constants, direction.title())
+            action = getattr(constants, action.title())
 
-            animation = render.Animation(sprite_path)
-            self.size = animation.get_max_size()
+            animation = Animation(sprite_path)
 
             try:
                 target[action][direction] = animation
             except KeyError:
                 target[action] = {direction: animation}
 
+        self.size = animation.get_max_size()
         position = start_position or (0, 0)  # px values
 
+        # ... set the rest of the attribs
         self.rect = pygame.Rect(position, self.size)
         self.speed = 1
-        self.action = 'stand'
+        self.action = constants.Stand
         self.direction = constants.Down
 
     def current_animation(self):
@@ -110,7 +226,7 @@ class Walkabout(object):
 
         """
 
-        for action in ('stand', 'walk'):
+        for action in (constants.Stand, constants.Walk):
 
             for direction in (constants.Up, constants.Down,
                               constants.Right, constants.Left):
@@ -147,7 +263,7 @@ class Walkabout(object):
         self.current_animation().pyganim_gif.blit(screen, position_on_screen)
 
     def init(self):
-        actions = ('walk', 'stand')
+        actions = (constants.Walk, constants.Stand)
         directions = (constants.Up, constants.Down,
                       constants.Left, constants.Right)
 
@@ -161,92 +277,6 @@ class Walkabout(object):
 
                 # this is me being lazy and impatient
                 animated_sprite.play()
-
-
-class HumanPlayer(Walkabout):
-    """Manipulation of walkabout specific to the human player.
-
-    """
-
-    def move(self, direction, tilemap):
-        """Modify positional data to reflect a legitimate player
-        movement operation.
-
-        Note:
-          Will round down to nearest probable step
-          if full step is impassable.
-
-        Args:
-          direction (constants.Direction): may be one of: up, right, down, left
-          tilemap (tiles.TileMap): tilemap for reference, so we can
-            avoid walking into water and such.
-
-        """
-
-        self.direction = direction
-        planned_movement_in_pixels = self.speed
-
-        for pixels in range(planned_movement_in_pixels, 0, -1):
-            new_topleft_x, new_topleft_y = self.rect.topleft
-
-            if direction == constants.Up:
-                new_topleft_y -= pixels
-            elif direction == constants.Right:
-                new_topleft_x += pixels
-            elif direction == constants.Down:
-                new_topleft_y += pixels
-            elif direction == constants.Left:
-                new_topleft_x -= pixels
-
-            new_bottomright_x = new_topleft_x + self.size[0]
-            new_bottomright_y = new_topleft_y + self.size[1]
-
-            movement_size_x = abs(new_bottomright_x - self.rect.topleft[0])
-            movement_size_y = abs(new_bottomright_y - self.rect.topleft[1])
-            movement_area_size = (movement_size_x, movement_size_y)
-
-            if direction == constants.Up:
-                new_topleft = (new_topleft_x, new_topleft_y)
-            elif direction == constants.Right:
-                new_topleft = self.rect.topleft
-            elif direction == constants.Down:
-                new_topleft = self.rect.topleft
-            elif direction == constants.Left:
-                new_topleft = (new_topleft_x, new_topleft_y)
-
-            movement_rectangle = pygame.Rect(new_topleft,
-                                             movement_area_size)
-            movement_rectangle_collides = False
-
-            for impassable_area in tilemap.impassability:
-
-                if impassable_area and (impassable_area
-                                        .colliderect(movement_rectangle)):
-
-                    movement_rectangle_collides = True
-
-                    break
-
-            if movement_rectangle_collides:
-                # done; can't move!
-                self.action = 'stand'
-
-                return False
-
-            else:
-                # we're done, we can move!
-                new_topleft = (new_topleft_x, new_topleft_y)
-                self.action = 'walk'
-                animation = self.current_animation()
-                self.size = animation.get_max_size()
-                self.rect = pygame.Rect(new_topleft, self.size)
-                print(self.action)
-                print(self.direction)
-                print(self.rect)
-                print()
-                print()
-
-                return True
 
 
 class Item(object):

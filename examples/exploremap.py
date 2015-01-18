@@ -1,25 +1,18 @@
-"""Render a map, simulate world.
-
-Note:
-  * Needs to be separate from simulation!
-  * Mostly a basic test for development purposes.
-
-"""
-
 import os
 import sys
 import collections
-sys.path.insert(0, '../engine')
+
 import pygame
 from pygame.locals import *
+
+sys.path.insert(0, '../engine')
 import sprites
 import tiles
 import render
-import controllers
 import gameblueprint
 
 __author__ = "Lillian Lemmer"
-__copyright__ = "Copyright 2014, Lillian Lemmer"
+__copyright__ = "Copyright 2015, Lillian Lemmer"
 __credits__ = ["Lillian Lemmer"]
 __license__ = "MIT"
 __maintainer__ = "Lillian Lemmer"
@@ -87,8 +80,7 @@ screen = pygame.display.set_mode(
 
 # prepare game assets
 items = [sprites.ExampleItem((40, 40))]
-player = sprites.HumanPlayer()
-player_controller = controllers.Controller(player, tilemap)
+player = sprites.Walkabout()
 viewport = render.Viewport((VIEWPORT_X, VIEWPORT_Y))
 
 game_blueprint = gameblueprint.Game(
@@ -105,7 +97,8 @@ first_time = True
 
 while True:
     game_blueprint.item_check()
-    player_controller.update()
+    game_blueprint.handle_input()
+    #player_controller.update()
 
     game_blueprint.blit_all()
 

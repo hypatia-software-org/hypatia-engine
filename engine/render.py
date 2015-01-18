@@ -15,14 +15,14 @@ Has some utils for managing images and animations.
 import sys
 import time
 import itertools
-import tiles
+
 import pygame
 import pyganim
-import sprites
-import constants
-import controllers
-from PIL import Image
 from pygame.locals import *
+
+import constants
+import sprites
+import tiles
 
 __author__ = "Lillian Lemmer"
 __copyright__ = "Copyright 2015, Lillian Lemmer"
@@ -153,113 +153,6 @@ class Viewport(object):
                          )
 
 
-class Animation(object):
-    """I got sick of converting between pyganim, pygame, and PIL.
-
-    Note:
-      Currently no support for pygame_surfaces to pil_gif. a possible
-      solution is seen below:
-
-        http://svn.effbot.org/public/pil/Scripts/gifmaker.py
-
-      It's not horribly handy to work with PIL once all the
-      animations are assembled, anyway!
-
-      I need to add support for creating from pygame surfaces, but
-      that hasn't been necessary yet.
-
-    Attibutes:
-      pygame_surfaces (list):
-      pyganim_gif (PygAnim):
-
-    """
-
-    def __init__(self, gif_path=None, pil_gif=None, pyganim_gif=None):
-        """
-
-        Args:
-          gif_path (str|None): create animation using a path to a gif
-          pil_gif (PIL.Image): create animation using a PIL Image()
-          pyganim_gif (pyganim.PygAnimation): create animation using a
-            PygAnimation object.
-
-        """
-
-        if gif_path:
-            # open as PIL image
-            pil_gif = Image.open(gif_path)
-
-        if pil_gif:
-            pygame_surfaces = self.pil_to_surfaces(pil_gif)
-            pyganim_gif = pyganim.PygAnimation(pygame_surfaces)
-            pyganim_gif.anchor(pyganim.CENTER)
-
-        elif pyganim_gif:
-            pygame_surfaces = self.pyganim_to_surfaces(pyganim_gif)
-
-        self.pyganim_gif = pyganim_gif
-        self.pygame_surfaces = pygame_surfaces
-
-    def pyganim_to_surfaces(self, pyganim_gif):
-        """Create a list of pygame surfaces with corresponding
-        frame durations, from a PygAnimation.
-
-        Args:
-          pyganim_gif (pyganim.PygAnimation): extract the surfaces
-            from this animation.
-
-        Returns:
-          list: a list of (pygame surface, frame duration) representing
-            the frames from supplied pyganim_gif.
-
-        """
-
-        pygame_surfaces = zip(pyganim_gif._images, pyganim_gif._durations)
-
-        return pygame_surfaces
-
-    def pil_to_surfaces(self, pil_gif):
-        """PIL Image() to list of pygame surfaces (surface, duration).
-
-        Args:
-          gif_path (str): GIF to open and load into a list
-            of pygame surfaces.
-
-        Returns:
-          list: [(frame surface, duration), (frame, duration)]
-
-        """
-
-        frame_index = 0
-        frames = []
-
-        try:
-
-            while 1:
-                duration = pil_gif.info['duration'] / 1000.0
-                frame_as_pygame_image = pil_to_pygame(pil_gif, "RGBA")
-                frames.append((frame_as_pygame_image, duration))
-                frame_index += 1
-                pil_gif.seek(pil_gif.tell() + 1)
-
-        except EOFError:
-
-            pass # end of sequence
-
-        return frames
-
-    def get_max_size(self):
-        """Boilerplate for consistency.
-
-        Returns:
-          tuple: (int x, int y) representing the pixel dimensions of
-            the largest frame.
-
-        """
-
-        return self.pyganim_gif.getMaxSize()
-
-
 def anchor_to_animation(animation, animation_mask, pygame_image):
     """Afix a pygame image to the right point per frame in an
     animation. Merge surfaces at their anchors.
@@ -304,7 +197,7 @@ def anchor_to_animation(animation, animation_mask, pygame_image):
 
     pyganim_gif = pyganim.PygAnimation(gif_surfaces)
 
-    return Animation(pyganim_gif=pyganim_gif)
+    return sprites.Animation(pyganim_gif=pyganim_gif)
 
 
 def pil_to_pygame(pil_image, encoding):
