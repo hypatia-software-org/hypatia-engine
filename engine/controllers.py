@@ -1,7 +1,7 @@
 # engine/controllers.py
 # Lillian Lemmer <lillian.lynn.lemmer@gmail.com>
 #
-# This module is part of Hypatia and is released under the
+# This module is part of Hypatia Engine and is released under the
 # MIT license: http://opensource.org/licenses/MIT
 
 """Controllers manipulate entity state/attributes.
