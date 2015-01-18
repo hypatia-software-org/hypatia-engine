@@ -33,26 +33,6 @@ __email__ = "lillian.lynn.lemmer@gmail.com"
 __status__ = "Development"
 
 
-class Controller(object):
-    keys = [
-            K_ESCAPE,
-            K_UP,
-            K_RIGHT,
-            K_DOWN,
-            K_LEFT,
-           ]
-
-    def __init__(self):
-        self.key_states = {key: False for key in self.keys}
-
-    def __getitem__(self, key):
-
-        return self.key_states[key]
-
-    def __setitem__(self, key, value):
-        self.key_states[key] = value
-
-
 class Game(object):
     """One simple object for referencing all of the game's features.
 
@@ -64,7 +44,6 @@ class Game(object):
         self.viewport = viewport
         self.items = items or []
         self.screen = screen
-        self.controller = Controller()
 
     def init(self):
         self.tilemap.convert_layer_images()
@@ -85,30 +64,27 @@ class Game(object):
 
     def handle_input(self):
 
-        # change the states
         for event in pygame.event.get():
 
-            if event.type == KEYDOWN:
-                self.controller[event.key] = True
-
             if event.type == KEYUP:
-                self.controller[event.key] = False
                 self.human_player.action = constants.Stand
 
-        if self.controller[K_ESCAPE]:
+        keys = pygame.key.get_pressed()
+
+        if keys[K_ESCAPE]:
             pygame.quit()
             sys.exit()
 
-        if self.controller[K_UP]:
+        if keys[K_UP]:
             self.move_player(constants.Up)
 
-        if self.controller[K_RIGHT]:
+        if keys[K_RIGHT]:
             self.move_player(constants.Right)
 
-        if self.controller[K_DOWN]:
+        if keys[K_DOWN]:
             self.move_player(constants.Down)
 
-        if self.controller[K_LEFT]:
+        if keys[K_LEFT]:
             self.move_player(constants.Left)
 
     def move_player(self, direction):
