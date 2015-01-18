@@ -9,7 +9,7 @@ sys.path.insert(0, '../engine')
 import sprites
 import tiles
 import render
-import gameblueprint
+import game
 
 __author__ = "Lillian Lemmer"
 __copyright__ = "Copyright 2015, Lillian Lemmer"
@@ -83,13 +83,13 @@ items = [sprites.ExampleItem((40, 40))]
 player = sprites.Walkabout()
 viewport = render.Viewport((VIEWPORT_X, VIEWPORT_Y))
 
-game_blueprint = gameblueprint.Game(
-                                    tilemap=tilemap,
-                                    human_player=player,
-                                    items=items,
-                                    screen=screen,
-                                    viewport=viewport
-                                   )
+game_blueprint = game.Game(
+                           tilemap=tilemap,
+                           human_player=player,
+                           items=items,
+                           screen=screen,
+                           viewport=viewport
+                          )
 
 # runtime
 game_blueprint.init()

@@ -13,12 +13,15 @@ the graphical counterpart to all aspects of the game which have one.
 
 import os
 import glob
-import render
-import constants
+from collections import OrderedDict
+
 import pyganim
 import pygame
 from PIL import Image
-from collections import OrderedDict
+
+import render
+import constants
+import physics
 
 __author__ = "Lillian Lemmer"
 __copyright__ = "Copyright 2015, Lillian Lemmer"
@@ -205,14 +208,19 @@ class Walkabout(object):
             except KeyError:
                 target[action] = {direction: animation}
 
-        self.size = animation.get_max_size()
         position = start_position or (0, 0)  # px values
 
+        # directional movement/speed
+        directions = (constants.Up, constants.Down,
+                      constants.Right, constants.Left)
+        movement = {d: physics.Stepper(0.5) for d in directions}
+
         # ... set the rest of the attribs
+        self.size = animation.get_max_size()
         self.rect = pygame.Rect(position, self.size)
-        self.speed = 1
         self.action = constants.Stand
         self.direction = constants.Down
+        self.movement = movement
 
     def current_animation(self):
 

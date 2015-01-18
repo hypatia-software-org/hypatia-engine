@@ -4,7 +4,7 @@
 # This module is part of Hypatia Engine and is released under the
 # MIT License: http://opensource.org/licenses/MIT
 
-"""render.py: screen presentation and manipulation
+"""render.py: screen and sprite presentation and manipulation
 
 Needs a lot of work. More of a demo/showcase right now.
 

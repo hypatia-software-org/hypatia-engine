@@ -126,10 +126,9 @@ class Game(object):
 
         """
 
-        # ported from move
         player = self.human_player
-        self.human_player.direction = direction
-        planned_movement_in_pixels = player.speed
+        player.direction = direction
+        planned_movement_in_pixels = player.movement[direction].get()
 
         for pixels in range(planned_movement_in_pixels, 0, -1):
             new_topleft_x, new_topleft_y = player.rect.topleft
@@ -153,12 +152,14 @@ class Game(object):
             if direction == constants.Up:
                 new_topleft = (new_topleft_x, new_topleft_y)
             elif direction == constants.Right:
-                new_topleft = self.human_player.rect.topleft
+                new_topleft = player.rect.topleft
             elif direction == constants.Down:
-                new_topleft = self.human_player.rect.topleft
+                new_topleft = player.rect.topleft
             elif direction == constants.Left:
                 new_topleft = (new_topleft_x, new_topleft_y)
 
+            # think of this as stretching the player's rect's right
+            # side to the destination, then checking if it collides
             movement_rectangle = pygame.Rect(new_topleft,
                                              movement_area_size)
             movement_rectangle_collides = False
