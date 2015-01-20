@@ -114,20 +114,21 @@ class Game(object):
 
         player = self.human_player
         player.direction = direction
-        planned_movement_in_pixels = player.speed * self.screen.get_seconds()
-        planned_movement_in_pixels = int(planned_movement_in_pixels)
+        planned_movement_in_pixels = player.speed_in_pixels_per_second
+        adj_speed = self.screen.time_elapsed_milliseconds / 1000.0
+        iter_pixels = max([1, int(planned_movement_in_pixels)])
 
-        for pixels in range(planned_movement_in_pixels, 0, -1):
-            new_topleft_x, new_topleft_y = player.rect.topleft
+        for pixels in range(iter_pixels, 0, -1):
+            new_topleft_x, new_topleft_y = player.topleft_float
 
             if direction == constants.Up:
-                new_topleft_y -= pixels
+                new_topleft_y -= pixels * adj_speed
             elif direction == constants.Right:
-                new_topleft_x += pixels
+                new_topleft_x += pixels * adj_speed
             elif direction == constants.Down:
-                new_topleft_y += pixels
+                new_topleft_y += pixels * adj_speed
             elif direction == constants.Left:
-                new_topleft_x -= pixels
+                new_topleft_x -= pixels * adj_speed
 
             new_bottomright_x = new_topleft_x + player.size[0]
             new_bottomright_y = new_topleft_y + player.size[1]
@@ -173,6 +174,7 @@ class Game(object):
                 animation = player.current_animation()
                 player.size = animation.get_max_size()
                 player.rect = pygame.Rect(new_topleft, player.size)
+                player.topleft_float = (new_topleft_x, new_topleft_y)
 
                 return True
 
@@ -194,4 +196,17 @@ class Game(object):
 
         for layer in self.tilemap.layer_images[1:]:
             self.viewport.blit(layer)
+
+
+def drange(start, stop, step):
+    """aasdf"""
+
+    r = start
+
+    while r <= stop:
+        raise Exception([start, stop, step])
+
+        yield r
+
+        r += step
 

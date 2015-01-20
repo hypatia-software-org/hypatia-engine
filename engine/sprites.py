@@ -175,6 +175,7 @@ class Walkabout(object):
         self.animations = {}
         self.meta_animations = {}
         self.size = None  # will be removed in future?
+        self.topleft_float = (0.0, 0.0)
 
         # specify the files to load
         walkabout_directory = os.path.join(
@@ -212,9 +213,10 @@ class Walkabout(object):
         # ... set the rest of the attribs
         self.size = animation.get_max_size()
         self.rect = pygame.Rect(position, self.size)
+        self.topleft_float = (0.0, 0.0)  # what if position is offered
         self.action = constants.Stand
         self.direction = constants.Down
-        self.speed = 100
+        self.speed_in_pixels_per_second = 10.0
 
     def current_animation(self):
 
@@ -258,7 +260,8 @@ class Walkabout(object):
 
         """
 
-        x, y = self.rect.topleft
+        #x, y = self.rect.topleft
+        x, y = self.topleft_float
         x -= offset[0]
         y -= offset[1]
         position_on_screen = (x, y)

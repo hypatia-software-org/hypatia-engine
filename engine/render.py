@@ -41,6 +41,7 @@ class Screen(object):
     def __init__(self):
         pygame.init()
         self.clock = pygame.time.Clock()
+        self.time_elapsed_milliseconds = 0
         display_info = pygame.display.Info()
         self.screen_size = (display_info.current_w, display_info.current_h)
         self.screen = pygame.display.set_mode(
@@ -48,22 +49,14 @@ class Screen(object):
                                               FULLSCREEN | DOUBLEBUF
                                              )
 
-    def get_seconds(self):
-        milliseconds = self.clock.tick(FPS)
-
-        return milliseconds / 1000.0
-
     def update(self, surface):
         scaled_surface = pygame.transform.scale(
                                                 surface,
                                                 self.screen_size
                                                )
-        self.screen.blit(
-                         scaled_surface,
-                         (0, 0)
-                        )
+        self.screen.blit(scaled_surface, (0, 0))
         pygame.display.flip()
-        self.clock.tick(FPS)
+        self.time_elapsed_milliseconds = self.clock.tick(FPS)
 
 
 class Viewport(object):
