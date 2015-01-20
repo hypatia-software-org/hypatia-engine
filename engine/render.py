@@ -33,6 +33,39 @@ __email__ = "lillian.lynn.lemmer@gmail.com"
 __status__ = "Development"
 
 
+FPS = 60
+
+
+class Screen(object):
+
+    def __init__(self):
+        pygame.init()
+        self.clock = pygame.time.Clock()
+        display_info = pygame.display.Info()
+        self.screen_size = (display_info.current_w, display_info.current_h)
+        self.screen = pygame.display.set_mode(
+                                              self.screen_size,
+                                              FULLSCREEN | DOUBLEBUF
+                                             )
+
+    def get_seconds(self):
+        milliseconds = self.clock.tick(FPS)
+
+        return milliseconds / 1000.0
+
+    def update(self, surface):
+        scaled_surface = pygame.transform.scale(
+                                                surface,
+                                                self.screen_size
+                                               )
+        self.screen.blit(
+                         scaled_surface,
+                         (0, 0)
+                        )
+        pygame.display.flip()
+        self.clock.tick(FPS)
+
+
 class Viewport(object):
     """Display only a fixed area of a surface.
 

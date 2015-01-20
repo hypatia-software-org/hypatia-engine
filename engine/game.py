@@ -19,10 +19,13 @@ Note:
 
 """
 
+import sys
+
 import pygame
 from pygame.locals import *
 
 import constants
+import render
 
 __author__ = "Lillian Lemmer"
 __copyright__ = "Copyright 2015, Lillian Lemmer"
@@ -36,14 +39,21 @@ __status__ = "Development"
 class Game(object):
     """One simple object for referencing all of the game's features.
 
+    Attributes:
+      human_player:
+      tilemap:
+      viewport:
+      items:
+      screen:
+
     """
 
-    def __init__(self, screen, tilemap, viewport, human_player, items=None):
+    def __init__(self, tilemap, viewport, human_player, items=None):
         self.human_player = human_player
         self.tilemap = tilemap
         self.viewport = viewport
         self.items = items or []
-        self.screen = screen
+        self.screen = render.Screen()
 
     def init(self):
         self.tilemap.convert_layer_images()
@@ -104,7 +114,8 @@ class Game(object):
 
         player = self.human_player
         player.direction = direction
-        planned_movement_in_pixels = player.movement[direction].get()
+        planned_movement_in_pixels = player.speed * self.screen.get_seconds()
+        planned_movement_in_pixels = int(planned_movement_in_pixels)
 
         for pixels in range(planned_movement_in_pixels, 0, -1):
             new_topleft_x, new_topleft_y = player.rect.topleft

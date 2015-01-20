@@ -21,7 +21,6 @@ from PIL import Image
 
 import render
 import constants
-import physics
 
 __author__ = "Lillian Lemmer"
 __copyright__ = "Copyright 2015, Lillian Lemmer"
@@ -210,17 +209,12 @@ class Walkabout(object):
 
         position = start_position or (0, 0)  # px values
 
-        # directional movement/speed
-        directions = (constants.Up, constants.Down,
-                      constants.Right, constants.Left)
-        movement = {d: physics.Stepper(0.5) for d in directions}
-
         # ... set the rest of the attribs
         self.size = animation.get_max_size()
         self.rect = pygame.Rect(position, self.size)
         self.action = constants.Stand
         self.direction = constants.Down
-        self.movement = movement
+        self.speed = 100
 
     def current_animation(self):
 
@@ -311,12 +305,6 @@ class Item(object):
         self.image = item_image
         self.rect = pygame.Rect(position, self.size)
         self.position = position
-        sound_path = os.path.join(
-                                  '../resources',
-                                  'sounds',
-                                  'touch-fuzzy.wav'
-                                 )
-        self.pickup_sound =  pygame.mixer.Sound(sound_path)
 
     def blit(self, surface, viewport_offset=None):
         x, y = self.position
@@ -339,11 +327,7 @@ class ExampleItem(Item):
     """
 
     def pickup(self, player):
-        self.pickup_sound.play()
         hat_image = '../resources/equipment/hat/mask_down.png'
         hat_image = pygame.image.load(hat_image)
         player.equip(hat_image)
-
-        #if screen_effect:
-        #    screen...
 

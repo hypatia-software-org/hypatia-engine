@@ -20,7 +20,6 @@ __email__ = "lillian.lynn.lemmer@gmail.com"
 __status__ = "Development"
 
 
-FPS = 60
 FILENAME = 'debug.tilemap'
 LAYERS = 2
 ROWS = 10
@@ -69,14 +68,6 @@ with open(FILENAME, 'wb') as f:
 #    tilemap = tiles.tilemap_from_string(f.read())
 
 # init screen
-pygame.init()
-clock = pygame.time.Clock()
-display_info = pygame.display.Info()
-screen_size = (display_info.current_w, display_info.current_h)
-screen = pygame.display.set_mode(
-                                 screen_size,
-                                 FULLSCREEN | DOUBLEBUF
-                                )
 
 # prepare game assets
 items = [sprites.ExampleItem((40, 40))]
@@ -87,7 +78,6 @@ game_blueprint = game.Game(
                            tilemap=tilemap,
                            human_player=player,
                            items=items,
-                           screen=screen,
                            viewport=viewport
                           )
 
@@ -114,10 +104,6 @@ while True:
     """
 
     # this is such a nice way to rescale to any resolution
-    scaled_viewport = pygame.transform.scale(
-                                             viewport.surface,
-                                             screen_size
-                                            )
     #transparent_rect = pygame.Surface(screen_size, pygame.SRCALPHA)  # tint
     #transparent_rect.fill((255,190,255,63))  # tint
     #scaled_viewport.blit(transparent_rect, (0, 0))  # tint
@@ -132,10 +118,5 @@ while True:
         scaled_viewport.set_palette(palette)
     """
 
-    screen.blit(
-                scaled_viewport,
-                (0, 0)
-               )
-    pygame.display.flip()
-    clock.tick(FPS)
+    game_blueprint.screen.update(viewport.surface)
 
