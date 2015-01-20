@@ -197,16 +197,3 @@ class Game(object):
         for layer in self.tilemap.layer_images[1:]:
             self.viewport.blit(layer)
 
-
-def drange(start, stop, step):
-    """aasdf"""
-
-    r = start
-
-    while r <= stop:
-        raise Exception([start, stop, step])
-
-        yield r
-
-        r += step
-
