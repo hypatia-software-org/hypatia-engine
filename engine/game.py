@@ -1,10 +1,13 @@
-# engine/gameblueprint.py
+# engine/game.py
 # Lillian Lemmer <lillian.lynn.lemmer@gmail.com>
 #
 # This module is part of Hypatia Engine and is released under the
 # MIT License: http://opensource.org/licenses/MIT
 
-"""Logic flow for the game.
+"""Why stuff is drawn; logic flow for the game.
+
+Glues various modules/game omponents together with behaviors defined
+in methods belonging to Game().
 
 Note:
   I have not decided firmly on the approach to take. Expect heavy
@@ -14,8 +17,6 @@ Note:
   architecture for this particular module. I have not decided
   firmly on the approach to take. Here, I'm sort of imitating
   Flask's app.
-
-  Rename to "game.py".
 
 """
 
@@ -118,8 +119,13 @@ class Game(object):
         adj_speed = self.screen.time_elapsed_milliseconds / 1000.0
         iter_pixels = max([1, int(planned_movement_in_pixels)])
 
+        # test a series of positions
         for pixels in range(iter_pixels, 0, -1):
+            # create a rectangle at the new position
             new_topleft_x, new_topleft_y = player.topleft_float
+
+            if pixels == 2:
+                adj_speed = 1
 
             if direction == constants.Up:
                 new_topleft_y -= pixels * adj_speed
@@ -130,68 +136,40 @@ class Game(object):
             elif direction == constants.Left:
                 new_topleft_x -= pixels * adj_speed
 
-            new_bottomright_x = new_topleft_x + player.size[0]
-            new_bottomright_y = new_topleft_y + player.size[1]
+            destination_rect = pygame.Rect((new_topleft_x, new_topleft_y),
+                                           self.human_player.size)
+            collision_rect = player.rect.union(destination_rect)
 
-            movement_size_x = abs(new_bottomright_x - player.rect.topleft[0])
-            movement_size_y = abs(new_bottomright_y - player.rect.topleft[1])
-            movement_area_size = (movement_size_x, movement_size_y)
-
-            if direction == constants.Up:
-                new_topleft = (new_topleft_x, new_topleft_y)
-            elif direction == constants.Right:
-                new_topleft = player.rect.topleft
-            elif direction == constants.Down:
-                new_topleft = player.rect.topleft
-            elif direction == constants.Left:
-                new_topleft = (new_topleft_x, new_topleft_y)
-
-            # think of this as stretching the player's rect's right
-            # side to the destination, then checking if it collides
-            movement_rectangle = pygame.Rect(new_topleft,
-                                             movement_area_size)
-            movement_rectangle_collides = False
-
-            for impassable_area in self.tilemap.impassability:
-
-                if impassable_area and (impassable_area
-                                        .colliderect(movement_rectangle)):
-
-                    movement_rectangle_collides = True
-
-                    break
-
-            if movement_rectangle_collides:
-                # done; can't move!
-                player.action = constants.Stand
-
-                return False
-
-            else:
+            if collision_rect.collidelist(self.tilemap.impassability) == -1:
                 # we're done, we can move!
                 new_topleft = (new_topleft_x, new_topleft_y)
                 player.action = constants.Walk
                 animation = player.current_animation()
                 player.size = animation.get_max_size()
-                player.rect = pygame.Rect(new_topleft, player.size)
-                player.topleft_float = (new_topleft_x, new_topleft_y)
+                player.rect = destination_rect
+                player.topleft_float = new_topleft
 
                 return True
 
+        # never found an applicable destination
+        player.action = constants.Stand
+
+        return False
+
     def blit_all(self):
+        """Drawing behavior for game objects.
+
+        """
+
         self.viewport.pan_for_entity(self.human_player)
         self.viewport.blit(self.tilemap.layer_images[0])
 
         for item in self.items:
-            item.blit(self.viewport.surface,
-                      (self.viewport.start_x, self.viewport.start_y))
+            item.blit(self.viewport.surface, self.viewport.rect.topleft)
 
         self.human_player.blit(
                                self.viewport.surface,
-                               (
-                                self.viewport.start_x,
-                                self.viewport.start_y
-                               )
+                               self.viewport.rect.topleft
                               )
 
         for layer in self.tilemap.layer_images[1:]:

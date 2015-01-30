@@ -4,14 +4,14 @@
 # This module is part of Hypatia Engine and is released under the
 # MIT License: http://opensource.org/licenses/MIT
 
-"""tile engine for maps.
+"""Where stuff is being drawn; tile engine for maps.
 
-See: http://en.wikipedia.org/wiki/Tile_engine
+Load, save, and manipulate a tile map. A tile map is basically a sprite
+which consists of graphical tiles aligned to a grid. Provides tools for
+loading specific tile resources into an object. Contains information
+about tiles (tile properties).
 
-I just rewrote almost everything, so you'll have to wait for more
-documentation...
-
-Examples here!
+For more information see: http://en.wikipedia.org/wiki/Tile_engine
 
 """
 
@@ -48,8 +48,8 @@ class BadTileName(Exception):
       bad_tile_name (str): the tile name which was looked up, but
         didn't exist/have a corresponding value in swatch.
 
-    Attribs:
-      message:
+    Attributes:
+      message: printed error message; prints the tile name attempted
 
     """
 
@@ -112,6 +112,7 @@ class TileMap(object):
         for row_of_image_names in first_layer:
 
             for image_name in row_of_image_names:
+                # STYLE: yes, pep8, i'll get back to it
                 properties = swatch.properties[image_name] if image_name in swatch.properties else TileProperties()
                 tile_properties.append(properties)
 

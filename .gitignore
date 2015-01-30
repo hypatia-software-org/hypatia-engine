@@ -58,10 +58,8 @@ target/
 *.swp
 *~
 
-# documentation
-sphinx-doc/
-
 # misc
+notes/
 *.core
 *.db
 *.swo

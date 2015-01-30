@@ -4,11 +4,12 @@
 # This module is part of Hypatia Engine and is released under the
 # MIT License: http://opensource.org/licenses/MIT
 
-"""render.py: screen and sprite presentation and manipulation
+"""How stuff is drawn; spite and surface manipulation.
 
-Needs a lot of work. More of a demo/showcase right now.
+Includes screen, viewport, and surface/animation manipulation.
 
-Has some utils for managing images and animations.
+Attributes:
+  FPS (int): frames per second limit
 
 """
 
@@ -37,6 +38,19 @@ FPS = 60
 
 
 class Screen(object):
+    """Everything blits to screen!
+
+    Notes:
+      --
+
+    Attributes:
+      clock (pygame.time.Clock):
+      time_elapsed_milliseconds (int): the time difference between
+        the two most recent frames/updates in milliseconds.
+      screen_size (tuple):
+      screen (pygame.display surface): --
+
+    """
 
     def __init__(self):
         pygame.init()
@@ -50,6 +64,11 @@ class Screen(object):
                                              )
 
     def update(self, surface):
+        """Update the screen; apply surface to screen, automatically
+        rescaling for fullscreen.
+
+        """
+
         scaled_surface = pygame.transform.scale(
                                                 surface,
                                                 self.screen_size
@@ -84,57 +103,19 @@ class Viewport(object):
 
         """
 
-        self.size = size
-
         self.surface = pygame.Surface(size)
-        self.start_x = 0
-        self.start_y = 0
-        self.end_x = size[0]
-        self.end_y = size[1]
-
-    def screen_pan(self, direction):
-        """Move viewport in a given direction by one whole viewport
-        in size.
-
-        Args:
-          direction (constants.Direction): Move the viewport toward
-            specified direction.
-
-        Example:
-          >>> viewport.screen_pan(constants.Up)
-
-        """
-
-        if direction is constants.Right:
-            self.start_x += self.size[0]
-            self.end_x += self.size[0]
-
-        # if player goes off the left of the screen...
-        elif direction is constants.Left:
-            self.start_x -= self.size[0]
-            self.end_x -= self.size[0]
-
-        # if player goes off bottom of screen...
-        elif direction is constants.Down:
-            self.start_y += self.size[1]
-            self.end_y += self.size[1]
-
-        # if player goes off top of screen...
-        elif direction is constants.Up:
-            self.start_y -= self.size[1]
-            self.end_y -= self.size[1]
-
-        else:
-            # should raise InvalidDirection
-            pass
+        self.rect = pygame.Rect((0, 0), size)
 
     def pan_for_entity(self, entity):
         """Check if entity is outside of the viewport, and if so,
-        in which direction?
+        in which di section?
 
         Args:
           entity (entity.Walkabout): something with a pygame.rect
             attribute. Uses rect.center for coordinates to check.
+
+        Note:
+          Need to use rect move_ip instead
 
         Example:
           >>> tilemap_pan_for_entity(player)
@@ -144,20 +125,20 @@ class Viewport(object):
         entity_position_x, entity_position_y = entity.rect.center
 
         # if player goes off the right of the screen...
-        if entity_position_x > self.end_x:
-            self.screen_pan(constants.Right)
+        if entity_position_x > self.rect.right:
+            self.rect.move_ip(self.rect.width, 0)
 
         # if player goes off the left of the screen...
-        elif entity_position_x < self.start_x:
-            self.screen_pan(constants.Left)
+        elif entity_position_x < self.rect.left:
+            self.rect.move_ip(-self.rect.width, 0)
 
         # if player goes off bottom of screen...
-        elif entity_position_y > self.end_y:
-            self.screen_pan(constants.Down)
+        elif entity_position_y > self.rect.bottom:
+            self.rect.move_ip(0, self.rect.height)
 
         # if player goes off top of screen...
-        elif entity_position_y < self.start_y:
-            self.screen_pan(constants.Up)
+        elif entity_position_y < self.rect.top:
+            self.rect.move_ip(0, -self.rect.height)
 
     def blit(self, surface):
         """Draw the correct portion of supplied surface onto viewport.
@@ -174,8 +155,7 @@ class Viewport(object):
         self.surface.blit(
                           surface,
                           (0, 0),
-                          (self.start_x, self.start_y,
-                           self.size[0], self.size[1])
+                          self.rect
                          )
 
 
@@ -286,14 +266,23 @@ def find_anchors(surface):
     return None
 
 
-def cycle_palette(surface):
-    scaled_viewport = scaled_viewport.convert(8)
+def shift_palette(surface):
+    """Cycle the palette of surface after generating an index for it.
+
+    Args:
+      surface (pygame.Surface): the surface you wish to shift the
+        palette of.
+
+    """
+
+    surface = surface.convert(8)
 
     if first_time:
-        palette = collections.deque(scaled_viewport.get_palette())
+        palette = collections.deque(surface.get_palette())
         first_time = False
     else:
         palette.rotate(1)
-        scaled_viewport.set_palette(palette)
+        surface.set_palette(palette)
 
+    return None
 

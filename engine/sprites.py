@@ -4,10 +4,7 @@
 # This module is part of Hypatia Engine and is released under the
 # MIT license: http://opensource.org/licenses/MIT
 
-"""Sprites: sprite manipulation and presentation.
-
-Again: presentation, really--think of it like CSS. Herein defines
-the graphical counterpart to all aspects of the game which have one.
+"""The stuff being drawn; sprites
 
 """
 
@@ -156,6 +153,7 @@ class Walkabout(object):
       size (tuple): --
       action (constants.Action): --
       direction (constnts.Direction): --
+      topleft_float (x,y tuple): --
 
     """
 
@@ -216,9 +214,32 @@ class Walkabout(object):
         self.topleft_float = (0.0, 0.0)  # what if position is offered
         self.action = constants.Stand
         self.direction = constants.Down
-        self.speed_in_pixels_per_second = 10.0
+        self.speed_in_pixels_per_second = 20.0
+
+    def __getitem__(self, key):
+        """Fetch sprites associated with action (key).
+
+        Args:
+          key (constants.Action): return dictionary of sprites for
+            this action (key).
+
+        Returns:
+          dict: sprites associated with action supplied (key)
+
+        Examples:
+          >>> walkabout = Walkabout()
+          >>> walkabout[constants.Walk][constants.Up]
+          <Animation Object>
+
+        """
+
+        return self.animations[key]
 
     def current_animation(self):
+        """Returns the animation selected by the current action
+        and direction.
+
+        """
 
         return self.animations[self.action][self.direction]
 
@@ -284,8 +305,8 @@ class Walkabout(object):
                 animated_sprite.play()
 
 
-class Item(object):
-    """An item on the ground which can be picked up.
+class Prop(object):
+    """A prop on the ground which can be picked up.
 
     Note:
       An equipable item which has a sprite per side just
@@ -305,7 +326,7 @@ class Item(object):
                                       )
         item_image = pygame.image.load(item_image_path)
         self.size = item_image.get_size()
-        self.image = item_image
+        self.image = item_image  # should rename to "surface"
         self.rect = pygame.Rect(position, self.size)
         self.position = position
 
@@ -317,7 +338,7 @@ class Item(object):
         surface.blit(self.image, position_on_screen)
 
 
-class ExampleItem(Item):
+class ExampleItem(Prop):
     """Plays a sound and cycles the screen tint for a duration.
 
     Note:
