@@ -66,3 +66,4 @@ notes/
 *.tilemap
 *.swn
 *.swl
+*.py.*
