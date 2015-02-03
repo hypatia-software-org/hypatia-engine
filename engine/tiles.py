@@ -112,8 +112,12 @@ class TileMap(object):
         for row_of_image_names in first_layer:
 
             for image_name in row_of_image_names:
-                # STYLE: yes, pep8, i'll get back to it
-                properties = swatch.properties[image_name] if image_name in swatch.properties else TileProperties()
+
+                if image_name in swatch.properties:
+                    properties = swatch.properties[image_name]
+                else:
+                    properties = TileProperties()
+
                 tile_properties.append(properties)
 
         # make the layer images

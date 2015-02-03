@@ -91,32 +91,5 @@ while True:
     #player_controller.update()
 
     game_blueprint.blit_all()
-
-    """I'll turn this into a debug feature...
-
-    debug: should be a game blue print, tilemap, or render feature...
-
-    Helped me debug a passability issue when porting to python 3
-
-    for rect in tilemap.impassability:
-        pygame.draw.rect(viewport.surface, pygame.Color(255, 0, 0), rect)
-
-    """
-
-    # this is such a nice way to rescale to any resolution
-    #transparent_rect = pygame.Surface(screen_size, pygame.SRCALPHA)  # tint
-    #transparent_rect.fill((255,190,255,63))  # tint
-    #scaled_viewport.blit(transparent_rect, (0, 0))  # tint
-    """
-    scaled_viewport = scaled_viewport.convert(8)
-
-    if first_time:
-        palette = collections.deque(scaled_viewport.get_palette())
-        first_time = False
-    else:
-        palette.rotate(1)
-        scaled_viewport.set_palette(palette)
-    """
-
     game_blueprint.screen.update(viewport.surface)
 
