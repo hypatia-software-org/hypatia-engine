@@ -8,6 +8,8 @@ For more details please read the wiki's https://github.com/lillian-lemmer/hypati
 
 MIT License!
 
+Checkout http://lillian-lemmer.github.io/hypatia-engine/[the official Hypatia Engine website]!
+
 == Examples
 
 Edit/run _/examples/exploremap.py_; it shows you how to use the tile system, to an extent.
