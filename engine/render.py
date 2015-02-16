@@ -16,6 +16,7 @@ Attributes:
 import sys
 import time
 import itertools
+import collections
 
 import pygame
 import pyganim
@@ -52,7 +53,15 @@ class Screen(object):
 
     """
 
-    def __init__(self):
+    def __init__(self, filters=None):
+        """
+
+        Args:
+          filters (list): list of functions which takes and
+            returns a surface.
+
+        """
+
         pygame.init()
         self.clock = pygame.time.Clock()
         self.time_elapsed_milliseconds = 0
@@ -62,6 +71,7 @@ class Screen(object):
                                               self.screen_size,
                                               FULLSCREEN | DOUBLEBUF
                                              )
+        self.filters = filters
 
     def update(self, surface):
         """Update the screen; apply surface to screen, automatically
@@ -73,6 +83,12 @@ class Screen(object):
                                                 surface,
                                                 self.screen_size
                                                )
+
+        if self.filters:
+
+            for filter_function in self.filters:
+                scaled_surface = filter_function(scaled_surface)
+
         self.screen.blit(scaled_surface, (0, 0))
         pygame.display.flip()
         self.time_elapsed_milliseconds = self.clock.tick(FPS)
@@ -159,53 +175,6 @@ class Viewport(object):
                          )
 
 
-def anchor_to_animation(animation, animation_mask, pygame_image):
-    """Afix a pygame image to the right point per frame in an
-    animation. Merge surfaces at their anchors.
-
-    Args:
-      pygame_image (pygame.image): pygame.image.load('hat.png')
-      alt_target (PygAnim): --
-
-    Note:
-      Precisely superimpose a surface by anchor onto each frame
-      of an animation.
-
-    Returns:
-      pyganim.PygAnimation: --
-
-    """
-
-    gif_surfaces = animation.pygame_surfaces
-    gif_mask_surfaces = animation_mask.pygame_surfaces
-
-    gif_x, gif_y = gif_surfaces[0][0].get_size()
-    pygame_image_anchor = find_anchors(pygame_image)
-    pygame_image_anchor_x, pygame_image_anchor_y = pygame_image_anchor
-    new_surfaces = []
-
-    for i, frame in enumerate(gif_mask_surfaces):
-        surface, duration = frame
-        head_anchor = find_anchors(surface)
-
-        if head_anchor:
-            head_anchor_x, head_anchor_y = head_anchor
-            new_x = head_anchor_x - pygame_image_anchor_x
-            new_y = head_anchor_y - pygame_image_anchor_y
-            new_topleft = (new_x, new_y)
-
-            gif_surfaces[i][0].blit(pygame_image, new_topleft)
-
-        else:
-
-            raise Exception('this should be an UnfoundAnchor error')
-
-
-    pyganim_gif = pyganim.PygAnimation(gif_surfaces)
-
-    return sprites.Animation(pyganim_gif=pyganim_gif)
-
-
 def pil_to_pygame(pil_image, encoding):
     """Convert PIL Image() to pygame Surface.
 
@@ -234,38 +203,6 @@ def pil_to_pygame(pil_image, encoding):
                                   )
 
 
-def find_anchors(surface):
-    """Return the coordinates for specified anchors in surface.
-
-    Note:
-      An "anchor" is simply a pixel which matches a specified color.
-
-      I created this for adding equipment to sprites.
-
-    Returns:
-      tuple|None: returns None if no anchors found on surface. Returns
-        a tuple (int x, int y) corresponding to the location of the
-        anchor/color on supplied surface.
-
-    Examples:
-      >>> find_anchors(some_character_sprite)
-      (2, 4)
-
-    """
-
-    head_anchor_color = pygame.Color(255, 136, 255)
-    x, y = surface.get_size()
-
-    for coordinates in itertools.product(range(0, x), range(0, y)):
-        color = surface.get_at(coordinates)
-
-        if color == head_anchor_color:
-
-            return coordinates
-
-    return None
-
-
 def shift_palette(surface):
     """Cycle the palette of surface after generating an index for it.
 
@@ -276,13 +213,10 @@ def shift_palette(surface):
     """
 
     surface = surface.convert(8)
+    palette = collections.deque(surface.get_palette())
+    palette.rotate(1)
+    surface.set_palette(palette)
 
-    if first_time:
-        palette = collections.deque(surface.get_palette())
-        first_time = False
-    else:
-        palette.rotate(1)
-        surface.set_palette(palette)
+    return surface
 
-    return None
 

@@ -10,6 +10,7 @@
 
 import os
 import glob
+import itertools
 from collections import OrderedDict
 
 import pyganim
@@ -146,6 +147,8 @@ class Walkabout(object):
       ASSUMPTION: walkabout_directory contains sprites for
       walk AND run actions.
 
+      Blits its children relative to its own anchor.
+
     Attributes:
       animations (dict): --
       meta_animations (dict): --
@@ -157,7 +160,8 @@ class Walkabout(object):
 
     """
 
-    def __init__(self, walkabout_directory='debug', start_position=None):
+    def __init__(self, walkabout_directory='debug', start_position=None,
+                 children=None):
         """a description about reading animations from directory into
         object
 
@@ -172,6 +176,8 @@ class Walkabout(object):
         # the attributes we're generating
         self.animations = {}
         self.meta_animations = {}
+        self.actions = []
+        self.directions = []
         self.size = None  # will be removed in future?
         self.topleft_float = (0.0, 0.0)
 
@@ -199,6 +205,9 @@ class Walkabout(object):
             direction = getattr(constants, direction.title())
             action = getattr(constants, action.title())
 
+            self.actions.append(action)
+            self.directions.append(direction)
+
             animation = Animation(sprite_path)
 
             try:
@@ -215,6 +224,8 @@ class Walkabout(object):
         self.action = constants.Stand
         self.direction = constants.Down
         self.speed_in_pixels_per_second = 20.0
+        self.child_walkabouts = children or []
+        self.anchors = self.get_anchors()
 
     def __getitem__(self, key):
         """Fetch sprites associated with action (key).
@@ -235,37 +246,44 @@ class Walkabout(object):
 
         return self.animations[key]
 
-    def current_animation(self):
+    def current_animation(self, meta=False):
         """Returns the animation selected by the current action
         and direction.
 
         """
 
-        return self.animations[self.action][self.direction]
+        if meta:
 
-    def equip(self, pygame_image):
-        """Lazy, temporary method of visualy equipping items.
+            return self.meta_animations[self.action][self.direction]
 
-        Args:
-          pygame_image (pygame.Surface): --
+        else:
 
-        """
+            return self.animations[self.action][self.direction]
 
-        for action in (constants.Stand, constants.Walk):
+    def get_anchors(self):
+        """needs to get actual offset"""
 
-            for direction in (constants.Up, constants.Down,
-                              constants.Right, constants.Left):
+        anchors = {a: {d: [] for d in self.directions} for a in self.actions}
 
-                animation = self.animations[action][direction]
-                meta_animation = self.meta_animations[action][direction]
-                new_animation = render.anchor_to_animation(
-                                                           animation,
-                                                           meta_animation,
-                                                           pygame_image
-                                                          )
-                self.animations[action][direction] = new_animation
+        for action, directions in self.meta_animations.items():
 
-        self.init()
+            for direction, animation in directions.items():
+
+                for surface_frame in animation.pyganim_gif._images:
+                    anchor = self.get_anchor(surface_frame)
+                    anchors[action][direction].append(anchor)
+
+        return anchors
+
+    def get_anchor(self, surface):
+        x, y = surface.get_size()
+        debug_color = pygame.Color(255, 136, 255)
+
+        for coord in itertools.product(range(0, x), range(0, y)):
+
+            if surface.get_at(coord) == debug_color:
+
+                return coord
 
     def blit(self, screen, offset):
         """Draw the appropriate/active animation to screen.
@@ -281,12 +299,31 @@ class Walkabout(object):
 
         """
 
-        #x, y = self.rect.topleft
         x, y = self.topleft_float
         x -= offset[0]
         y -= offset[1]
         position_on_screen = (x, y)
-        self.current_animation().pyganim_gif.blit(screen, position_on_screen)
+
+        pyganim_gif = self.current_animation().pyganim_gif
+        pyganim_gif.blit(screen, position_on_screen)
+
+        pyganim_frame_index = pyganim.findStartTime(pyganim_gif._startTimes,
+                                                    pyganim_gif.elapsed)
+        current_frame_surface = pyganim_gif.getFrame(pyganim_frame_index)
+
+        animation_anchors = self.anchors[self.action][self.direction]
+        frame_anchor = animation_anchors[pyganim_frame_index]  # use as offset
+        parent_anchor_position = (position_on_screen[0] + frame_anchor[0],
+                                  position_on_screen[1] + frame_anchor[1])
+
+        for child_walkabout in self.child_walkabouts:
+            # draw at positition + difference in child anchor
+            child_anchor = (child_walkabout
+                            .anchors[self.action][self.direction][0])  # lazy/testing
+            child_position = (parent_anchor_position[0] - child_anchor[0],
+                              parent_anchor_position[1] - child_anchor[1])
+            child_pyganim = child_walkabout.current_animation().pyganim_gif
+            child_pyganim.blit(screen, child_position)
 
     def init(self):
         actions = (constants.Walk, constants.Stand)
@@ -304,54 +341,6 @@ class Walkabout(object):
                 # this is me being lazy and impatient
                 animated_sprite.play()
 
-
-class Prop(object):
-    """A prop on the ground which can be picked up.
-
-    Note:
-      An equipable item which has a sprite per side just
-      uses Walkabout.
-
-      Also: sprites don't have sounds! I'll later be adding
-      an items.py.
-
-    """
-
-    def __init__(self, position, item_name='debug'):
-        #self.game = game
-        item_image_path = os.path.join(
-                                       '../resources',
-                                       'items',
-                                       item_name + '.png'
-                                      )
-        item_image = pygame.image.load(item_image_path)
-        self.size = item_image.get_size()
-        self.image = item_image  # should rename to "surface"
-        self.rect = pygame.Rect(position, self.size)
-        self.position = position
-
-    def blit(self, surface, viewport_offset=None):
-        x, y = self.position
-        x -= viewport_offset[0]
-        y -= viewport_offset[1]
-        position_on_screen = (x, y)
-        surface.blit(self.image, position_on_screen)
-
-
-class ExampleItem(Prop):
-    """Plays a sound and cycles the screen tint for a duration.
-
-    Note:
-      This has too manny features for a "sprite."
-
-      Items role in the sprites module needs to be completely
-      grounded in the graphical manipulation and presentation
-      of items.
-
-    """
-
-    def pickup(self, player):
-        hat_image = '../resources/equipment/hat/mask_down.png'
-        hat_image = pygame.image.load(hat_image)
-        player.equip(hat_image)
+        for walkabout_child in self.child_walkabouts:
+            walkabout_child.init()
 

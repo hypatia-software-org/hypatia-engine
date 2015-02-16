@@ -1,4 +1,4 @@
-# engine/gameblueprint.py
+# engine/constants.py
 # Lillian Lemmer <lillian.lynn.lemmer@gmail.com>
 #
 # This module is part of Hypatia Engine and is released under the

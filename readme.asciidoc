@@ -1,16 +1,26 @@
-= Hypatia Engine: 2D adventure games
+= Cross-platform 2D tile-based game engine
 
-*Experimental/in early development* game engine for an item-centric top-down 2D tile-based puzzle/action game vein of __Zelda: Oracle of Ages__,  __Zelda: Oracle of Seasons__, and __Zelda: Link's Awakening__.
+This repository is in very early development.
 
-Tested functional in Python 2.7.6 and Python 3.4.0. Tested on FreeBSD, Linuxmint, Windows, Mac OS.
+Hypatia Engine is a cross-platform game engine for 2D tile-based games, namely inspired by __Zelda: Oracle of Ages__ and __Zelda: Oracle of Seasons__.
 
-For more details please read the wiki's https://github.com/lillian-lemmer/hypatia-engine/wiki/Current-Features[current features page] and https://github.com/lillian-lemmer/hypatia-engine/wiki/Planned-Features[planned features page] or check out the _examples_ section below.
+Key features:
 
-MIT License!
+  * Tested working in Python 2.7.6 and Python 3.4.0.
+  * Tested working in FreeBSD, Linuxmint, Windows, Mac OS
+  * MIT License
+  * OpenGL
+  * Handles tile maps, sprite animations
 
-Checkout http://lillian-lemmer.github.io/hypatia-engine/[the official Hypatia Engine website]!
+More information:
+
+  * http://lillian-lemmer.github.io/hypatia-engine/[The official Hypatia Engine website]!
+  * https://github.com/lillian-lemmer/hypatia-engine/wiki/Current-Features[current features page]
+  * https://github.com/lillian-lemmer/hypatia-engine/wiki/Planned-Features[planned features page]
 
 == Examples
+
+I promise there will be better examples, particularly unittests in the future!
 
 Edit/run _/examples/exploremap.py_; it shows you how to use the tile system, to an extent.
 

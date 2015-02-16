@@ -64,32 +64,19 @@ tilemap_string = tilemap.to_string()
 with open(FILENAME, 'wb') as f:
     f.write(tilemap_string)
 
-#with open(FILENAME, 'rb') as f:
-#    tilemap = tiles.tilemap_from_string(f.read())
-
-# init screen
+with open(FILENAME, 'rb') as f:
+    tilemap = tiles.tilemap_from_string(f.read())
 
 # prepare game assets
-items = [sprites.ExampleItem((40, 40))]
-player = sprites.Walkabout()
+hat = sprites.Walkabout('hat')
+player = sprites.Walkabout(children=[hat])
 viewport = render.Viewport((VIEWPORT_X, VIEWPORT_Y))
-
 game_blueprint = game.Game(
                            tilemap=tilemap,
                            human_player=player,
-                           items=items,
                            viewport=viewport
                           )
 
 # runtime
-game_blueprint.init()
-first_time = True
-
-while True:
-    game_blueprint.item_check()
-    game_blueprint.handle_input()
-    #player_controller.update()
-
-    game_blueprint.blit_all()
-    game_blueprint.screen.update(viewport.surface)
+game_blueprint.start_loop()
 

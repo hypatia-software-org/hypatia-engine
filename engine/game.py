@@ -6,7 +6,9 @@
 
 """Why stuff is drawn; logic flow for the game.
 
-Glues various modules/game omponents together with behaviors defined
+Game logic, game component interaction.
+
+Glues various modules/game components together with behaviors defined
 in methods belonging to Game().
 
 Note:
@@ -38,42 +40,21 @@ __status__ = "Development"
 
 
 class Game(object):
-    """One simple object for referencing all of the game's features.
 
-    Attributes:
-      human_player:
-      tilemap:
-      viewport:
-      items:
-      screen:
-
-    """
-
-    def __init__(self, tilemap, viewport, human_player, items=None):
+    def __init__(self, tilemap, viewport, human_player):
         self.human_player = human_player
         self.tilemap = tilemap
         self.viewport = viewport
-        self.items = items or []
         self.screen = render.Screen()
 
-    def init(self):
-        self.tilemap.convert_layer_images()
-        self.human_player.init()
-
-    def item_check(self):
-        ungot_items = []
-
-        for item in self.items:
-
-            if item.rect.colliderect(self.human_player.rect):
-                # should this be player.pickup item? or both?
-                item.pickup(self.human_player)
-            else:
-                ungot_items.append(item)
-
-        self.items = ungot_items
-
     def handle_input(self):
+        """...
+
+        Returns
+          bool: returns True if escape was never pressed; returns
+            false if escape pressed.
+
+        """
 
         for event in pygame.event.get():
 
@@ -83,8 +64,8 @@ class Game(object):
         keys = pygame.key.get_pressed()
 
         if keys[K_ESCAPE]:
-            pygame.quit()
-            sys.exit()
+
+            return False
 
         if keys[K_UP]:
             self.move_player(constants.Up)
@@ -97,6 +78,8 @@ class Game(object):
 
         if keys[K_LEFT]:
             self.move_player(constants.Left)
+
+        return True
 
     def move_player(self, direction):
         """Modify human player's positional data legally (check
@@ -124,6 +107,7 @@ class Game(object):
             # create a rectangle at the new position
             new_topleft_x, new_topleft_y = player.topleft_float
 
+            # what's going on here
             if pixels == 2:
                 adj_speed = 1
 
@@ -156,17 +140,13 @@ class Game(object):
 
         return False
 
-    def blit_all(self):
+    def render(self):
         """Drawing behavior for game objects.
 
         """
 
         self.viewport.pan_for_entity(self.human_player)
         self.viewport.blit(self.tilemap.layer_images[0])
-
-        for item in self.items:
-            item.blit(self.viewport.surface, self.viewport.rect.topleft)
-
         self.human_player.blit(
                                self.viewport.surface,
                                self.viewport.rect.topleft
@@ -174,4 +154,16 @@ class Game(object):
 
         for layer in self.tilemap.layer_images[1:]:
             self.viewport.blit(layer)
+
+    def start_loop(self):
+        self.tilemap.convert_layer_images()
+        self.human_player.init()
+
+        while self.handle_input():
+            self.handle_input()
+            self.screen.update(self.viewport.surface)
+            self.render()
+
+        pygame.quit()
+        sys.exit()
 
