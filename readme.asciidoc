@@ -1,14 +1,14 @@
 = Cross-platform 2D tile-based game engine
 
-![Latest build examples/exploremap.py](http://i.imgur.com/bVLCMq4.png)
-
 This repository is in very early development.
 
 Hypatia Engine is a cross-platform game engine for 2D tile-based games, namely inspired by __Zelda: Oracle of Ages__ and __Zelda: Oracle of Seasons__.
 
+Right now the only working demo is +examples/exploremap.py+; you need to run it from +examples/+.
+
 == Key features
 
-  * Amazing support for BSD, Linux, Windows, Mac; Python 2.7.6 and Python 3.4.0. Please checkout https://github.com/lillian-lemmer/hypatia-engine/wiki/support[the official wiki page on support].
+  * Compatible with BSD, Linux, Windows, Mac; Python 2.7.6 and Python 3.4.0. Please checkout https://github.com/lillian-lemmer/hypatia-engine/wiki/support[the official wiki page on support].
   * MIT License
   * OpenGL
   * Tile map management
@@ -21,4 +21,50 @@ Hypatia Engine is a cross-platform game engine for 2D tile-based games, namely i
   * http://lillian-lemmer.github.io/hypatia-engine/[The official Hypatia Engine website] (donate here!)
   * https://github.com/lillian-lemmer/hypatia-engine/wiki[The official Hypatia Engine wiki] - please read!
   * Official IRC support channel (Freenode): irc.freenode.net #hypatia-engine -- my nick is lillian.
+
+== Examples
+
+You should checkout +examples/exploremap.py+.
+
+You use 3D lists of tile names to create tile maps:
+
+```python
+blueprint = [
+             [  # layer
+               ['default', 'default', 'default'],  # row
+               ['default', 'default', 'default'],
+               ['default', 'default', 'default']
+             ]
+            ]
+tilemap = TileMap('debug', blueprint)
+```
+
+You can save tile map to file:
+
+```python
+tilemap_string = tilemap.to_string()
+
+with open('test.tilemap', 'wb') as f:
+    f.write(tilemap_string)
+```
+
+You can load the tile map from file:
+
+```python
+tilemap = tilemap_from_string(tilemap_string)
+```
+
+Each tile has its associated TileProperties, you can access them like:
+
+```python
+tilemap[(3, 3)]
+```
+
+The tilemap is just some data + each layer of tiles as a single image in a list:
+
+```python
+for surface in tilemap.layer_images:
+    # do something with the layer image pygame surface
+    pass
+```
 
