@@ -1,5 +1,7 @@
 = Cross-platform 2D tile-based game engine
 
+![Latest build examples/exploremap.py](http://i.imgur.com/bVLCMq4.png)
+
 This repository is in very early development.
 
 Hypatia Engine is a cross-platform game engine for 2D tile-based games, namely inspired by __Zelda: Oracle of Ages__ and __Zelda: Oracle of Seasons__.
