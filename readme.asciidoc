@@ -24,11 +24,16 @@ Right now the only working demo is +examples/exploremap.py+; you need to run it 
 
 == Examples
 
-You should checkout +examples/exploremap.py+.
+You should checkout +examples/exploremap.py+ for a functional demo.
+
+=== tiles module
 
 You use 3D lists of tile names to create tile maps:
 
 ```python
+import tiles
+
+
 blueprint = [
              [  # layer
                ['default', 'default', 'default'],  # row
@@ -36,7 +41,7 @@ blueprint = [
                ['default', 'default', 'default']
              ]
             ]
-tilemap = TileMap('debug', blueprint)
+tilemap = tiles.TileMap('debug', blueprint)
 ```
 
 You can save tile map to file:
@@ -51,7 +56,7 @@ with open('test.tilemap', 'wb') as f:
 You can load the tile map from file:
 
 ```python
-tilemap = tilemap_from_string(tilemap_string)
+tilemap = tiles.tilemap_from_string(tilemap_string)
 ```
 
 Each tile has its associated TileProperties, you can access them like:
@@ -67,4 +72,12 @@ for surface in tilemap.layer_images:
     # do something with the layer image pygame surface
     pass
 ```
+
+A tile swatch defines tile graphics and properties. A tile's properties are set in +tileswatch.ini+. Below the TileSwatch we're defining is +'debug'+, which comes as a default TileSwatch with Hypatia Engine:
+
+```python
+tilemap = tiles.TileMap('debug', blueprint)
+```
+
+Remember, a TileSwatch is how TileMap knows how to extrapolate TileProperties and graphic data for blitting to the respective layer surface.
 
