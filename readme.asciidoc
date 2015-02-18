@@ -4,83 +4,19 @@ This repository is in very early development.
 
 Hypatia Engine is a cross-platform game engine for 2D tile-based games, namely inspired by __Zelda: Oracle of Ages__ and __Zelda: Oracle of Seasons__.
 
-Key features:
+== Key features
 
-  * Tested working in Python 2.7.6 and Python 3.4.0.
-  * Tested working in FreeBSD, Linuxmint, Windows, Mac OS
+  * Amazing support for BSD, Linux, Windows, Mac; Python 2.7.6 and Python 3.4.0. Please checkout https://github.com/lillian-lemmer/hypatia-engine/wiki/support[the official wiki page on support].
   * MIT License
   * OpenGL
-  * Handles tile maps, sprite animations
+  * Tile map management
+  * Walkabout animations, with support for child Walkabout sprites
+  * Game logic automation
 
-More information:
+== Help/Support
 
-  * http://lillian-lemmer.github.io/hypatia-engine/[The official Hypatia Engine website]!
-  * https://github.com/lillian-lemmer/hypatia-engine/wiki/Current-Features[current features page]
-  * https://github.com/lillian-lemmer/hypatia-engine/wiki/Planned-Features[planned features page]
-
-== Examples
-
-I promise there will be better examples, particularly unittests in the future!
-
-Edit/run _/examples/exploremap.py_; it shows you how to use the tile system, to an extent.
-
-Below a 3D array is created, the +default+ bit refers to the +default+ graphical tile in the (later) specified tile swatch. +water+ is just another graphical tile name.
-
-----
-blueprint = [[['default' for i in xrange(WIDTH)]
-                         for i in xrange(ROWS)]
-                         for i in xrange(LAYERS)]
-#         z  y  x
-blueprint[0][0][1] = 'water'  # 10, 0, 0
-blueprint[0][0][2] = 'water'
-blueprint[0][1][2] = 'water'
-----
-
-All tiles have default properties, passability, defined by the swatch's configuration file, see +data/tiles/swatches/debug+.
-
-Below we create the tilemap object, using our blueprint from above, and convert it to string so we can write to file, then we later recreate the tilemap from that same string. Finally, we use the demo render to show off the map.
-
-----
-tilemap = tiles.TileMap('debug', blueprint)
-tilemap_string = tilemap.to_string()
-
-with open(FILENAME, 'w') as f:
-    f.write(tilemap_string)
-
-with open(FILENAME) as f:
-    tilemap = tiles.tilemap_from_string(f.read())
-
-render.render(tilemap)
-----
-
-Tilemaps compile each layer's tiles into a single image, producing a list of images (layers). Ergo, you can iterate the images/layers in order to render them in their respective z-order.
-
-----
-pygame.init()
-clock = pygame.time.Clock()
-display_info = pygame.display.Info()
-screen_size = (display_info.current_w, display_info.current_h)
-screen = pygame.display.set_mode(
-                                 screen_size,
-                                 FULLSCREEN | DOUBLEBUF
-                                )
-
-# juicy parts
-tilemap.convert_layer_images()
-
-while True:
-    screen.blit(tilemap.layer_images[0], (0, 0))
-
-    for layer in tilemap.layer_images:
-        screen.blit(layer, (0, 0))
-
-    pygame.display.flip()
-    clock.tick(60)
-----
-
-TileMap also has methods for getting tile properties by tile or pixel coordinate! See: +TileMap.__getitem__()+ and +TileMap.get_properties()+.
-
-== Setup
-
-Please read the https://github.com/lillian-lemmer/hypatia-engine/wiki/Installation-Instructions[Installation Instructions] on the wiki.
+  * https://github.com/lillian-lemmer/hypatia-engine/wiki/Installation-Instructions[Official wiki installation instructions]
+  * http://lillian-lemmer.github.io/hypatia-engine/[The official Hypatia Engine website] (donate here!)
+  * https://github.com/lillian-lemmer/hypatia-engine/wiki[The official Hypatia Engine wiki] - please read!
+  * Official IRC support channel (Freenode): irc.freenode.net #hypatia-engine -- my nick is lillian.
 
