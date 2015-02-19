@@ -30,23 +30,16 @@ __status__ = "Development"
 
 
 class Animation(object):
-    """I got sick of converting between pyganim, pygame, and PIL.
+    """Animation object for handling multiple formats. Pyganim doesn't
+    handle opening GIF animations from disk, but PIL does.
 
     Note:
-      Currently no support for pygame_surfaces to pil_gif. a possible
-      solution is seen below:
-
-        http://svn.effbot.org/public/pil/Scripts/gifmaker.py
-
-      It's not horribly handy to work with PIL once all the
-      animations are assembled, anyway!
-
-      I need to add support for creating from pygame surfaces, but
-      that hasn't been necessary yet.
+      I don't like this; would work better as a function that takes
+      gif path and returns a Pyganim obj.
 
     Attibutes:
-      pygame_surfaces (list):
-      pyganim_gif (PygAnim):
+      pygame_surfaces (list): the surfaces belonging to pyganim_gif
+      pyganim_gif (PygAnim): pyganim animation
 
     """
 
@@ -162,14 +155,15 @@ class Walkabout(object):
 
     def __init__(self, walkabout_directory='debug', start_position=None,
                  children=None):
-        """a description about reading animations from directory into
-        object
+        """
 
         Args:
           walkabout_directory (str): directory containing (animated)
             walkabout GIFs. Assumed parent is data/walkabouts/
           start_position (tuple): (x, y) coordinates (integers)
             referring to absolute pixel coordinate.
+          children (list|None): Walkabout objects drawn relative to
+            this Walkabout instance.
 
         """
 
