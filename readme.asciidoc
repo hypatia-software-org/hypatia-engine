@@ -17,9 +17,8 @@ Right now the only working demo is +examples/exploremap.py+; you need to run it 
 
 == Help/Support
 
-  * https://github.com/lillian-lemmer/hypatia-engine/wiki/Installation-Instructions[Official wiki installation instructions]
   * http://lillian-lemmer.github.io/hypatia-engine/[The official Hypatia Engine website] (donate here!)
-  * https://github.com/lillian-lemmer/hypatia-engine/wiki[The official Hypatia Engine wiki] - please read!
+  * https://github.com/lillian-lemmer/hypatia-engine/wiki[The official Hypatia Engine wiki]: everything you need to know!
   * Official IRC support channel (Freenode): irc.freenode.net #hypatia-engine -- my nick is lillian.
 
 == Examples
