@@ -29,17 +29,28 @@ __email__ = "lillian.lynn.lemmer@gmail.com"
 __status__ = "Development"
 
 
+class BadWalkabout(Exception):
+    """The supplied directory has no files which match *.gif.
+
+    """
+
+    def __init__(self, supplied_directory):
+        super(BadWalkabout, self).__init__(supplied_directory)
+
+
 class Animation(object):
     """Animation abstraction of animation gif and its respective
     meta animation gif.
 
     Attibutes:
-      --
+      gif (pyganim.PygAnimation): --
+      meta_gif (pyganim.PygAnimation): --
 
     """
 
     def __init__(self, gif_path):
-        """
+        """Load gif_path to PygAnimation, as well as respective
+        meta gif.
 
         Args:
           gif_path (str|None): create animation using a path to a gif
@@ -56,6 +67,18 @@ class Animation(object):
         self.meta_gif = self.pyganim_from_path(meta_gif_path)
 
     def pyganim_from_path(self, gif_path):
+        """Create a PygAnimation utilizing the GIF animation specified
+        in gif_path.
+
+        Args:
+          gif_path (str): path to GIF.
+
+        Returns:
+          pyganim.PygAnimation: comprised of the times and frames from
+            specified GIF.
+
+        """
+
         pil_gif = Image.open(gif_path)
 
         frame_index = 0
@@ -105,24 +128,23 @@ class Walkabout(object):
       Blits its children relative to its own anchor.
 
     Attributes:
-      animations (dict): --
-      meta_animations (dict): --
-      rect (pygame.Rect): --
-      size (tuple): --
+      animations (dict): 2D dictionary [action][direction] whose
+        values are PygAnimations.
+      rect (pygame.Rect): position on tilemap
+      size (tuple): the size of the animation in pixels.
       action (constants.Action): --
       direction (constnts.Direction): --
       topleft_float (x,y tuple): --
 
     """
 
-    def __init__(self, walkabout_directory='debug', start_position=None,
-                 children=None):
+    def __init__(self, directory='debug', position=None, children=None):
         """
 
         Args:
-          walkabout_directory (str): directory containing (animated)
+          directory (str): directory containing (animated)
             walkabout GIFs. Assumed parent is data/walkabouts/
-          start_position (tuple): (x, y) coordinates (integers)
+          position (tuple): (x, y) coordinates (integers)
             referring to absolute pixel coordinate.
           children (list|None): Walkabout objects drawn relative to
             this Walkabout instance.
@@ -140,12 +162,18 @@ class Walkabout(object):
         walkabout_directory = os.path.join(
                                            '../resources',
                                            'walkabouts',
-                                           walkabout_directory
+                                           directory
                                           )
         sprite_name_pattern = os.path.join(walkabout_directory, '*.gif')
 
         # get all the animations in this directory
         # what about if no sprites in directory? what if no such match?
+        sprite_paths = glob.glob(sprite_name_pattern)
+
+        if not sprite_paths:
+
+            raise BadWalkabout(directory)
+
         for sprite_path in glob.iglob(sprite_name_pattern):
             file_name, file_ext = os.path.splitext(sprite_path)
             file_name = os.path.split(file_name)[1]
@@ -171,7 +199,7 @@ class Walkabout(object):
             except KeyError:
                 target[action] = {direction: animation}
 
-        position = start_position or (0, 0)  # px values
+        position = position or (0, 0)  # px values
 
         # ... set the rest of the attribs
         self.size = animation.get_max_size()
