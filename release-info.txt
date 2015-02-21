@@ -1,0 +1,13 @@
+Release Version 0.2.0
+
+These notes are for the dev version of 0.2.0.
+
+Implemented:
+
+  * Animation() loads meta of supplied gif; changes in Walkabout reflect this
+
+Unimplemented:
+
+  * Cleaned-up Walkabout child implementation
+  * Fuller implementation/configuration of the anchor/Walkabout child system
+

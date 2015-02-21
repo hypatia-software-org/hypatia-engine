@@ -30,74 +30,33 @@ __status__ = "Development"
 
 
 class Animation(object):
-    """Animation object for handling multiple formats. Pyganim doesn't
-    handle opening GIF animations from disk, but PIL does.
-
-    Note:
-      I don't like this; would work better as a function that takes
-      gif path and returns a Pyganim obj.
+    """Animation abstraction of animation gif and its respective
+    meta animation gif.
 
     Attibutes:
-      pygame_surfaces (list): the surfaces belonging to pyganim_gif
-      pyganim_gif (PygAnim): pyganim animation
+      --
 
     """
 
-    def __init__(self, gif_path=None, pil_gif=None, pyganim_gif=None):
+    def __init__(self, gif_path):
         """
 
         Args:
           gif_path (str|None): create animation using a path to a gif
-          pil_gif (PIL.Image): create animation using a PIL Image()
-          pyganim_gif (pyganim.PygAnimation): create animation using a
-            PygAnimation object.
 
         """
 
-        if gif_path:
-            # open as PIL image
-            pil_gif = Image.open(gif_path)
+        # create path for meta gif
+        gif_dir, gif_name = os.path.split(gif_path)
+        meta_gif_name = "meta_" + gif_name
+        meta_gif_path = os.path.join(gif_dir, meta_gif_name)
 
-        if pil_gif:
-            pygame_surfaces = self.pil_to_surfaces(pil_gif)
-            pyganim_gif = pyganim.PygAnimation(pygame_surfaces)
-            pyganim_gif.anchor(pyganim.CENTER)
+        # set attributes
+        self.gif = self.pyganim_from_path(gif_path)
+        self.meta_gif = self.pyganim_from_path(meta_gif_path)
 
-        elif pyganim_gif:
-            pygame_surfaces = self.pyganim_to_surfaces(pyganim_gif)
-
-        self.pyganim_gif = pyganim_gif
-        self.pygame_surfaces = pygame_surfaces
-
-    def pyganim_to_surfaces(self, pyganim_gif):
-        """Create a list of pygame surfaces with corresponding
-        frame durations, from a PygAnimation.
-
-        Args:
-          pyganim_gif (pyganim.PygAnimation): extract the surfaces
-            from this animation.
-
-        Returns:
-          list: a list of (pygame surface, frame duration) representing
-            the frames from supplied pyganim_gif.
-
-        """
-
-        pygame_surfaces = zip(pyganim_gif._images, pyganim_gif._durations)
-
-        return pygame_surfaces
-
-    def pil_to_surfaces(self, pil_gif):
-        """PIL Image() to list of pygame surfaces (surface, duration).
-
-        Args:
-          gif_path (str): GIF to open and load into a list
-            of pygame surfaces.
-
-        Returns:
-          list: [(frame surface, duration), (frame, duration)]
-
-        """
+    def pyganim_from_path(self, gif_path):
+        pil_gif = Image.open(gif_path)
 
         frame_index = 0
         frames = []
@@ -115,7 +74,10 @@ class Animation(object):
 
             pass # end of sequence
 
-        return frames
+        gif = pyganim.PygAnimation(frames)
+        gif.anchor(pyganim.CENTER)
+
+        return gif
 
     def get_max_size(self):
         """Boilerplate for consistency.
@@ -126,7 +88,7 @@ class Animation(object):
 
         """
 
-        return self.pyganim_gif.getMaxSize()
+        return self.gif.getMaxSize()
 
 
 class Walkabout(object):
@@ -169,7 +131,6 @@ class Walkabout(object):
 
         # the attributes we're generating
         self.animations = {}
-        self.meta_animations = {}
         self.actions = []
         self.directions = []
         self.size = None  # will be removed in future?
@@ -189,12 +150,13 @@ class Walkabout(object):
             file_name, file_ext = os.path.splitext(sprite_path)
             file_name = os.path.split(file_name)[1]
 
+            # we do this because Animation handles meta_
             if file_name.startswith('meta_'):
-                __, action, direction = file_name.split('_', 2)
-                target = self.meta_animations
-            else:
-                action, direction = file_name.split('_', 1)
-                target = self.animations
+
+                continue
+
+            action, direction = file_name.split('_', 1)
+            target = self.animations
 
             direction = getattr(constants, direction.title())
             action = getattr(constants, action.title())
@@ -240,30 +202,25 @@ class Walkabout(object):
 
         return self.animations[key]
 
-    def current_animation(self, meta=False):
+    def current_animation(self):
         """Returns the animation selected by the current action
         and direction.
 
         """
 
-        if meta:
-
-            return self.meta_animations[self.action][self.direction]
-
-        else:
-
-            return self.animations[self.action][self.direction]
+        return self.animations[self.action][self.direction]
 
     def get_anchors(self):
         """needs to get actual offset"""
 
         anchors = {a: {d: [] for d in self.directions} for a in self.actions}
 
-        for action, directions in self.meta_animations.items():
+        for action, directions in self.animations.items():
 
             for direction, animation in directions.items():
+                meta_gif = animation.meta_gif
 
-                for surface_frame in animation.pyganim_gif._images:
+                for surface_frame in meta_gif._images:
                     anchor = self.get_anchor(surface_frame)
                     anchors[action][direction].append(anchor)
 
@@ -298,7 +255,7 @@ class Walkabout(object):
         y -= offset[1]
         position_on_screen = (x, y)
 
-        pyganim_gif = self.current_animation().pyganim_gif
+        pyganim_gif = self.current_animation().gif
         pyganim_gif.blit(screen, position_on_screen)
 
         pyganim_frame_index = pyganim.findStartTime(pyganim_gif._startTimes,
@@ -316,7 +273,7 @@ class Walkabout(object):
                             .anchors[self.action][self.direction][0])  # lazy/testing
             child_position = (parent_anchor_position[0] - child_anchor[0],
                               parent_anchor_position[1] - child_anchor[1])
-            child_pyganim = child_walkabout.current_animation().pyganim_gif
+            child_pyganim = child_walkabout.current_animation().gif
             child_pyganim.blit(screen, child_position)
 
     def init(self):
@@ -327,8 +284,7 @@ class Walkabout(object):
         for action in actions:
 
             for direction in directions:
-                animated_sprite = (self.animations[action][direction]
-                                   .pyganim_gif)
+                animated_sprite = self.animations[action][direction].gif
                 animated_sprite.convert_alpha()
                 animated_sprite.convert()
 
