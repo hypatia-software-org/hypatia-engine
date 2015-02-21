@@ -174,7 +174,7 @@ class Walkabout(object):
 
             raise BadWalkabout(directory)
 
-        for sprite_path in glob.iglob(sprite_name_pattern):
+        for sprite_path in sprite_paths:
             file_name, file_ext = os.path.splitext(sprite_path)
             file_name = os.path.split(file_name)[1]
 
