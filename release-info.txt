@@ -1,13 +1,9 @@
-Release Version 0.2.0
-
 These notes are for the dev version of 0.2.0.
 
-Implemented:
-
   * Animation() loads meta of supplied gif; changes in Walkabout reflect this
-
-Unimplemented:
-
-  * Cleaned-up Walkabout child implementation
-  * Fuller implementation/configuration of the anchor/Walkabout child system
+  * Walkabout() raises BadWalkabout if directory provided does not contain ay files by *.gif.
+  * Updated debug/default tileswatch
+  * Updated readme to reflect twitter info
+  * Debug tool for generating tilemap blueprints (3d lists) from string
+  * tweaked example map, exploremap.py; now using the tool for generating blueprints from string
 

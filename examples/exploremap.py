@@ -24,38 +24,34 @@ FILENAME = 'debug.tilemap'
 LAYERS = 2
 ROWS = 10
 WIDTH = 10
-VIEWPORT_X, VIEWPORT_Y = 50, 50
+VIEWPORT_X, VIEWPORT_Y = 80, 80
 
 
-# TILEMAP
-blueprint = [[['default' for i in range(WIDTH)]
-                         for i in range(ROWS)]
-                         for i in range(LAYERS)]
+blueprint_string = """\
+` grass
+@ cobblestone_wall_top
+= cobblestone_wall_upper
+# cobblestone_wall
+~ water
 
-# I'm drawing a border of water around the default tile, but I'm
-# leaving two parts of the wall open so I can have fun with nodraw.
-for z in range(LAYERS):
+`~~~~~~~~~~~~~~~~
+``````````````~~~
+~```````````````~
+~```````````````~
+~```````````````~
+~``@@@@@@@@@@@``~
+~``@=========@``~
+~``@#########@``~
+~``@`````````@``~
+~``=`````````=``~
+~``#`````````#``~
+~```````````````~
+~``@@@@@@@@@@@``~
+~~`===========``~
+~~~###########`~~
+~~~~~~~~~~~~~~~~~"""
 
-    for y in range(ROWS):
-
-        for x in range(WIDTH):
-
-            if y == 0 and x > 0:
-                blueprint[z][y][x] = 'water'
-            elif y > 1 and x == 0:
-                blueprint[z][y][x] = 'water'
-            elif y > 1 and x == WIDTH - 1:
-                blueprint[z][y][x] = 'water'
-            elif y == ROWS - 1:
-                blueprint[z][y][x] = 'water'
-
-            if z > 0:
-                blueprint[z][x][y] = 'air'
-
-# showing off layer support with column
-#         z  y  x
-blueprint[0][2][2] = 'block-bottom'
-blueprint[1][1][2] = 'block-top'
+blueprint = tiles.blueprint_from_string(blueprint_string)
 
 # write to file; load from file
 tilemap = tiles.TileMap('debug', blueprint)

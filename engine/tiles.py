@@ -71,6 +71,7 @@ class TileMap(object):
       layer_images:
       properties:
       impassability:
+      animated_tiles:
 
     """
 
@@ -288,7 +289,9 @@ class TileSwatch(object):
           Abstraction of a directory of images
           accompanied by a config file.
 
-        INI defines default tile properties, default tile.
+          INI defines default tile properties, default tile.
+
+          need to load sprite.Animation for animated gifs loaded as tiles.j animated tiles hae support for effects like shift_pallette
 
         Args:
           swatch_name (str): asdf
@@ -395,6 +398,9 @@ class TileProperties(object):
 
         """
 
+        # rect should always be present for positioning info
+        # impassable should be set if "impassable" in properties
+        # then set self.impassable = true or self.solid = true
         self.rect = rect
 
         if properties:
@@ -452,4 +458,46 @@ def tilemap_from_string(tilemap_string):
 
     return TileMap(swatch_name, tile_graphic_names_three_dimensions)
 
+
+def blueprint_from_string(blueprint_string):
+    """This is a debug feature. Create a 3D list of tile names using
+    ASCII symbols.
+
+    Note:
+      Currently only supports 2D maps.
+
+      ` grass
+      @ cobblestone_wall_top
+      = cobblestone_wall_upper
+      # cobblestone_wall
+      ~ water
+
+      ```@@@@@@@@@@@```
+      ```@=========@```
+      ```@#########@```
+      ```=`````````=```
+      ```#`````````#```
+      `````````````````
+      ```@~~~~~~~~~@```
+      ```@@@@@@@@@@@```
+      ```===========```
+      ```###########```
+
+    """
+
+    legend_string, blueprint_string = blueprint_string.split('\n\n', 1)
+    legend = {}
+
+    for line in legend_string.split('\n'):
+
+        symbol, tile_name = line.split(' ', 1)
+        legend[symbol] = tile_name
+
+    layer = []
+
+    for line in blueprint_string.split('\n'):
+        row = [legend[char] for char in line]
+        layer.append(row)
+
+    return [layer]
 
