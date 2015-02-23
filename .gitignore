@@ -60,7 +60,7 @@ target/
 
 # misc
 private/
-wiki/
+hypatia-engine.wiki/
 *.core
 *.db
 *.swo
