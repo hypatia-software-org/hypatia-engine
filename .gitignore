@@ -59,7 +59,8 @@ target/
 *~
 
 # misc
-notes/
+private/
+wiki/
 *.core
 *.db
 *.swo
