@@ -14,5 +14,4 @@ Coming soon:
 
   * cleaned-up all engine modules, including docstrings
   * viewport now attribute of screen
-  * screen class richer in features
   * x, y velocity for movement, nev/pos values

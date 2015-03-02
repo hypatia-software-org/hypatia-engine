@@ -130,7 +130,6 @@ class Viewport(object):
         """
 
         entity_position_x, entity_position_y = entity.rect.center
-        # should not be abs
         difference_x = entity_position_x - self.rect.centerx
         difference_y = entity_position_y - self.rect.centery
         self.rect.move_ip(*(difference_x, difference_y))
