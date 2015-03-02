@@ -145,7 +145,7 @@ class Game(object):
 
         """
 
-        self.viewport.pan_for_entity(self.human_player)
+        self.viewport.center_on(self.human_player)
         self.viewport.blit(self.tilemap.layer_images[0])
         self.human_player.blit(
                                self.viewport.surface,

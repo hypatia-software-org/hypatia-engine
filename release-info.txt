@@ -1,9 +1,18 @@
 These notes are for the dev version of 0.2.0.
 
+Finished:
+
   * Animation() loads meta of supplied gif; changes in Walkabout reflect this
   * Walkabout() raises BadWalkabout if directory provided does not contain ay files by *.gif.
   * Updated debug/default tileswatch
   * Updated readme to reflect twitter info
   * Debug tool for generating tilemap blueprints (3d lists) from string
   * tweaked example map, exploremap.py; now using the tool for generating blueprints from string
+  * viewport centers on player
+  
+Coming soon:
 
+  * cleaned-up all engine modules, including docstrings
+  * viewport now attribute of screen
+  * screen class richer in features
+  * x, y velocity for movement, nev/pos values

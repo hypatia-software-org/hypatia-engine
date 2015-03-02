@@ -98,13 +98,8 @@ class Viewport(object):
     """Display only a fixed area of a surface.
 
     Attributes:
-      size (tuple): dimensions of viewport in pixels (int x, int y)
-      surface (pygame.Surface): the "canvas" of the viewport, to which
-        portions of other surfaces are blitted upon.
-      start_x (int): the top-left corner x coordinate
-      start_y (int): the top-left corner y coordinate
-      end_x (int): the bottom-right corner x coorinate
-      end_y (int): the bottom-right corner y coorindate
+      surface
+      rect
 
     """
 
@@ -122,39 +117,23 @@ class Viewport(object):
         self.surface = pygame.Surface(size)
         self.rect = pygame.Rect((0, 0), size)
 
-    def pan_for_entity(self, entity):
-        """Check if entity is outside of the viewport, and if so,
-        in which di section?
+    def center_on(self, entity):
+        """Center the viewport rectangle on an object.
+        
+        Note:
+          entity must have entity.rect (pygame.Rect)
 
         Args:
-          entity (entity.Walkabout): something with a pygame.rect
-            attribute. Uses rect.center for coordinates to check.
-
-        Note:
-          Need to use rect move_ip instead
-
-        Example:
-          >>> tilemap_pan_for_entity(player)
+          entity: something with an attribute "rect" which value is
+            a pygame.Rect.
 
         """
 
         entity_position_x, entity_position_y = entity.rect.center
-
-        # if player goes off the right of the screen...
-        if entity_position_x > self.rect.right:
-            self.rect.move_ip(self.rect.width, 0)
-
-        # if player goes off the left of the screen...
-        elif entity_position_x < self.rect.left:
-            self.rect.move_ip(-self.rect.width, 0)
-
-        # if player goes off bottom of screen...
-        elif entity_position_y > self.rect.bottom:
-            self.rect.move_ip(0, self.rect.height)
-
-        # if player goes off top of screen...
-        elif entity_position_y < self.rect.top:
-            self.rect.move_ip(0, -self.rect.height)
+        # should not be abs
+        difference_x = entity_position_x - self.rect.centerx
+        difference_y = entity_position_y - self.rect.centery
+        self.rect.move_ip(*(difference_x, difference_y))
 
     def blit(self, surface):
         """Draw the correct portion of supplied surface onto viewport.
