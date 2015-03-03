@@ -129,10 +129,6 @@ class Game(object):
             destination_rect = pygame.Rect((new_topleft_x, new_topleft_y),
                                            self.human_player.walkabout.size)
             collision_rect = player.walkabout.rect.union(destination_rect)
-            possible_collisions = self.tilemap.impassability
-            
-            for npc in self.tilemap.npcs:
-                possible_collisions.append(npc.walkabout.rect)
 
             if not self.collide_check(collision_rect):
                 # we're done, we can move!

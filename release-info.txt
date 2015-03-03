@@ -10,11 +10,11 @@ Finished:
   * tweaked example map, exploremap.py; now using the tool for generating blueprints from string
   * viewport centers on player
   
-Coming soon:
+Coming soon/incomplete:
 
   * cleaned-up all engine modules, including docstrings
   * viewport now attribute of screen
   * x, y velocity for movement, nev/pos values
   * player module, npcs, tilemap npc support, npc say support
   * dialog module
-  * npc collisions
+
