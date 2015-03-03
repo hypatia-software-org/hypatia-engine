@@ -15,3 +15,6 @@ Coming soon:
   * cleaned-up all engine modules, including docstrings
   * viewport now attribute of screen
   * x, y velocity for movement, nev/pos values
+  * player module, npcs, tilemap npc support, npc say support
+  * dialog module
+  * npc collisions

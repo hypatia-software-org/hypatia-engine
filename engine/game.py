@@ -59,7 +59,7 @@ class Game(object):
         for event in pygame.event.get():
 
             if event.type == KEYUP:
-                self.human_player.action = constants.Stand
+                self.human_player.walkabout.action = constants.Stand
 
         keys = pygame.key.get_pressed()
 
@@ -78,6 +78,9 @@ class Game(object):
 
         if keys[K_LEFT]:
             self.move_player(constants.Left)
+        
+        if keys[K_SPACE]:
+            self.human_player.talk(self.tilemap.npcs)
 
         return True
 
@@ -88,6 +91,8 @@ class Game(object):
         Note:
           Will round down to nearest probable step
           if full step is impassable.
+          
+          Needs to use velocity instead...
 
         Args:
           direction (constants.Direction): may be one of: up, right, down, left
@@ -97,15 +102,16 @@ class Game(object):
         """
 
         player = self.human_player
-        player.direction = direction
-        planned_movement_in_pixels = player.speed_in_pixels_per_second
+        player.walkabout.direction = direction
+        planned_movement_in_pixels = (player.walkabout.
+                                      speed_in_pixels_per_second)
         adj_speed = self.screen.time_elapsed_milliseconds / 1000.0
         iter_pixels = max([1, int(planned_movement_in_pixels)])
 
         # test a series of positions
         for pixels in range(iter_pixels, 0, -1):
             # create a rectangle at the new position
-            new_topleft_x, new_topleft_y = player.topleft_float
+            new_topleft_x, new_topleft_y = player.walkabout.topleft_float
 
             # what's going on here
             if pixels == 2:
@@ -121,43 +127,71 @@ class Game(object):
                 new_topleft_x -= pixels * adj_speed
 
             destination_rect = pygame.Rect((new_topleft_x, new_topleft_y),
-                                           self.human_player.size)
-            collision_rect = player.rect.union(destination_rect)
+                                           self.human_player.walkabout.size)
+            collision_rect = player.walkabout.rect.union(destination_rect)
+            possible_collisions = self.tilemap.impassability
+            
+            for npc in self.tilemap.npcs:
+                possible_collisions.append(npc.walkabout.rect)
 
-            if collision_rect.collidelist(self.tilemap.impassability) == -1:
+            if not self.collide_check(collision_rect):
                 # we're done, we can move!
                 new_topleft = (new_topleft_x, new_topleft_y)
-                player.action = constants.Walk
-                animation = player.current_animation()
-                player.size = animation.get_max_size()
-                player.rect = destination_rect
-                player.topleft_float = new_topleft
+                player.walkabout.action = constants.Walk
+                animation = player.walkabout.current_animation()
+                player.walkabout.size = animation.get_max_size()
+                player.walkabout.rect = destination_rect
+                player.walkabout.topleft_float = new_topleft
 
                 return True
 
         # never found an applicable destination
-        player.action = constants.Stand
+        player.walkabout.action = constants.Stand
 
         return False
+
+    def collide_check(self, rect):
+        """Returns True if there are collisions with rect.
+        
+        """
+        
+        possible_collisions = self.tilemap.impassability
+        
+        for npc in self.tilemap.npcs:
+            possible_collisions.append(npc.walkabout.rect)
+
+        return rect.collidelist(possible_collisions) != -1
 
     def render(self):
         """Drawing behavior for game objects.
 
         """
 
-        self.viewport.center_on(self.human_player)
+        self.viewport.center_on(self.human_player.walkabout)
         self.viewport.blit(self.tilemap.layer_images[0])
-        self.human_player.blit(
+
+        # render each npc walkabout
+        for npc in self.tilemap.npcs:
+            npc.walkabout.blit(
                                self.viewport.surface,
                                self.viewport.rect.topleft
                               )
+
+        # finally human and rest map layers last
+        self.human_player.walkabout.blit(
+                                         self.viewport.surface,
+                                         self.viewport.rect.topleft
+                                        )
 
         for layer in self.tilemap.layer_images[1:]:
             self.viewport.blit(layer)
 
     def start_loop(self):
         self.tilemap.convert_layer_images()
-        self.human_player.init()
+        self.human_player.walkabout.init()
+        
+        for npc in self.tilemap.npcs:
+            npc.walkabout.init()
 
         while self.handle_input():
             self.handle_input()

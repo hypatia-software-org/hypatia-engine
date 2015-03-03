@@ -20,7 +20,6 @@ import sys
 import glob
 import zlib
 import string
-import sqlite3
 
 try:
     import ConfigParser as configparser
@@ -72,10 +71,11 @@ class TileMap(object):
       properties:
       impassability:
       animated_tiles:
+      npcs:
 
     """
 
-    def __init__(self, swatch_name, tile_graphic_names):
+    def __init__(self, swatch_name, tile_graphic_names, npcs=None):
         """Stitch tiles from swatch to layer surfaces. 
 
         Piece together layers/surfaces from corresponding tile graphic
@@ -86,6 +86,7 @@ class TileMap(object):
           swatch_name (str): directory name of the swatch to use
           tile_graphic_names (list): 3d list where
             list[layer][row][tile]
+          npcs (list): list of player.Npc objects
 
         Examples:
           Make a 2x2x1 tilemap:
@@ -166,6 +167,7 @@ class TileMap(object):
         self.layer_images = layer_images
         self.properties = tile_properties
         self.impassability = impassability
+        self.npcs = npcs
 
     def __getitem__(self, coord):
         """Fetch TileProperties by tile coordinate.

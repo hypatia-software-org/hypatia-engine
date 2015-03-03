@@ -10,6 +10,7 @@ import sprites
 import tiles
 import render
 import game
+import player
 
 __author__ = "Lillian Lemmer"
 __copyright__ = "Copyright 2015, Lillian Lemmer"
@@ -65,11 +66,17 @@ with open(FILENAME, 'rb') as f:
 
 # prepare game assets
 hat = sprites.Walkabout('hat')
-player = sprites.Walkabout(children=[hat])
+human_walkabout = sprites.Walkabout(children=[hat])
+human = player.Player(walkabout=human_walkabout)
+
+npc_walkabout = sprites.Walkabout(position=(40, 40))
+npc = player.Npc(walkabout=npc_walkabout, say_text="Hello!")
+tilemap.npcs = [npc]
+
 viewport = render.Viewport((VIEWPORT_X, VIEWPORT_Y))
 game_blueprint = game.Game(
                            tilemap=tilemap,
-                           human_player=player,
+                           human_player=human,
                            viewport=viewport
                           )
 

@@ -156,7 +156,11 @@ class Walkabout(object):
         self.actions = []
         self.directions = []
         self.size = None  # will be removed in future?
-        self.topleft_float = (0.0, 0.0)
+        
+        if not position:
+            position = (0, 0)
+
+        topleft_float = (float(position[0]), float(position[1]))
 
         # specify the files to load
         walkabout_directory = os.path.join(
@@ -199,12 +203,10 @@ class Walkabout(object):
             except KeyError:
                 target[action] = {direction: animation}
 
-        position = position or (0, 0)  # px values
-
         # ... set the rest of the attribs
         self.size = animation.get_max_size()
         self.rect = pygame.Rect(position, self.size)
-        self.topleft_float = (0.0, 0.0)  # what if position is offered
+        self.topleft_float = topleft_float
         self.action = constants.Stand
         self.direction = constants.Down
         self.speed_in_pixels_per_second = 20.0
@@ -321,4 +323,3 @@ class Walkabout(object):
 
         for walkabout_child in self.child_walkabouts:
             walkabout_child.init()
-
