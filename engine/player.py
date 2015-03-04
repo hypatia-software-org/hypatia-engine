@@ -49,9 +49,9 @@ class Npc(Player):
         say_text = kwargs.pop('say_text', None)
         
         if say_text:
-            self.dialog_balloon = dialog.DialogBalloon(self, say_text)
+            self.dialog_box = dialog.DialogBox(self, say_text)
         else:
-            self.dialog_balloon = None
+            self.dialog_box = None
 
         super(Npc, self).__init__(*args, **kwargs)
 
@@ -64,5 +64,5 @@ class Npc(Player):
                  }[at_direction]
         self.walkabout.direction = facing
         
-        if self.dialog_balloon:
-            self.dialog_balloon.blit(to_surface, font, screen_width)
+        if self.dialog_box:
+            self.dialog_box.blit(to_surface, font, screen_width)

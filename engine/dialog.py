@@ -8,7 +8,7 @@ All very experimental. Highly subject to change.
 import pygame
 
 
-class DialogBalloon(object):
+class DialogBox(object):
 
     def __init__(self, follows, message):
         """
