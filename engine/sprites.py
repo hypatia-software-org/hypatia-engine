@@ -212,6 +212,8 @@ class Walkabout(object):
         self.speed_in_pixels_per_second = 20.0
         self.child_walkabouts = children or []
         self.anchors = self.get_anchors()
+        
+        self.init()
 
     def __getitem__(self, key):
         """Fetch sprites associated with action (key).

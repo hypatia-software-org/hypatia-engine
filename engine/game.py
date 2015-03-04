@@ -41,12 +41,12 @@ __status__ = "Development"
 
 class Game(object):
 
-    def __init__(self, tilemap, viewport, human_player):
-        self.human_player = human_player
-        self.tilemap = tilemap
-        self.viewport = viewport
-        self.screen = render.Screen()
+    def __init__(self, screen):
+        self.screen = screen
 
+    def all_to_screen(self):
+        pass
+        
     def handle_input(self):
         """...
 
@@ -80,7 +80,12 @@ class Game(object):
             self.move_player(constants.Left)
         
         if keys[K_SPACE]:
-            self.human_player.talk(self.tilemap.npcs)
+            self.human_player.talk(
+                                   self.tilemap.npcs,
+                                   self.viewport.surface,
+                                   self.font,
+                                   self.screen.screen_size
+                                  )
 
         return True
 
@@ -183,11 +188,6 @@ class Game(object):
             self.viewport.blit(layer)
 
     def start_loop(self):
-        self.tilemap.convert_layer_images()
-        self.human_player.walkabout.init()
-        
-        for npc in self.tilemap.npcs:
-            npc.walkabout.init()
 
         while self.handle_input():
             self.handle_input()

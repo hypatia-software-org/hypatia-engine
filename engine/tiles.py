@@ -168,6 +168,8 @@ class TileMap(object):
         self.properties = tile_properties
         self.impassability = impassability
         self.npcs = npcs
+        
+        self.convert_layer_images()
 
     def __getitem__(self, coord):
         """Fetch TileProperties by tile coordinate.

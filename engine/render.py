@@ -54,7 +54,7 @@ class Screen(object):
     """
 
     def __init__(self, filters=None):
-        """
+        """Will init pygame.
 
         Args:
           filters (list): list of functions which takes and

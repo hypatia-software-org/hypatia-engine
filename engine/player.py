@@ -6,6 +6,7 @@ Note:
 """
 
 
+import dialog
 import sprites
 import constants
 
@@ -15,7 +16,7 @@ class Player(object):
     def __init__(self, walkabout=None):
         self.walkabout = walkabout or sprites.Walkabout()
 
-    def talk(self, npcs):
+    def talk(self, npcs, to_surface, font, screen_width):
         """Attempt to talk in current direction.
         
         """
@@ -39,17 +40,29 @@ class Player(object):
         for npc in npcs:
             
             if npc.walkabout.rect.colliderect(talk_rect):
-                npc.say()
+                npc.say(facing, to_surface, font, screen_width)
 
 
 class Npc(Player):
 
     def __init__(self, *args, **kwargs):
-        self.say_text = kwargs.pop('say_text', None)
+        say_text = kwargs.pop('say_text', None)
+        
+        if say_text:
+            self.dialog_balloon = dialog.DialogBalloon(self, say_text)
+        else:
+            self.dialog_balloon = None
+
         super(Npc, self).__init__(*args, **kwargs)
 
-    def say(self):
-
-        # launch a dialog box for self.say, change direction
-        if self.say_text:
-            raise Exception('adf')
+    def say(self, at_direction, to_surface, font, screen_width):
+        facing = {
+                  constants.Up: constants.Down,
+                  constants.Right: constants.Left,
+                  constants.Left: constants.Right,
+                  constants.Down: constants.Up
+                 }[at_direction]
+        self.walkabout.direction = facing
+        
+        if self.dialog_balloon:
+            self.dialog_balloon.blit(to_surface, font, screen_width)

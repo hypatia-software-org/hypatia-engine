@@ -15,6 +15,9 @@ Coming soon/incomplete:
   * cleaned-up all engine modules, including docstrings
   * viewport now attribute of screen
   * x, y velocity for movement, nev/pos values
-  * player module, npcs, tilemap npc support, npc say support
-  * dialog module
+  * player module, npcs, tilemap npc support
+  * npc say support; faces direction of player, presents dialog
+  * dialog module/dialog balloons
+  * redid init stuff
+
 
