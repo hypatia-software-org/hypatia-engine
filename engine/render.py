@@ -78,11 +78,8 @@ class Screen(object):
         rescaling for fullscreen.
 
         """
-
-        scaled_surface = pygame.transform.scale(
-                                                surface,
-                                                self.screen_size
-                                               )
+        
+        scaled_surface = pygame.transform.scale(surface, self.screen_size)
 
         if self.filters:
 

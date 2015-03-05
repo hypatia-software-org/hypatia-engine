@@ -16,7 +16,7 @@ class Player(object):
     def __init__(self, walkabout=None):
         self.walkabout = walkabout or sprites.Walkabout()
 
-    def talk(self, npcs, to_surface, font, screen_width):
+    def talk(self, npcs, dialogbox):
         """Attempt to talk in current direction.
         
         """
@@ -40,22 +40,17 @@ class Player(object):
         for npc in npcs:
             
             if npc.walkabout.rect.colliderect(talk_rect):
-                npc.say(facing, to_surface, font, screen_width)
+                npc.say(facing, dialogbox)
 
 
 class Npc(Player):
 
     def __init__(self, *args, **kwargs):
-        say_text = kwargs.pop('say_text', None)
-        
-        if say_text:
-            self.dialog_box = dialog.DialogBox(self, say_text)
-        else:
-            self.dialog_box = None
+        self.say_text = kwargs.pop('say_text', None)
 
         super(Npc, self).__init__(*args, **kwargs)
 
-    def say(self, at_direction, to_surface, font, screen_width):
+    def say(self, at_direction, dialogbox):
         facing = {
                   constants.Up: constants.Down,
                   constants.Right: constants.Left,
@@ -64,5 +59,5 @@ class Npc(Player):
                  }[at_direction]
         self.walkabout.direction = facing
         
-        if self.dialog_box:
-            self.dialog_box.blit(to_surface, font, screen_width)
+        if self.say_text:
+            dialogbox.set_message(self.say_text)

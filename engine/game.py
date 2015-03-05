@@ -28,6 +28,7 @@ import pygame
 from pygame.locals import *
 
 import constants
+import dialog
 import render
 
 __author__ = "Lillian Lemmer"
@@ -41,11 +42,10 @@ __status__ = "Development"
 
 class Game(object):
 
-    def __init__(self, screen):
-        self.screen = screen
-
-    def all_to_screen(self):
-        pass
+    def __init__(self, screen=None, viewport=None, dialogbox=None):
+        self.screen = screen or render.Screen()
+        self.viewport = viewport or render.Viewport((256, 240))
+        self.dialogbox = dialogbox or dialog.DialogBox(viewport.rect.size)
         
     def handle_input(self):
         """...
@@ -56,36 +56,35 @@ class Game(object):
 
         """
 
+        pressed_keys = pygame.key.get_pressed()
+        
+        if pressed_keys[K_ESCAPE]:
+
+            return False
+
+        if pressed_keys[K_UP]:
+            self.move_player(constants.Up)
+
+        if pressed_keys[K_RIGHT]:
+            self.move_player(constants.Right)
+
+        if pressed_keys[K_DOWN]:
+            self.move_player(constants.Down)
+
+        if pressed_keys[K_LEFT]:
+            self.move_player(constants.Left)
+            
         for event in pygame.event.get():
 
             if event.type == KEYUP:
                 self.human_player.walkabout.action = constants.Stand
-
-        keys = pygame.key.get_pressed()
-
-        if keys[K_ESCAPE]:
-
-            return False
-
-        if keys[K_UP]:
-            self.move_player(constants.Up)
-
-        if keys[K_RIGHT]:
-            self.move_player(constants.Right)
-
-        if keys[K_DOWN]:
-            self.move_player(constants.Down)
-
-        if keys[K_LEFT]:
-            self.move_player(constants.Left)
-        
-        if keys[K_SPACE]:
-            self.human_player.talk(
-                                   self.tilemap.npcs,
-                                   self.viewport.surface,
-                                   self.font,
-                                   self.screen.screen_size
-                                  )
+            
+            if event.type == KEYDOWN and event.key == K_SPACE:
+            
+                if self.dialogbox.active:
+                    self.dialogbox.next()
+                else:
+                    self.human_player.talk(self.tilemap.npcs, self.dialogbox)
 
         return True
 
@@ -186,6 +185,8 @@ class Game(object):
 
         for layer in self.tilemap.layer_images[1:]:
             self.viewport.blit(layer)
+            
+        self.dialogbox.blit(self.viewport.surface)
 
     def start_loop(self):
 

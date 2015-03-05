@@ -19,5 +19,6 @@ Coming soon/incomplete:
   * npc say support; faces direction of player, presents dialog
   * dialog module/dialog balloons
   * redid init stuff
+  * various measurements all put neatly into pygame.Rect objects when possible, e.g., x.height, x.size, etc.
 
 

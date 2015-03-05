@@ -29,14 +29,8 @@ VIEWPORT_X, VIEWPORT_Y = 256, 240
 
 
 # NEW RUNTIME
-screen = render.Screen()
-game = Game(screen)
-
-# set game font
-game.font = pygame.font.Font('../resources/fonts/VeraMono.ttf', 11)
-
-# set game viewport
-game.viewport = render.Viewport((VIEWPORT_X, VIEWPORT_Y))
+viewport = render.Viewport((VIEWPORT_X, VIEWPORT_Y))
+game = Game(viewport=viewport)
 
 # set human player
 hat = sprites.Walkabout('hat')
@@ -73,7 +67,9 @@ game.tilemap = tiles.TileMap('debug', blueprint)
 
 # ... and set tilemap npcs
 npc_walkabout = sprites.Walkabout(position=(40, 40))
-npc = player.Npc(walkabout=npc_walkabout, say_text="Hello! How're you?")
+npc_say = """\
+START Praesent a dignissim ipsum. Etiam venenatis purus est, ornare sollicitudin velit scelerisque eget. Ut consequat odio tortor, eu lobortis sem viverra in. Maecenas maximus nunc in consectetur tempor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Suspendisse a sapien interdum, venenatis erat eu, faucibus lorem. Quisque erat lacus, varius a lorem vitae, posuere molestie erat. In interdum, dolor et vestibulum placerat, lectus massa tempus purus, eget pharetra mauris sapien eget turpis. Curabitur nec eleifend quam, nec scelerisque leo. Fusce tempus sem ex, eu gravida tellus sagittis nec. Aenean cursus pretium urna, id congue metus rutrum quis. Cras at nisi ac nibh aliquam maximus quis at turpis. Morbi commodo id odio ac scelerisque. Nunc eros diam, faucibus et volutpat in, feugiat nec turpis. Suspendisse fermentum efficitur enim sit amet volutpat. END"""
+npc = player.Npc(walkabout=npc_walkabout, say_text=npc_say)
 game.tilemap.npcs = [npc]
 
 # finished!
