@@ -63,6 +63,7 @@ class Screen(object):
         """
 
         pygame.init()
+        pygame.mouse.set_visible(False)
         self.clock = pygame.time.Clock()
         self.time_elapsed_milliseconds = 0
         display_info = pygame.display.Info()
@@ -91,12 +92,13 @@ class Screen(object):
         self.time_elapsed_milliseconds = self.clock.tick(FPS)
 
 
+# how much of this is redundant due to pygame Surface.scroll?
 class Viewport(object):
     """Display only a fixed area of a surface.
 
     Attributes:
-      surface
-      rect
+      surface (pygame.Surface): viewport surface
+      rect (pygame.Rect): viewable coordinates
 
     """
 
@@ -107,30 +109,50 @@ class Viewport(object):
           size (tuple): (int x, int y) pixel dimensions of viewport.
 
         Example:
-          >>> viewport = Viewport((320, 240))
+          >>> viewport = Viewport(master_surface, (320, 240))
 
         """
 
         self.surface = pygame.Surface(size)
         self.rect = pygame.Rect((0, 0), size)
 
-    def center_on(self, entity):
+    def center_on(self, entity, master_rect):
         """Center the viewport rectangle on an object.
         
         Note:
           entity must have entity.rect (pygame.Rect)
+          
+          Does not center if centering would render off-surface;
+          finds nearest.
 
         Args:
           entity: something with an attribute "rect" which value is
             a pygame.Rect.
 
+        Returns:
+          bool: --
+          
         """
-
+        
         entity_position_x, entity_position_y = entity.rect.center
         difference_x = entity_position_x - self.rect.centerx
-        difference_y = entity_position_y - self.rect.centery
-        self.rect.move_ip(*(difference_x, difference_y))
+        difference_y = entity_position_y - self.rect.centery 
+        potential_rect = self.rect.move(*(difference_x, difference_y))
+        
+        if potential_rect.left < 0:
+            difference_x = 0
+        
+        if potential_rect.top < 0:
+            difference_y = 0
 
+        if potential_rect.right > master_rect.right:
+            difference_x = difference_x - (potential_rect.right - master_rect.right)
+
+        if potential_rect.bottom > master_rect.bottom:
+            difference_y = difference_y - (potential_rect.bottom - master_rect.bottom)
+            
+        self.rect.move_ip(*(difference_x, difference_y))
+        
     def blit(self, surface):
         """Draw the correct portion of supplied surface onto viewport.
 

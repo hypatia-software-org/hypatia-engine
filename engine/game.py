@@ -55,7 +55,25 @@ class Game(object):
             false if escape pressed.
 
         """
+        
+        for event in pygame.event.get():
 
+            if event.type == KEYUP:
+                self.human_player.walkabout.action = constants.Stand
+            
+            # need to trap player in a next loop, release when no next
+            if event.type == KEYDOWN and event.key == K_SPACE:
+
+                # do until 
+                if self.dialogbox.active:
+                    self.dialogbox.next()
+                else:
+                    self.human_player.talk(self.tilemap.npcs, self.dialogbox)
+        
+        if self.dialogbox.active:
+            
+            return True
+            
         pressed_keys = pygame.key.get_pressed()
         
         if pressed_keys[K_ESCAPE]:
@@ -73,18 +91,6 @@ class Game(object):
 
         if pressed_keys[K_LEFT]:
             self.move_player(constants.Left)
-            
-        for event in pygame.event.get():
-
-            if event.type == KEYUP:
-                self.human_player.walkabout.action = constants.Stand
-            
-            if event.type == KEYDOWN and event.key == K_SPACE:
-            
-                if self.dialogbox.active:
-                    self.dialogbox.next()
-                else:
-                    self.human_player.talk(self.tilemap.npcs, self.dialogbox)
 
         return True
 
@@ -167,8 +173,10 @@ class Game(object):
 
         """
 
-        self.viewport.center_on(self.human_player.walkabout)
-        self.viewport.blit(self.tilemap.layer_images[0])
+        first_tilemap_layer = self.tilemap.layer_images[0]
+        self.viewport.center_on(self.human_player.walkabout,
+                                first_tilemap_layer.get_rect())
+        self.viewport.blit(first_tilemap_layer)
 
         # render each npc walkabout
         for npc in self.tilemap.npcs:

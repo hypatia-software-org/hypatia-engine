@@ -9,16 +9,19 @@ Finished:
   * Debug tool for generating tilemap blueprints (3d lists) from string
   * tweaked example map, exploremap.py; now using the tool for generating blueprints from string
   * viewport centers on player
+  * hid mouse
+  * redid init stuff
+  * dialog module
+  * player module, npcs, tilemap npc support
+  * npc say support; faces direction of player, presents dialog
   
 Coming soon/incomplete:
 
   * cleaned-up all engine modules, including docstrings
   * viewport now attribute of screen
   * x, y velocity for movement, nev/pos values
-  * player module, npcs, tilemap npc support
-  * npc say support; faces direction of player, presents dialog
-  * dialog module/dialog balloons
-  * redid init stuff
+  * fixed camera movement never shows nodraw
+  * documented, enforced ABSOLUTE coordinates--used comments to signify
   * various measurements all put neatly into pygame.Rect objects when possible, e.g., x.height, x.size, etc.
 
 

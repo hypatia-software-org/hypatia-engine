@@ -38,6 +38,7 @@ class DialogBox(object):
         self.lines_at_a_time = 4
         self.full_surface = None
         
+        # Could just use Viewport!
         self.viewport_rect = None
         self.reset_viewport_rect()
         
@@ -78,10 +79,9 @@ class DialogBox(object):
         # will stay off beause viewport rect never resets!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         # when run out set self.active to false!
         offset = (0, self.character_size[1] * self.lines_at_a_time)
-        previous_rect = self.viewport_rect.copy()
         self.viewport_rect.move_ip(offset)
         
-        if not previous_rect.colliderect(self.full_surface.get_rect()):
+        if not self.viewport_rect.colliderect(self.full_surface.get_rect()):
             self.active = False
             self.reset_viewport_rect()
         
