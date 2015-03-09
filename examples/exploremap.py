@@ -92,7 +92,10 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"""
-game.tilemap = tiles.TileMap.from_string(blueprint_string)
+tilemap = tiles.TileMap.from_string(blueprint_string, friendly=True)
+new_tilemap_string = tilemap.to_string()
+game.tilemap = tiles.TileMap.from_string(new_tilemap_string)
+print(game.tilemap.to_string(friendly=True))
 
 # ... and set tilemap npcs
 npc_walkabout = sprites.Walkabout(position=(140, 140))

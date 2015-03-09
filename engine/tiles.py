@@ -242,10 +242,64 @@ class TileMap(object):
 
         return None
 
-    # need to work on to_string corresponding to below
+    def to_string(self, friendly=False):
+        """Create the user-unfriendly string for the tilemap.
+        
+        """
+        
+        output_string = ''
+
+        # create legend if friendly
+        if friendly:
+            tile_graphic_names = []
+            
+            for layer in self.tile_graphic_names:
+            
+                for row in layer:
+                    tile_graphic_names.extend(row)
+                    
+            tile_graphic_names = set(tile_graphic_names)
+            legend = {}  # name to char
+            printable_chars = string.printable
+            
+            for i, tile_graphic_name in enumerate(tile_graphic_names):
+                symbol = printable_chars[i]
+                legend[tile_graphic_name] = symbol
+                output_string += symbol + ' ' + tile_graphic_name + '\n'
+            
+            output_string += '\n'
+                    
+        # create map layers
+        layers = []
+        
+        for layer in self.tile_graphic_names:
+            layer_lines = []
+        
+            for row in layer:
+                    
+                if friendly:
+                    row_string = ''.join([legend[name] for name in row])
+                else:
+                    row_string = ';'.join(row)
+                    
+                layer_lines.append(row_string)
+                    
+            layer_string = '\n'.join(layer_lines)
+            layers.append(layer_string)
+
+        layers_string = '\n\n'.join(layers)
+        output_string += layers_string
+
+        if friendly:
+        
+            return output_string
+            
+        else:
+        
+            return zlib.compress(output_string.encode('ascii'), 9)
 
     @classmethod
-    def from_string(self, blueprint_string):
+    def from_string(cls, blueprint_string, friendly=False):
         """This is a debug feature. Create a 3D list of tile names using
         ASCII symbols. Supports layers.
        
@@ -276,24 +330,41 @@ class TileMap(object):
           
         """
 
+        if not friendly:
+            blueprint_string = (zlib.decompress(blueprint_string)
+                                .decode('ascii'))
+        
         # blueprint legend and layers are separated by blank lines
         # legend comes first, rest are layers
         blueprint_split = blueprint_string.split('\n\n')
-        legend_string = blueprint_split[0]
-        blueprint_strings = blueprint_split[1:]
         
-        # create a legend mapping of ascii symbol to tile graphic name
-        legend = {}
+        if friendly:
+            legend_string = blueprint_split[0]
+            blueprint_strings = blueprint_split[1:]
+            
+            # create a legend mapping of ascii symbol to tile graphic name
+            legend = {}
 
-        for line in legend_string.split('\n'):
-            symbol, tile_name = line.split(' ', 1)  # e.g.: ` grass
-            legend[symbol] = tile_name
+            for line in legend_string.split('\n'):
+                symbol, tile_name = line.split(' ', 1)  # e.g.: ` grass
+                legend[symbol] = tile_name
+
+        else:
+            blueprint_strings = blueprint_split
 
         # transform our characters into a 3D list of tile graphic names
         layers = []
 
         for layer_string in blueprint_strings:
-            layer = [[legend[c] for c in row] for row in layer_string.split('\n')]
+        
+            if friendly:
+                layer = [[legend[c] for c in row]
+                         for row in layer_string.split('\n')]
+
+            else:
+                layer = [[name for name in row.split(';')]
+                         for row in layer_string.split('\n')]
+
             layers.append(layer)
 
         return TileMap('debug', layers)
