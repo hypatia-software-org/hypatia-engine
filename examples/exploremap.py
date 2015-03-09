@@ -92,10 +92,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"""
-
-blueprint = tiles.blueprint_from_string(blueprint_string)
-#blueprint[1][11][12] = 'column_top'
-game.tilemap = tiles.TileMap('debug', blueprint)
+game.tilemap = tiles.TileMap.from_string(blueprint_string)
 
 # ... and set tilemap npcs
 npc_walkabout = sprites.Walkabout(position=(140, 140))

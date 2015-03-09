@@ -18,6 +18,8 @@ Finished:
   * tileproperties merge with tileproperties from its x,y position on other layers
   * layer support added in debug blueprint from string
   * column tiles to show off z-index, floor and flower tiles
+  * Class method TileInfo.from_string replaces blueprint_from_string and from_string to_string
+  * TileProperties now TileInfo, TileInfo updates, TileInfo.graphic_name
   
 Coming soon/incomplete:
 
