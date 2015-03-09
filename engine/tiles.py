@@ -488,28 +488,32 @@ def blueprint_from_string(blueprint_string):
     ASCII symbols.
 
     Note:
-      Currently only supports 2D maps.
+      Supports layering!
 
       ` grass
-      @ cobblestone_wall_top
-      = cobblestone_wall_upper
       # cobblestone_wall
       ~ water
+      A air
+      v column_top
+      ^ column_bottom
+      
+      `###```~`
+      `###```~`
+      `###```~`
+      ```````~`
 
-      ```@@@@@@@@@@@```
-      ```@=========@```
-      ```@#########@```
-      ```=`````````=```
-      ```#`````````#```
-      `````````````````
-      ```@~~~~~~~~~@```
-      ```@@@@@@@@@@@```
-      ```===========```
-      ```###########```
-
+      AAAAAAAAv
+      AAAAAAAA^
+      AAAAAAAAv
+      AAAAAAAA^
+      
     """
 
-    legend_string, blueprint_string = blueprint_string.split('\n\n', 1)
+    # firstly, split the string by blank line. this will give us the
+    # legend and following layers
+    blueprint_split = blueprint_string.split('\n\n')
+    legend_string = blueprint_split[0]
+    blueprint_strings = blueprint_split[1:]
     legend = {}
 
     for line in legend_string.split('\n'):
@@ -518,20 +522,14 @@ def blueprint_from_string(blueprint_string):
         legend[symbol] = tile_name
 
     layers = []
-    layer = []
 
-    for line in blueprint_string.split('\n'):
-    
-        if not line:
-            layers.append(layer)
-            layer = []
+    for layer_string in blueprint_strings:
+        layer = []
+        
+        for line in layer_string.split('\n'):
+            row = [legend[char] for char in line]
+            layer.append(row)
             
-            continue
-
-        row = [legend[char] for char in line]
-        layer.append(row)
-
-    if layer:
         layers.append(layer)
 
     return layers
