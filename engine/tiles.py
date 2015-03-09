@@ -13,6 +13,8 @@ about tiles (tile properties).
 
 For more information see: http://en.wikipedia.org/wiki/Tile_engine
 
+Important equation: (width_in_tiles * y) + x
+
 """
 
 import os
@@ -109,18 +111,27 @@ class TileMap(object):
         layer_size = (layer_width, layer_height)
 
         # bug: does not use master default properties
+        # unions properties from higher z-index down
         tile_properties = []
 
-        for row_of_image_names in first_layer:
+        for z, layer in enumerate(tile_graphic_names):
+        
+            for y, row_of_image_names in enumerate(layer):
 
-            for image_name in row_of_image_names:
-
-                if image_name in swatch.properties:
-                    properties = swatch.properties[image_name]
-                else:
-                    properties = TileProperties()
-
-                tile_properties.append(properties)
+                for x, image_name in enumerate(row_of_image_names):
+                
+                    if image_name in swatch.properties:
+                        properties = swatch.properties[image_name]
+                    else:
+                        properties = TileProperties()
+                
+                    if z:
+                        # check tile_properties[(width_in_tiles * y) + x]
+                        # union THIS with existing
+                        (tile_properties[(dimensions_in_tiles[0] * y) + x] +
+                         properties)
+                    else:
+                        tile_properties.append(properties)
 
         # make the layer images
         layer_images = []
@@ -408,9 +419,9 @@ class TileProperties(object):
         self.rect = rect
 
         if properties:
-            self.properties = frozenset(properties)
+            self.properties = set(properties)
         else:
-            self.properties = frozenset()
+            self.properties = set()
 
     def __iter__(self):
 
@@ -419,6 +430,15 @@ class TileProperties(object):
     def __contains__(self, item):
 
         return item in self.properties
+        
+    def __add__(self, other_tileproperties):
+        self.properties.update(other_tileproperties.properties)
+        
+        if other_tileproperties.rect:
+            self.rect = other_tileproperties.rect
+
+    def merge_properties(self, new_properties):
+        self.properties.update(new_properties)
 
 
 def tilemap_from_string(tilemap_string):
@@ -497,11 +517,22 @@ def blueprint_from_string(blueprint_string):
         symbol, tile_name = line.split(' ', 1)
         legend[symbol] = tile_name
 
+    layers = []
     layer = []
 
     for line in blueprint_string.split('\n'):
+    
+        if not line:
+            layers.append(layer)
+            layer = []
+            
+            continue
+
         row = [legend[char] for char in line]
         layer.append(row)
 
-    return [layer]
+    if layer:
+        layers.append(layer)
+
+    return layers
 

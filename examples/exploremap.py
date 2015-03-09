@@ -40,29 +40,61 @@ game.human_player = player.Player(walkabout=human_walkabout)
 # set game tilemap
 blueprint_string = """\
 ` grass
-@ cobblestone_wall_top
-= cobblestone_wall_upper
-# cobblestone_wall
+' grass_detail
+o grass_flower
+= wall_hl
+- wall
+| wall_top
+# wall_top_hl
+v column_top
+^ column_bottom
 ~ water
+. wood_floor
+A air
 
-`~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-````````````````````````````````````````~~~
-~`````````````````````````````````````````~
-~`````````````````````````````````````````~
-~`````````````````````````````````````````~
-~``@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@``~
-~``@===================================@``~
-~``@###################################@``~
-~``@```````````````````````````````````@``~
-~``=```````````````````````````````````=``~
-~``#```````````````````````````````````#``~
-~`````````````````````````````````````````~
-~``@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@``~
-~~`=====================================``~
-~~~#####################################`~~
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"""
+`~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+`````````'```````````~~~~~~~``````````~~~
+~``````````o```````''`````````````````~~~
+~````'````````````````````''```````o````~
+~````````````'````'```````````````'`````~
+~`````#=========================#```````~
+~```'`|.........................|```''``~
+~''''`|.........................|```````~
+~``'``|.........................|```'```~
+~`````|.........................|```````~
+~``'``-.........................-`'''```~
+~`o```...........................```````~
+~``'``...........................``o````~
+~`````|.........................|```````~
+~'````-=========================-```````~
+~``'``````````````````````````'`'```````~
+~`````'``````````o```````````'''''````~~~
+~``````````````````````````````'``````~~~
+~~~~~~~```````~~~~~~~~~~~~~``````~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAvAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAA^AAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"""
 
 blueprint = tiles.blueprint_from_string(blueprint_string)
+#blueprint[1][11][12] = 'column_top'
 game.tilemap = tiles.TileMap('debug', blueprint)
 
 # ... and set tilemap npcs

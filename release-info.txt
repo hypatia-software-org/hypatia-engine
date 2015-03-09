@@ -5,7 +5,7 @@ Finished:
   * Animation() loads meta of supplied gif; changes in Walkabout reflect this
   * Walkabout() raises BadWalkabout if directory provided does not contain ay files by *.gif.
   * Updated debug/default tileswatch
-  * Updated readme to reflect twitter info
+  * Updated readme to reflect twitter info (I think tumblr, too)
   * Debug tool for generating tilemap blueprints (3d lists) from string
   * tweaked example map, exploremap.py; now using the tool for generating blueprints from string
   * viewport centers on player
@@ -14,13 +14,19 @@ Finished:
   * dialog module
   * player module, npcs, tilemap npc support
   * npc say support; faces direction of player, presents dialog
+  * fixed camera movement never shows nodraw
+  * tileproperties merge with tileproperties from its x,y position on other layers
+  * layer support added in debug blueprint from string
+  * column tiles to show off z-index, floor and flower tiles
   
 Coming soon/incomplete:
 
   * cleaned-up all engine modules, including docstrings
+  * game constructor/__init__() revised, api changed
+  * TileProperties.subsurface which references tilemap layer
+  * TileProperties.rect exists with proper positioning info regardless of attribs
   * viewport now attribute of screen
   * x, y velocity for movement, nev/pos values
-  * fixed camera movement never shows nodraw
   * documented, enforced ABSOLUTE coordinates--used comments to signify
   * various measurements all put neatly into pygame.Rect objects when possible, e.g., x.height, x.size, etc.
 
