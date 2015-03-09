@@ -485,11 +485,9 @@ def tilemap_from_string(tilemap_string):
 
 def blueprint_from_string(blueprint_string):
     """This is a debug feature. Create a 3D list of tile names using
-    ASCII symbols.
+    ASCII symbols. Supports layers.
 
-    Note:
-      Supports layering!
-
+    Example:
       ` grass
       # cobblestone_wall
       ~ water
@@ -509,27 +507,24 @@ def blueprint_from_string(blueprint_string):
       
     """
 
-    # firstly, split the string by blank line. this will give us the
-    # legend and following layers
+    # blueprint legend and layers are separated by blank lines
+    # legend comes first, rest are layers
     blueprint_split = blueprint_string.split('\n\n')
     legend_string = blueprint_split[0]
     blueprint_strings = blueprint_split[1:]
+    
+    # create a legend mapping of ascii symbol to tile graphic name
     legend = {}
 
     for line in legend_string.split('\n'):
-
-        symbol, tile_name = line.split(' ', 1)
+        symbol, tile_name = line.split(' ', 1)  # e.g.: ` grass
         legend[symbol] = tile_name
 
+    # transform our characters into a 3D list of tile graphic names
     layers = []
 
     for layer_string in blueprint_strings:
-        layer = []
-        
-        for line in layer_string.split('\n'):
-            row = [legend[char] for char in line]
-            layer.append(row)
-            
+        layer = [[legend[c] for c in row] for row in layer_string.split('\n')]
         layers.append(layer)
 
     return layers
