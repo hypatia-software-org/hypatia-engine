@@ -300,7 +300,7 @@ class Walkabout(object):
                                   position_on_screen[1] + frame_anchor[1])
 
         for child_walkabout in self.child_walkabouts:
-            # draw at positition + difference in child anchor
+            # draw at position + difference in child anchor
             child_anchor = (child_walkabout
                             .anchors[self.action][self.direction][0])  # lazy/testing
             child_position = (parent_anchor_position[0] - child_anchor[0],

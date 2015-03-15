@@ -22,6 +22,9 @@ import sys
 import glob
 import zlib
 import string
+import zipfile
+import itertools
+from StringIO import StringIO
 
 try:
     import ConfigParser as configparser
@@ -37,6 +40,10 @@ __license__ = "MIT"
 __maintainer__ = "Lillian Lemmer"
 __email__ = "lillian.lynn.lemmer@gmail.com"
 __status__ = "Development"
+
+
+# bad
+coord_to_index = lambda width, x, y: (width * y) + x
 
 
 class BadTileName(Exception):
@@ -60,24 +67,23 @@ class BadTileName(Exception):
 
 
 class TileMap(object):
-    """Layers created from graphical tiles specified in a tile swatch.
+    """Layers created from graphical tiles specified in a tilesheet.
 
     Note:
-      Makes map-specific data accesssible.
+      Makes map-specific data accessible.
 
     Attributes:
-      swatch:
-      tile_graphic_names:
+      tilesheet:
       dimensions_in_tiles:
       layer_images:
-      properties:
+      flags:
       impassability:
       animated_tiles:
       npcs:
 
     """
 
-    def __init__(self, swatch_name, tile_graphic_names, npcs=None):
+    def __init__(self, tilesheet_name, tile_ids, npcs=None):
         """Stitch tiles from swatch to layer surfaces. 
 
         Piece together layers/surfaces from corresponding tile graphic
@@ -85,98 +91,78 @@ class TileMap(object):
         metadata, including passability.
 
         Args:
-          swatch_name (str): directory name of the swatch to use
-          tile_graphic_names (list): 3d list where
-            list[layer][row][tile]
+          tilesheet_name (str): directory name of the swatch to use
+          tile_ids (list): 3d list where list[layer][row][tile]
           npcs (list): list of player.Npc objects
 
         Examples:
           Make a 2x2x1 tilemap:
-          >>> tiles = [['default', 'default'], ['default', 'default']]
+          >>> tiles = [[0, 0], [0, 0]]
           >>> tilemap = TileMap('debug', tiles)
 
         """
 
         # create the layer images and tile properties
-        swatch = TileSwatch(swatch_name)
-        first_layer = tile_graphic_names[0]
-        dimensions_in_tiles = (
-                               len(first_layer[0]),
-                               len(first_layer),
-                               len(tile_graphic_names)
-                              )
+        tilesheet = TileSheet.from_name(tilesheet_name)
+        first_layer = tile_ids[0]
+        
+        width_tiles = len(first_layer[0])
+        height_tiles = len(first_layer)
+        depth_tiles = len(tile_ids)
+        dimensions_in_tiles = (width_tiles, height_tiles, depth_tiles)
 
-        layer_width = len(first_layer[0]) * swatch.tile_size[0]
-        layer_height = len(first_layer) * swatch.tile_size[1]
+        tile_size = tilesheet.tiles[0].size
+        tile_width, tile_height = tile_size
+        layer_width = len(first_layer[0]) * tile_width
+        layer_height = len(first_layer) * tile_height
         layer_size = (layer_width, layer_height)
 
-        tileinfos = []
-
-        for z, layer in enumerate(tile_graphic_names):
-        
-            for y, row_of_image_names in enumerate(layer):
-
-                for x, image_name in enumerate(row_of_image_names):
-                
-                    if image_name in swatch.info:
-                        tileinfo = swatch.info[image_name]
-                    else:
-                        tileinfo = TileInfo(image_name)
-                
-                    if z:
-                        # check tile_properties[(width_in_tiles * y) + x]
-                        # union THIS with existing
-                        (tileinfos[(dimensions_in_tiles[0] * y) + x] +
-                         tileinfo)
-                    else:
-                        tileinfos.append(tileinfo)
-
-        # make the layer images
+        tiles = []
         layer_images = []
+        impassable_rects = []
 
-        for z, layer in enumerate(tile_graphic_names):
+        for z, layer in enumerate(tile_ids):
             new_layer = pygame.Surface(layer_size, pygame.SRCALPHA, 32)
             new_layer.fill([0,0,0,0])
+        
+            for y, row_of_tile_ids in enumerate(layer):
 
-            for y, row in enumerate(layer):
-
-                for x, tile in enumerate(row):
-
-                    if tile == 'air':
-
+                for x, tile_id in enumerate(row_of_tile_ids):
+                    # is this right...?
+                    tile_index = (((z - 1) * height_tiles * width_tiles) + 
+                                  (y * width_tiles) + x)
+                    tile = tilesheet[tile_id]
+                    
+                    # if not on first layer, merge flags down to first
+                    if z:
+                        tile_index = (y * width_tiles) + x
+                        tiles[tile_index].flags.update(tile.flags)
+                    else:
+                        tiles.append(tile)
+                        
+                    # -1 is air/nothing
+                    if tile.id == -1:
+                    
                         continue
-
-                    tile_position = (x * swatch.tile_size[0],
-                                     y * swatch.tile_size[1])
-                    new_layer.blit(swatch[tile], tile_position)
-
+                    
+                    # blit tile subsurface onto respective layer
+                    tile_position = (x * tile_width, y * tile_height)
+                    new_layer.blit(tile.subsurface, tile_position)
+                    
+                    # finally passability!
+                    if 'impass_all' in tile.flags:
+                        impassable_rects.append(pygame.Rect(tile_position,
+                                                            tile_size))
+                    
             layer_images.append(new_layer)
 
-        # impassability
-        impassability = []
-        layer_width_px, layer_height_px = layer_images[0].get_size()
-        layer_width_tiles, layer_height_tiles, __ = dimensions_in_tiles
-
-        for i, tileinfo in enumerate(tileinfos):
-            tile_x = i % layer_width_tiles
-            tile_y = i // layer_width_tiles
-            y = swatch.tile_size[1] * tile_y
-            x = swatch.tile_size[0] * tile_x
-            top_left_tile_corner = (x, y)
-
-            if 'impass_all' in tileinfo.flags:
-                rect = pygame.Rect(top_left_tile_corner, swatch.tile_size)
-                tileinfo.rect = rect
-                impassability.append(rect)
-
-        # attribs
-        self.swatch = swatch
-        self.tile_graphic_names = tile_graphic_names
-        self.dimensions_in_tiles = dimensions_in_tiles
+        self.tilesheet = tilesheet
         self.layer_images = layer_images
-        self.info = tileinfos
-        self.impassability = impassability
+        self.tiles = tiles
+        self.impassable_rects = impassable_rects
+        self.dimensions_in_tiles = dimensions_in_tiles
         self.npcs = npcs
+        self._tile_ids = tile_ids
         
         self.convert_layer_images()
 
@@ -201,7 +187,7 @@ class TileMap(object):
         x, y = coord
         width_in_tiles = self.dimensions_in_tiles[0]
 
-        return self.info[(width_in_tiles * y) + x]
+        return self.tiles[coord_to_index(width_in_tiles, x, y)]
 
     def get_info(self, coord):
         """Fetch TileProperties by pixel coordinate.
@@ -242,45 +228,24 @@ class TileMap(object):
 
         return None
 
-    def to_string(self, friendly=False):
+    def to_string(self, separator=' '):
         """Create the user-unfriendly string for the tilemap.
         
+        Args:
+          separator (str): can be ''
+          
         """
-        
-        output_string = ''
 
-        # create legend if friendly
-        if friendly:
-            tile_graphic_names = []
-            
-            for layer in self.tile_graphic_names:
-            
-                for row in layer:
-                    tile_graphic_names.extend(row)
-                    
-            tile_graphic_names = set(tile_graphic_names)
-            legend = {}  # name to char
-            printable_chars = string.printable
-            
-            for i, tile_graphic_name in enumerate(tile_graphic_names):
-                symbol = printable_chars[i]
-                legend[tile_graphic_name] = symbol
-                output_string += symbol + ' ' + tile_graphic_name + '\n'
-            
-            output_string += '\n'
+        output_string = ''
                     
         # create map layers
         layers = []
         
-        for layer in self.tile_graphic_names:
+        for layer in self._tile_ids:
             layer_lines = []
         
             for row in layer:
-                    
-                if friendly:
-                    row_string = ''.join([legend[name] for name in row])
-                else:
-                    row_string = ';'.join(row)
+                row_string = separator.join([str(i) for i in row])
                     
                 layer_lines.append(row_string)
                     
@@ -290,16 +255,10 @@ class TileMap(object):
         layers_string = '\n\n'.join(layers)
         output_string += layers_string
 
-        if friendly:
-        
-            return output_string
-            
-        else:
-        
-            return zlib.compress(output_string.encode('ascii'), 9)
+        return output_string
 
     @classmethod
-    def from_string(cls, blueprint_string, friendly=False):
+    def from_string(cls, blueprint_string, separator=' '):
         """This is a debug feature. Create a 3D list of tile names using
         ASCII symbols. Supports layers.
        
@@ -309,181 +268,132 @@ class TileMap(object):
           all of the layers.
           
           What about swatch name? Shouldn't that be first?
-
-        Example:
-          ` grass
-          # cobblestone_wall
-          ~ water
-          A air
-          v column_top
-          ^ column_bottom
-          
-          `###```~`
-          `###```~`
-          `###```~`
-          ```````~`
-
-          AAAAAAAAv
-          AAAAAAAA^
-          AAAAAAAAv
-          AAAAAAAA^
           
         """
-
-        if not friendly:
-            blueprint_string = (zlib.decompress(blueprint_string)
-                                .decode('ascii'))
         
         # blueprint legend and layers are separated by blank lines
         # legend comes first, rest are layers
         blueprint_split = blueprint_string.split('\n\n')
         
-        if friendly:
-            legend_string = blueprint_split[0]
-            blueprint_strings = blueprint_split[1:]
-            
-            # create a legend mapping of ascii symbol to tile graphic name
-            legend = {}
-
-            for line in legend_string.split('\n'):
-                symbol, tile_name = line.split(' ', 1)  # e.g.: ` grass
-                legend[symbol] = tile_name
-
-        else:
-            blueprint_strings = blueprint_split
+        # in the future the first few elements of blueprint_split
+        # will have some sort of meta
+        blueprint_strings = blueprint_split
 
         # transform our characters into a 3D list of tile graphic names
         layers = []
 
         for layer_string in blueprint_strings:
-        
-            if friendly:
-                layer = [[legend[c] for c in row]
-                         for row in layer_string.split('\n')]
-
-            else:
-                layer = [[name for name in row.split(';')]
-                         for row in layer_string.split('\n')]
-
+            layer = [[int(tile_id) for tile_id in row.split(separator)]
+                     for row in layer_string.split('\n')]
             layers.append(layer)
 
         return TileMap('debug', layers)
 
 
-class TileSwatch(object):
+class TileSheet(object):
 
-    def __init__(self, swatch_name):
-        """Named pygame.Surface instances of tiles in swatch directory.
+    def __init__(self, surface, tiles):
+        self.surface = surface
+        self.tiles = tiles
 
-        Note:
-          Abstraction of a directory of images
-          accompanied by a config file.
-
-          INI defines default tile properties, default tile.
-
-        Args:
-          swatch_name (str): asdf
-
-        Examples:
-          >>> tileswatch = TileSwatch('debug')
-
-        """
-
-        swatch_directory = os.path.join(
-                                        '../resources',
-                                        'tileswatches',
-                                        swatch_name
-                                       )
-        swatch_directory = os.path.abspath(swatch_directory)
-        tile_pattern = os.path.abspath(os.path.join(swatch_directory, '*.png'))
-        self.swatch = {}
-        self.info = {}
-        self.name = swatch_name
-
-        # load default properties for tileswatch
-        # make sure it's loaded first, I guess
-        config_path = os.path.abspath(os.path.join(
-                                                   swatch_directory,
-                                                   'swatch.ini'
-                                                  )
-                                     )
-
-        if not os.path.exists(config_path):
-
-            raise Exception('bad config path: ' + config_path)
-
-        config_file = configparser.RawConfigParser()
-        config_file.read(config_path)
-
-        for tile_name, flags in config_file.items('tileinfo_flags'):
-            tileinfo = TileInfo(
-                                tile_name,
-                                flags=[f.strip() for f in flags.split(',')]
-                               )
-            self.info[tile_name] = tileinfo
-
-        # set swatch images
-        for full_file_name in glob.iglob(tile_pattern):
-            file_name, file_ext = os.path.splitext(full_file_name)
-            file_name = os.path.split(file_name)[1]
-            tile_image = pygame.image.load(full_file_name)
-            self.tile_size = tile_image.get_size()
-            self.swatch[file_name] = tile_image
-
-    def __getitem__(self, tile_name):
-        """Return tile corresponding to tile_name.
-
-        Args:
-          tile_name (str): tile/file name of desired tile
-
-        Returns:
-          pygame.Surface: tile image
-
-        Raises:
-          BadTileName: KeyError; no tile in swatch corresponds to
-            provided tile_name.
-
-        Examples:
-          >>> swatch['water']
-          <pygame.Surface>
-
-        """
+    def __getitem__(self, tile_id):
 
         try:
 
-            return self.swatch[tile_name]
+            return self.tiles[tile_id]
 
         except KeyError:
 
-            raise BadTileName(self.name, tile_name)
+            raise BadTileName(self.name, tile_id)
+
+    @classmethod
+    def from_name(self, tilesheet_name):
+        """Create a TileSheet from a name, corresponding to a path
+        pointing to a tilesheet zip archive.
+        
+        Args:
+          tilesheet_name (str): this string is appended to the default
+            resources/tilesheets location.
+        
+        Returns:
+          TileSheet: initialized utilizing information from the
+            respective tilesheet zip's tilesheet.png and tilesheet.ini.
+          
+        """
+        
+        # path to the zip containing tilesheet.png and tilesheet.ini
+        zip_path = os.path.join(
+                                '../resources',
+                                'tilesheets',
+                                tilesheet_name + '.zip'
+                               )
+
+        with zipfile.ZipFile(zip_path) as zip:
+            zip_png = zip.open('tilesheet.png').read()
+            config_file = zip.open('tilesheet.ini').read()
+        
+        png_io = StringIO(zip_png)
+        tilesheet_surface = pygame.image.load(png_io)
+        config_io = StringIO(config_file)
+        config = configparser.ConfigParser()
+        config.readfp(config_io)
+        
+        flags = {int(k): set(v.split(',')) for k, v in config.items('flags')}
+        tile_width = config.getint('meta', 'tile_width')
+        tile_height = config.getint('meta', 'tile_height')
+        tile_size = (tile_width, tile_height)
+        tilesheet_width, tilesheet_height = tilesheet_surface.get_size()
+        
+        x_positions = xrange(0, tilesheet_width, tile_width)
+        y_positions = xrange(0, tilesheet_height, tile_height)
+        topleft_positions = []
+        
+        for y in y_positions:
+        
+            for x in x_positions:
+                topleft_positions.append((x, y))
+                
+        tiles = []
+        
+        for tile_id, top_left in enumerate(topleft_positions):
+            tile = Tile(
+                        tile_id=tile_id,
+                        surface=tilesheet_surface,
+                        tile_size=tile_size,
+                        subsurface_position=top_left,
+                        flags=flags.get(tile_id, None)
+                       )
+            tiles.append(tile)
+
+        return TileSheet(tilesheet_surface, tiles)
 
 
-class TileInfo(object):
-    """Tile info/properties/attributes.
-
+class Tile(object):
+    """
+    
     Attributes:
-      rect:
-      flags: inherits flags of flags set on higher layers
-      graphic_name:
-
+      --
+    
     """
 
-    def __init__(self, tile_graphic_name, flags=None):
-        """Describe a tile.
+    def __init__(self, tile_id, surface, tile_size,
+                 subsurface_position, flags=None):
+        """create subsurface of tilesheet surface using topleft
+        position on tilesheet.
 
         Args:
-          tile_graphic_name (str): --
-          flags (list|None): a list of strings, namely properties as
-            seen above.
+          tile_id (int): --
+          surface (pygame.Surface): tilesheet surface
+          tile_size (tuple): x, y dimensions of tiles in pixels
+          subsurface_position: the topleft coordinate of the tile
+            relative to the topleft of surface.
+          flags (set): properties belonging to this tile
 
         """
-
-        self.graphic_name = tile_graphic_name
-        self.flags = set(flags) if flags else set()
-        self.rect = None
         
-    def __add__(self, other_tileinfo):
-        self.flags.update(other_tileinfo.flags)
-        
-        if other_tileinfo.rect:
-            self.rect = other_tileinfo.rect
+        position_rect = pygame.Rect(subsurface_position, tile_size)
+        self.subsurface = surface.subsurface(position_rect)
+        self.flags = flags or set()
+        self.rect = pygame.Rect((0, 0), tile_size)
+        self.id = tile_id
+        self.size = tile_size

@@ -161,7 +161,7 @@ class Game(object):
         
         """
         
-        possible_collisions = self.tilemap.impassability
+        possible_collisions = self.tilemap.impassable_rects
         
         for npc in self.tilemap.npcs:
             possible_collisions.append(npc.walkabout.rect)

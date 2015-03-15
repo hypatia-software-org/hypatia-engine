@@ -31,5 +31,12 @@ Coming soon/incomplete:
   * x, y velocity for movement, nev/pos values
   * documented, enforced ABSOLUTE coordinates--used comments to signify
   * various measurements all put neatly into pygame.Rect objects when possible, e.g., x.height, x.size, etc.
+  * tiles as sprite sheet; swatch provides subsurfaces
+  * own animations
+  * tile palette cycling
+  * using 3rd party sprites
+  * demo game in demo/ which uses hypatiaengine package
+  * setup-win7_x64.bat, setup-win7_x86.bat, setup-linuxmint.sh, setup.py
+  * bug with camera when map smaller than screen
 
 

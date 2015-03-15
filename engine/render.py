@@ -8,9 +8,6 @@
 
 Includes screen, viewport, and surface/animation manipulation.
 
-Attributes:
-  FPS (int): frames per second limit
-
 """
 
 import sys
@@ -35,14 +32,14 @@ __email__ = "lillian.lynn.lemmer@gmail.com"
 __status__ = "Development"
 
 
-FPS = 60
-
-
 class Screen(object):
     """Everything blits to screen!
 
     Notes:
       --
+     
+    CONSTANTS:
+      FPS (int): frames per second limit
 
     Attributes:
       clock (pygame.time.Clock):
@@ -52,6 +49,8 @@ class Screen(object):
       screen (pygame.display surface): --
 
     """
+    
+    FPS = 60
 
     def __init__(self, filters=None):
         """Will init pygame.
@@ -89,7 +88,7 @@ class Screen(object):
 
         self.screen.blit(scaled_surface, (0, 0))
         pygame.display.flip()
-        self.time_elapsed_milliseconds = self.clock.tick(FPS)
+        self.time_elapsed_milliseconds = self.clock.tick(Screen.FPS)
 
 
 # how much of this is redundant due to pygame Surface.scroll?

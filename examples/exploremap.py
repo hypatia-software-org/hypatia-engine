@@ -39,63 +39,50 @@ game.human_player = player.Player(walkabout=human_walkabout)
 
 # set game tilemap
 blueprint_string = """\
-` grass
-' grass_detail
-o grass_flower
-= wall_hl
-- wall
-| wall_top
-# wall_top_hl
-v column_top
-^ column_bottom
-~ water
-. wood_floor
-A air
+11 11 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13
+13 11 11 11 11 12 13 13 11 11 11 11 13 13 13 13 13 13 11 11 11 11 11 13 13 13
+13 11 11 11 11 11 11 64 11 11 11 11 11 11 13 13 13 11 11 11 11 11 11 13 13 13
+13 11 64 11 11 11 11 11 11 12 11 11 65 11 13 11 11 11 11 11 64 11 11 11 13 13
+13 11 11 65 11 64 11 11 11 11 11 11 11 11 11 11 64 11 11 11 11 11 11 11 11 13
+13 13 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 12 11 11 11 11 13
+13 13 11 12 11 03 00 00 00 00 00 00 03 64 11 12 11 11 11 11 11 11 11 11 11 13
+13 11 11 11 11 01 08 08 08 55 08 08 01 11 11 11 11 11 11 11 11 11 11 11 11 13
+13 11 11 11 11 01 08 08 08 08 08 08 01 11 11 11 11 11 11 11 11 65 11 11 13 13
+13 64 11 11 11 01 08 08 08 08 08 08 01 11 65 11 11 11 64 11 11 11 11 11 13 13
+13 13 11 11 11 01 08 08 08 08 08 08 01 11 11 11 11 11 11 11 11 11 11 11 11 13
+13 13 11 11 65 01 08 08 08 08 08 08 01 11 11 11 11 11 11 11 11 11 11 11 11 13
+13 13 11 11 11 02 08 00 00 08 00 02 02 11 11 11 12 11 11 11 11 11 11 11 11 13
+13 12 11 11 11 11 11 11 11 64 11 11 11 11 11 11 11 11 11 64 11 11 11 11 11 13
+13 11 11 64 11 11 11 11 11 11 11 11 11 65 11 11 11 11 11 11 11 11 11 11 11 13
+13 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 12 11 13
+13 13 11 11 11 11 11 11 12 11 11 11 11 11 11 64 11 11 11 11 11 64 11 11 11 13
+13 13 13 13 11 11 11 11 11 11 11 13 13 13 13 11 11 11 11 11 11 11 11 11 13 13
+13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13 13
 
-`~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-`````````'```````````~~~~~~~``````````~~~
-~``````````o```````''`````````````````~~~
-~````'````````````````````''```````o````~
-~````````````'````'```````````````'`````~
-~`````#=========================#```````~
-~```'`|.........................|```''``~
-~''''`|.........................|```````~
-~``'``|.........................|```'```~
-~`````|.........................|```````~
-~``'``-.........................-`'''```~
-~`o```...........................```````~
-~``'``...........................``o````~
-~`````|.........................|```````~
-~'````-=========================-```````~
-~``'``````````````````````````'`'```````~
-~`````'``````````o```````````'''''````~~~
-~``````````````````````````````'``````~~~
-~~~~~~~```````~~~~~~~~~~~~~``````~~~~~~~~
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAvAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAA^AAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"""
-tilemap = tiles.TileMap.from_string(blueprint_string, friendly=True)
-new_tilemap_string = tilemap.to_string()
-game.tilemap = tiles.TileMap.from_string(new_tilemap_string)
-print(game.tilemap.to_string(friendly=True))
+-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+-1 -1 -1 -1 31 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 45 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+-1 -1 38 -1 -1 -1 -1 -1 -1 -1 -1 54 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+-1 -1 -1 -1 -1 -1 -1 91 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+-1 -1 -1 -1 -1 -1 -1 99 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 39 -1 -1 -1 -1 -1 -1 -1 47 -1 -1 -1 -1 -1 -1 -1
+-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+-1 -1 -1 -1 -1 -1 -1 -1 -1 48 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 38 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+-1 -1 -1 -1 -1 -1 38 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1"""
+tilemap = tiles.TileMap.from_string(blueprint_string)
+#new_tilemap_string = tilemap.to_string()
+#game.tilemap = tiles.TileMap.from_string(new_tilemap_string)
+#print(game.tilemap.to_string())
+game.tilemap = tilemap
 
 # ... and set tilemap npcs
 npc_walkabout = sprites.Walkabout(position=(140, 140))
