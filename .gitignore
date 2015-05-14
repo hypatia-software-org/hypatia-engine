@@ -68,3 +68,4 @@ hypatia-engine.wiki/
 *.swn
 *.swl
 .*.py.*
+pycallgraph.png

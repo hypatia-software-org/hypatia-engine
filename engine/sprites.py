@@ -6,6 +6,10 @@
 
 """The stuff being drawn; sprites
 
+Note:
+  I wanna add support for loading character animations
+  from sprite sheets.
+
 """
 
 import os
@@ -38,6 +42,7 @@ class BadWalkabout(Exception):
         super(BadWalkabout, self).__init__(supplied_directory)
 
 
+# NOTE: seems overcomplicated
 class Animation(object):
     """Animation abstraction of animation gif and its respective
     meta animation gif.
@@ -95,7 +100,7 @@ class Animation(object):
 
         except EOFError:
 
-            pass # end of sequence
+            pass  # end of sequence
 
         gif = pyganim.PygAnimation(frames)
         gif.anchor(pyganim.CENTER)
@@ -156,7 +161,7 @@ class Walkabout(object):
         self.actions = []
         self.directions = []
         self.size = None  # will be removed in future?
-        
+
         if not position:
             position = (0, 0)
 
@@ -212,7 +217,7 @@ class Walkabout(object):
         self.speed_in_pixels_per_second = 20.0
         self.child_walkabouts = children or []
         self.anchors = self.get_anchors()
-        
+
         self.init()
 
     def __getitem__(self, key):
