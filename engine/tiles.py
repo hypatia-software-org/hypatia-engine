@@ -42,7 +42,7 @@ __email__ = "lillian.lynn.lemmer@gmail.com"
 __status__ = "Development"
 
 
-# bad
+# bad?
 coord_to_index = lambda width, x, y: (width * y) + x
 
 
@@ -99,6 +99,9 @@ class TileMap(object):
           Make a 2x2x1 tilemap:
           >>> tiles = [[0, 0], [0, 0]]
           >>> tilemap = TileMap('debug', tiles)
+
+        Note:
+          Maybe this shouldn't hold npcs!
 
         """
 
@@ -397,3 +400,4 @@ class Tile(object):
         self.rect = pygame.Rect((0, 0), tile_size)
         self.id = tile_id
         self.size = tile_size
+

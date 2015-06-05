@@ -145,7 +145,7 @@ class Game(object):
                 new_topleft = (new_topleft_x, new_topleft_y)
                 player.walkabout.action = constants.Walk
                 animation = player.walkabout.current_animation()
-                player.walkabout.size = animation.get_max_size()
+                player.walkabout.size = animation.getMaxSize()
                 player.walkabout.rect = destination_rect
                 player.walkabout.topleft_float = new_topleft
 

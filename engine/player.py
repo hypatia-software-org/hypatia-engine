@@ -61,3 +61,4 @@ class Npc(Player):
         
         if self.say_text:
             dialogbox.set_message(self.say_text)
+

@@ -15,7 +15,11 @@ Note:
 import os
 import glob
 import itertools
-from collections import OrderedDict
+
+try:
+    import ConfigParser as configparser
+except ImportError:
+    import configparser
 
 import pyganim
 import pygame
@@ -42,81 +46,158 @@ class BadWalkabout(Exception):
         super(BadWalkabout, self).__init__(supplied_directory)
 
 
-# NOTE: seems overcomplicated
-class Animation(object):
-    """Animation abstraction of animation gif and its respective
-    meta animation gif.
+class AnimAnchors(object):
+    """Named/labeled anchor points whose coordinates depend on the
+    frame of the corresponding PygAnim object.
 
-    Attibutes:
-      gif (pyganim.PygAnimation): --
-      meta_gif (pyganim.PygAnimation): --
+    See: AnchorPoint()
+
+    Attributes:
+      anchor_points (dict): key is anchor label/group, value is a list
+        of AnchorPoint()s whose index corresponds to respective PygAnim
+        frame index.
+      anchor_groups (list): the names/labels of the anchor groups, e.g.,
+        "head_anchor."
 
     """
 
     def __init__(self, gif_path):
-        """Load gif_path to PygAnimation, as well as respective
-        meta gif.
+        """Loads the INI associated with a GIF (defined in gif_path).
 
         Args:
-          gif_path (str|None): create animation using a path to a gif
-
-        """
-
-        # create path for meta gif
-        gif_dir, gif_name = os.path.split(gif_path)
-        meta_gif_name = "meta_" + gif_name
-        meta_gif_path = os.path.join(gif_dir, meta_gif_name)
-
-        # set attributes
-        self.gif = self.pyganim_from_path(gif_path)
-        self.meta_gif = self.pyganim_from_path(meta_gif_path)
-
-    def pyganim_from_path(self, gif_path):
-        """Create a PygAnimation utilizing the GIF animation specified
-        in gif_path.
-
-        Args:
-          gif_path (str): path to GIF.
+          gif_path (str): path to the GIF animation you want to load the
+            anchor data thereof.
 
         Returns:
-          pyganim.PygAnimation: comprised of the times and frames from
-            specified GIF.
+          dict: frame: (x, y) anchor definition dictionary.
+
+        Example:
+          >>> animation_anchors = AnimAnchors('default.gif')
 
         """
 
-        pil_gif = Image.open(gif_path)
+        gif_file_name = os.path.splitext(os.path.basename(gif_path))[0] + '.ini'
+        anchor_ini_path = os.path.join(os.path.dirname(gif_path), gif_file_name)
+        anchor_ini = configparser.ConfigParser()
+        anchor_ini.read(anchor_ini_path)
+        anchor_point_groups = anchor_ini.sections()
 
-        frame_index = 0
-        frames = []
+        # key is group, value is list of frame coord positions
+        anchors = {name: [] for name in anchor_point_groups}
+
+        for anchor_point_group in anchor_point_groups:
+
+            for __, frame_anchor in anchor_ini.items(anchor_point_group):
+                x, y = frame_anchor.split(',')
+                anchor_point = AnchorPoint(int(x), int(y))
+                anchors[anchor_point_group].append(anchor_point)
+
+        self.anchor_points = anchors
+        self.anchor_groups = anchor_point_groups
+
+    def get_anchor_point(self, anchor_point_group, frame_index):
+        """Return an AnchorPoint corresponding to group name and frame
+        index.
+
+        Args:
+          anchor_point_group (str): name of the anchor point group
+          frame_index (int): which frame for group's anchor
+        
+        Returns:
+          AnchorPoint: --
+
+        Note:
+          Will simply return last anchor point for group if an anchor
+          isn't defined for frame.
+
+        Example:
+          >>> animation_anchors = AnimAnchors('default.gif')
+          >>> animation_anchors.get_anchor_point('head_anchor', 0)
+          (2, 3)
+
+        """
 
         try:
 
-            while 1:
-                duration = pil_gif.info['duration'] / 1000.0
-                frame_as_pygame_image = render.pil_to_pygame(pil_gif, "RGBA")
-                frames.append((frame_as_pygame_image, duration))
-                frame_index += 1
-                pil_gif.seek(pil_gif.tell() + 1)
+            return self.anchor_points[anchor_point_group][frame_index]
 
-        except EOFError:
+        except IndexError:
 
-            pass  # end of sequence
+            return self.anchor_points[anchor_point_group][-1]
 
-        gif = pyganim.PygAnimation(frames)
-        gif.anchor(pyganim.CENTER)
 
-        return gif
+class AnchorPoint(object):
+    """A coordinate on a surface which is used for pinning to another
+    surface AnchorPoint. Used when attempting to afix one surface to
+    another, lining up their corresponding anchorpoints.
 
-    def get_max_size(self):
-        """Boilerplate for consistency.
+    Attributes:
+      x (int): x-axis coordinate on a surface to place anchor at
+      y (int): x-axis coordinate on a surface to place anchor at
 
-        Returns:
-          tuple: (int x, int y) representing the pixel dimensions of
-            the largest frame.
+    """
+
+    def __init__(self, x, y):
+        """Create an AnchorPoint at coordinate (x, y).
+
+        Args:
+          x (int): the x-axis pixel position
+          y (int): the y-axis pixel position
+
+        Example:
+          >>> anchor_point = AnchorPoint(5, 3)
+          >>> anchor_point.x
+          5
+          >>> anchor_point.y
+          3
 
         """
 
-        return self.gif.getMaxSize()
+        self.x = x
+        self.y = y
+
+    def __add__(self, other_anchor_point):
+        """Adds the x, y values of this and another anchor point.
+
+        Args:
+          other_anchor_point (AnchorPoint): the AnchorPoint coordinates
+            to add to this AnchorPoint's coordinates.
+
+        Returns:
+          (x, y) tuple: the new x, y coordinate
+
+        Example:
+          >>> anchor_point_a = AnchorPoint(4, 1)
+          >>> anchor_point_b = AnchorPoint(2, 0)
+          >>> anchor_point_a + anchor_point_b
+          (6, 1)
+
+        """
+
+        return (self.x + other_anchor_point.x,
+                self.y + other_anchor_point.y)
+
+    def __sub__(self, other_anchor_point):
+        """Find the difference between this anchor and another.
+
+        Args:
+          other_anchor_point (AnchorPoint): the AnchorPoint coordinates
+            to subtract from this AnchorPoint's coordinates.
+
+        Returns:
+          (x, y) tuple: the x, y difference between this anchor point
+            and the other supplied.
+
+        Example:
+          >>> anchor_point_a = AnchorPoint(4, 1)
+          >>> anchor_point_b = AnchorPoint(2, 0)
+          >>> anchor_point_a - anchor_point_b
+          (2, 0)
+
+        """
+ 
+        return (self.x - other_anchor_point.x,
+                self.y - other_anchor_point.y)
 
 
 class Walkabout(object):
@@ -135,6 +216,8 @@ class Walkabout(object):
     Attributes:
       animations (dict): 2D dictionary [action][direction] whose
         values are PygAnimations.
+      animation_anchors (dict): 2D dictionary [action][direction] whose
+        values are AnimAnchors.
       rect (pygame.Rect): position on tilemap
       size (tuple): the size of the animation in pixels.
       action (constants.Action): --
@@ -154,10 +237,15 @@ class Walkabout(object):
           children (list|None): Walkabout objects drawn relative to
             this Walkabout instance.
 
+        Example:
+          >>> hat = Walkabout(directory='hat')
+          >>> walkabout = Walkabout(position=(44, 55), children=[hat])
+
         """
 
         # the attributes we're generating
         self.animations = {}
+        self.animation_anchors = {}
         self.actions = []
         self.directions = []
         self.size = None  # will be removed in future?
@@ -176,9 +264,9 @@ class Walkabout(object):
         sprite_name_pattern = os.path.join(walkabout_directory, '*.gif')
 
         # get all the animations in this directory
-        # what about if no sprites in directory? what if no such match?
         sprite_paths = glob.glob(sprite_name_pattern)
 
+        # no sprites matching pattern!
         if not sprite_paths:
 
             raise BadWalkabout(directory)
@@ -187,13 +275,7 @@ class Walkabout(object):
             file_name, file_ext = os.path.splitext(sprite_path)
             file_name = os.path.split(file_name)[1]
 
-            # we do this because Animation handles meta_
-            if file_name.startswith('meta_'):
-
-                continue
-
             action, direction = file_name.split('_', 1)
-            target = self.animations
 
             direction = getattr(constants, direction.title())
             action = getattr(constants, action.title())
@@ -201,22 +283,30 @@ class Walkabout(object):
             self.actions.append(action)
             self.directions.append(direction)
 
-            animation = Animation(sprite_path)
+            # load pyganim from gif file
+            animation = load_gif(sprite_path)
 
             try:
-                target[action][direction] = animation
+                self.animations[action][direction] = animation
             except KeyError:
-                target[action] = {direction: animation}
+                self.animations[action] = {direction: animation}
+
+            # load anchor points
+            anim_anchors = AnimAnchors(sprite_path)
+
+            try:
+                self.animation_anchors[action][direction] = anim_anchors
+            except KeyError:
+                self.animation_anchors[action] = {direction: anim_anchors}
 
         # ... set the rest of the attribs
-        self.size = animation.get_max_size()
+        self.size = animation.getMaxSize()
         self.rect = pygame.Rect(position, self.size)
         self.topleft_float = topleft_float
         self.action = constants.Stand
         self.direction = constants.Down
         self.speed_in_pixels_per_second = 20.0
         self.child_walkabouts = children or []
-        self.anchors = self.get_anchors()
 
         self.init()
 
@@ -233,7 +323,7 @@ class Walkabout(object):
         Examples:
           >>> walkabout = Walkabout()
           >>> walkabout[constants.Walk][constants.Up]
-          <Animation Object>
+          <PygAnim Object>
 
         """
 
@@ -243,27 +333,59 @@ class Walkabout(object):
         """Returns the animation selected by the current action
         and direction.
 
+        Returns:
+          PygAnim: the animation associated with this Walkabout's
+            current action and direction.
+
+        Example:
+          >>> walkabout = Walkabout()
+          >>> walkabout.current_animation()
+          <PygAnim Object>
+
         """
 
         return self.animations[self.action][self.direction]
 
     def get_anchors(self):
-        """needs to get actual offset"""
+        """Get anchors per frame in a GIF by identifying th ecoordinate
+        of a specific color.
+
+        Note:
+          This is an old, but still useful way of loading anchors for
+          an animation.
+
+        """
 
         anchors = {a: {d: [] for d in self.directions} for a in self.actions}
 
         for action, directions in self.animations.items():
 
             for direction, animation in directions.items():
-                meta_gif = animation.meta_gif
 
-                for surface_frame in meta_gif._images:
+                for surface_frame in animation._images:
                     anchor = self.get_anchor(surface_frame)
                     anchors[action][direction].append(anchor)
 
         return anchors
 
     def get_anchor(self, surface):
+        """Locate the anchor coordinate by identifying which pixel
+        coordinate matches color.
+
+        Args:
+          surface (pygame.Surface): surface to scan for color and
+            return the coord which color appears
+
+        Returns:
+          (x, y): pixel coordinate where color shows up.
+
+        Note:
+          Old way of defining anchor points, but still handy! I was
+          thinking about making it so you can define anchor point
+          group colors.
+
+        """
+    
         x, y = surface.get_size()
         debug_color = pygame.Color(255, 136, 255)
 
@@ -292,28 +414,43 @@ class Walkabout(object):
         y -= offset[1]
         position_on_screen = (x, y)
 
-        pyganim_gif = self.current_animation().gif
+        pyganim_gif = self.current_animation()
         pyganim_gif.blit(screen, position_on_screen)
 
         pyganim_frame_index = pyganim.findStartTime(pyganim_gif._startTimes,
                                                     pyganim_gif.elapsed)
         current_frame_surface = pyganim_gif.getFrame(pyganim_frame_index)
 
-        animation_anchors = self.anchors[self.action][self.direction]
-        frame_anchor = animation_anchors[pyganim_frame_index]  # use as offset
-        parent_anchor_position = (position_on_screen[0] + frame_anchor[0],
-                                  position_on_screen[1] + frame_anchor[1])
+        # anchors are all completely wrong
+        animation_anchors = self.animation_anchors[self.action][self.direction]
+        frame_anchor = animation_anchors.get_anchor_point('head_anchor',
+                                                          pyganim_frame_index)
+        parent_anchor = AnchorPoint(position_on_screen[0] + frame_anchor.x,
+                                    position_on_screen[1] + frame_anchor.y)
 
         for child_walkabout in self.child_walkabouts:
             # draw at position + difference in child anchor
-            child_anchor = (child_walkabout
-                            .anchors[self.action][self.direction][0])  # lazy/testing
-            child_position = (parent_anchor_position[0] - child_anchor[0],
-                              parent_anchor_position[1] - child_anchor[1])
-            child_pyganim = child_walkabout.current_animation().gif
-            child_pyganim.blit(screen, child_position)
+            child_anim_anchor = (child_walkabout
+                                 .animation_anchors[self.action][self.direction])
+            child_frame_anchor = (child_anim_anchor
+                                  .get_anchor_point('head_anchor',
+                                                    pyganim_frame_index))
+            child_position = parent_anchor - child_frame_anchor
+            child_anim = child_walkabout.current_animation()
+            child_anim.blit(screen, child_position)
 
     def init(self):
+        """Perform actions to setup the walkabout. Actions performed
+        once pygame is running and walkabout has been initialized.
+
+        Convert and play all the animations, run init for children.
+
+        Note:
+          It MAY be bad to leave the sprites in play mode in startup
+          by default.
+
+        """
+
         actions = (constants.Walk, constants.Stand)
         directions = (constants.Up, constants.Down,
                       constants.Left, constants.Right)
@@ -321,7 +458,7 @@ class Walkabout(object):
         for action in actions:
 
             for direction in directions:
-                animated_sprite = self.animations[action][direction].gif
+                animated_sprite = self.animations[action][direction]
                 animated_sprite.convert_alpha()
                 animated_sprite.convert()
 
@@ -330,3 +467,44 @@ class Walkabout(object):
 
         for walkabout_child in self.child_walkabouts:
             walkabout_child.init()
+
+
+def load_gif(gif_path):
+    """Load the PygAnim animation abstraction of a GIF from path.
+
+    Args:
+      gif_path (str): create animation using file path to GIF
+
+    Returns:
+      PygAnim: the PygAnim animation which accurately depicts the GIF
+        referenced in gif_path.
+
+    Example:
+      >>> load_gif('default.gif')
+      <PygAnim Object>
+
+    """
+
+    pil_gif = Image.open(gif_path)
+
+    frame_index = 0
+    frames = []
+
+    try:
+
+        while 1:
+            duration = pil_gif.info['duration'] / 1000.0
+            frame_as_pygame_image = render.pil_to_pygame(pil_gif, "RGBA")
+            frames.append((frame_as_pygame_image, duration))
+            frame_index += 1
+            pil_gif.seek(pil_gif.tell() + 1)
+
+    except EOFError:
+
+        pass  # end of sequence
+
+    gif = pyganim.PygAnimation(frames)
+    gif.anchor(pyganim.CENTER)
+
+    return gif
+
