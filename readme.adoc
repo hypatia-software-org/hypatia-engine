@@ -31,5 +31,4 @@ There is a functional demo (+example/game.py+) of Hypatia's current capabilities
   * https://github.com/lillian-lemmer/hypatia/wiki[The official Hypatia Engine wiki]: everything you need to know!
   * Official IRC support channel: #hypatia on link:http://irc.lillian.link/[irc.lillian.link]
   * https://twitter.com/LilyLemmer[Lillian's Twitter]
-  * http://lilyscode.tumblr.com/[Lily's Code Tumblr]
 

@@ -1,0 +1,6 @@
+This directory is for:
+
+  * finalized documents, e.g., design documents
+  * logos
+  * press releases
+
