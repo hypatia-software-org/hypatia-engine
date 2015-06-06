@@ -1,0 +1,33 @@
+= Hypatia: 2D Adventure Game Engine
+
+This repository is in very early development. It is the brainchild of Lillian Lemmer. The development is being guided by the game and technical design documents being made for a game (Hypatia). More info to be announced...
+
+Hypatia is a 2D adventure game engine inspired by link:http://en.wikipedia.org/wiki/The_Legend_of_Zelda:_Oracle_of_Seasons_and_Oracle_of_Ages[__Legend of Zelda: Oracle of Ages__ and __Oracle of Seasons]
+
+There is a functional demo (+example/game.py+) of Hypatia's current capabilities.
+
+== Key features
+
+  * Great support for various platforms:
+
+   ** Operating systems supported: BSD, Linux, Windows, Mac
+   ** Python 2 & 3 support
+   ** Please checkout https://github.com/lillian-lemmer/hypatia-engine/wiki/support[the official wiki page on support].
+
+  * Permissive MIT License
+  * OpenGL
+  * Framework spefically for 2D adventure games:
+
+    ** Tile map management
+    ** Sprite management
+    ** Game logic automation
+    ** Dialog management
+
+== Help/Support
+
+  * http://lillian-lemmer.github.io/hypatia/[The official Hypatia Engine website] (donate here!)
+  * https://github.com/lillian-lemmer/hypatia/wiki[The official Hypatia Engine wiki]: everything you need to know!
+  * Official IRC support channel: #hypatia on link:http://irc.lillian.link/[irc.lillian.link]
+  * https://twitter.com/LilyLemmer[Lillian's Twitter]
+  * http://lilyscode.tumblr.com/[Lily's Code Tumblr]
+
