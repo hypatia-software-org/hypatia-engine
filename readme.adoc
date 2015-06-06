@@ -2,7 +2,7 @@
 
 This repository is in very early development. It is the brainchild of Lillian Lemmer. The development is being guided by the game and technical design documents being made for a game (Hypatia). More info to be announced...
 
-Hypatia is a 2D adventure game engine inspired by link:http://en.wikipedia.org/wiki/The_Legend_of_Zelda:_Oracle_of_Seasons_and_Oracle_of_Ages[__Legend of Zelda: Oracle of Ages__ and __Oracle of Seasons]
+Hypatia is a 2D adventure game engine inspired by link:http://en.wikipedia.org/wiki/The_Legend_of_Zelda:_Oracle_of_Seasons_and_Oracle_of_Ages[__Legend of Zelda: Oracle of Ages__ and __Oracle of Seasons__].
 
 There is a functional demo (+example/game.py+) of Hypatia's current capabilities.
 
