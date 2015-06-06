@@ -14,7 +14,7 @@ Hypatia is a labor of love, crafted by Lillian Lemmer. Read more link:http://git
 
 === Please Donate
 
-link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YFHB5TMMXMNT6[Please make a donation, securely with PayPal].
+Please, link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YFHB5TMMXMNT6[make a donation, securely with PayPal], no account or sign up required.
 
 == Documentation, Help, and Contact
 
