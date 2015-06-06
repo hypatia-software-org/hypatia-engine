@@ -22,7 +22,7 @@ All of the documentation is on the link:http://github.com/lillian-lemmer/hypatia
 
 Additional resources:
 
-  * http://lillian-lemmer.github.io/hypatia/[The official Hypatia Engine website] (donate here!)
+  * http://lillian-lemmer.github.io/hypatia/[The official Hypatia website]
   * Official IRC support channel: #hypatia on link:http://irc.lillian.link/[irc.lillian.link]
   * You can contact the author via her email: lillian.lynn.lemmer@mgmail.com
 
