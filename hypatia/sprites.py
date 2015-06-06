@@ -192,7 +192,7 @@ class AnchorPoint(object):
           >>> anchor_point_a = AnchorPoint(4, 1)
           >>> anchor_point_b = AnchorPoint(2, 0)
           >>> anchor_point_a - anchor_point_b
-          (2, 0)
+          (2, 1)
 
         """
  
@@ -257,7 +257,7 @@ class Walkabout(object):
 
         # specify the files to load
         walkabout_directory = os.path.join(
-                                           '../resources',
+                                           'resources',
                                            'walkabouts',
                                            directory
                                           )
@@ -507,4 +507,9 @@ def load_gif(gif_path):
     gif.anchor(pyganim.CENTER)
 
     return gif
+
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
 

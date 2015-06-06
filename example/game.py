@@ -5,12 +5,11 @@ import collections
 import pygame
 from pygame.locals import *
 
-sys.path.insert(0, '../engine')
-import tiles
-import sprites
-import render
-import player
-from game import Game
+from hypatia import tiles
+from hypatia import sprites
+from hypatia import render
+from hypatia import player
+from hypatia import game
 
 __author__ = "Lillian Lemmer"
 __copyright__ = "Copyright 2015, Lillian Lemmer"
@@ -30,7 +29,7 @@ VIEWPORT_X, VIEWPORT_Y = 256, 240
 
 # NEW RUNTIME
 viewport = render.Viewport((VIEWPORT_X, VIEWPORT_Y))
-game = Game(viewport=viewport)
+game = game.Game(viewport=viewport)
 
 # set human player
 hat = sprites.Walkabout('hat')

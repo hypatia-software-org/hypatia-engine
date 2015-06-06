@@ -326,7 +326,7 @@ class TileSheet(object):
         
         # path to the zip containing tilesheet.png and tilesheet.ini
         zip_path = os.path.join(
-                                '../resources',
+                                'resources',
                                 'tilesheets',
                                 tilesheet_name + '.zip'
                                )

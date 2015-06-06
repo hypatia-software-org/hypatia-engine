@@ -27,7 +27,7 @@ class DialogBox(object):
         """
         
         self.font = (font or
-                     pygame.font.Font('../resources/fonts/VeraMono.ttf', 11))
+                     pygame.font.Font('resources/fonts/VeraMono.ttf', 11))
         self.active = False
         self.viewport_width = viewport_size[0]
         

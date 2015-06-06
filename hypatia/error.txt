@@ -1,0 +1,126 @@
+**********************************************************************
+File "sprites.py", line 115, in __main__.AnimAnchors.get_anchor_point
+Failed example:
+    animation_anchors.get_anchor_point('head_anchor', 0)
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/local/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest __main__.AnimAnchors.get_anchor_point[1]>", line 1, in <module>
+        animation_anchors.get_anchor_point('head_anchor', 0)
+      File "sprites.py", line 122, in get_anchor_point
+        return self.anchor_points[anchor_point_group][frame_index]
+    KeyError: 'head_anchor'
+**********************************************************************
+File "sprites.py", line 324, in __main__.Walkabout.__getitem__
+Failed example:
+    walkabout = Walkabout()
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/local/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest __main__.Walkabout.__getitem__[0]>", line 1, in <module>
+        walkabout = Walkabout()
+      File "sprites.py", line 311, in __init__
+        self.init()
+      File "sprites.py", line 462, in init
+        animated_sprite.convert_alpha()
+      File "/usr/local/lib/python2.7/site-packages/pyganim/__init__.py", line 520, in convert_alpha
+        self._surfaceMethodWrapper('convert_alpha', *args, **kwargs)
+      File "/usr/local/lib/python2.7/site-packages/pyganim/__init__.py", line 509, in _surfaceMethodWrapper
+        methodToCall(*args, **kwargs)
+    error: cannot convert without pygame.display initialized
+**********************************************************************
+File "sprites.py", line 325, in __main__.Walkabout.__getitem__
+Failed example:
+    walkabout[constants.Walk][constants.Up]
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/local/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest __main__.Walkabout.__getitem__[1]>", line 1, in <module>
+        walkabout[constants.Walk][constants.Up]
+    NameError: name 'walkabout' is not defined
+**********************************************************************
+File "sprites.py", line 241, in __main__.Walkabout.__init__
+Failed example:
+    hat = Walkabout(directory='hat')
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/local/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest __main__.Walkabout.__init__[0]>", line 1, in <module>
+        hat = Walkabout(directory='hat')
+      File "sprites.py", line 311, in __init__
+        self.init()
+      File "sprites.py", line 462, in init
+        animated_sprite.convert_alpha()
+      File "/usr/local/lib/python2.7/site-packages/pyganim/__init__.py", line 520, in convert_alpha
+        self._surfaceMethodWrapper('convert_alpha', *args, **kwargs)
+      File "/usr/local/lib/python2.7/site-packages/pyganim/__init__.py", line 509, in _surfaceMethodWrapper
+        methodToCall(*args, **kwargs)
+    error: cannot convert without pygame.display initialized
+**********************************************************************
+File "sprites.py", line 242, in __main__.Walkabout.__init__
+Failed example:
+    walkabout = Walkabout(position=(44, 55), children=[hat])
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/local/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest __main__.Walkabout.__init__[1]>", line 1, in <module>
+        walkabout = Walkabout(position=(44, 55), children=[hat])
+    NameError: name 'hat' is not defined
+**********************************************************************
+File "sprites.py", line 341, in __main__.Walkabout.current_animation
+Failed example:
+    walkabout = Walkabout()
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/local/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest __main__.Walkabout.current_animation[0]>", line 1, in <module>
+        walkabout = Walkabout()
+      File "sprites.py", line 311, in __init__
+        self.init()
+      File "sprites.py", line 462, in init
+        animated_sprite.convert_alpha()
+      File "/usr/local/lib/python2.7/site-packages/pyganim/__init__.py", line 520, in convert_alpha
+        self._surfaceMethodWrapper('convert_alpha', *args, **kwargs)
+      File "/usr/local/lib/python2.7/site-packages/pyganim/__init__.py", line 509, in _surfaceMethodWrapper
+        methodToCall(*args, **kwargs)
+    error: cannot convert without pygame.display initialized
+**********************************************************************
+File "sprites.py", line 342, in __main__.Walkabout.current_animation
+Failed example:
+    walkabout.current_animation()
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/local/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest __main__.Walkabout.current_animation[1]>", line 1, in <module>
+        walkabout.current_animation()
+    NameError: name 'walkabout' is not defined
+**********************************************************************
+File "sprites.py", line 483, in __main__.load_gif
+Failed example:
+    load_gif('default.gif')
+Exception raised:
+    Traceback (most recent call last):
+      File "/usr/local/lib/python2.7/doctest.py", line 1315, in __run
+        compileflags, 1) in test.globs
+      File "<doctest __main__.load_gif[0]>", line 1, in <module>
+        load_gif('default.gif')
+      File "sprites.py", line 488, in load_gif
+        pil_gif = Image.open(gif_path)
+      File "/usr/local/lib/python2.7/site-packages/PIL/Image.py", line 2248, in open
+        fp = builtins.open(fp, "rb")
+    IOError: [Errno 2] No such file or directory: 'default.gif'
+**********************************************************************
+5 items had failures:
+   1 of   2 in __main__.AnimAnchors.get_anchor_point
+   2 of   2 in __main__.Walkabout.__getitem__
+   2 of   2 in __main__.Walkabout.__init__
+   2 of   2 in __main__.Walkabout.current_animation
+   1 of   1 in __main__.load_gif
+***Test Failed*** 8 failures.
