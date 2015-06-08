@@ -19,10 +19,7 @@ We want to give back to the community to our fullest potential. Unfortunately, s
 There are two ways to donate to the Hypatia project (none of which require a sign in):
 
   * link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YFHB5TMMXMNT6[Donate through PayPal]
-  * link:https://gratipay.com/~lillian-lemmer/[Donate through Gratipay]
-
-    ** image:https://img.shields.io/gratipay/lillian-lemmer.svg[Gratipay]
-    ** ++<script data-gratipay-username="lillian-lemmer" data-gratipay-widget="button" src="//grtp.co/v1.js"></script>++
+  * link:https://gratipay.com/~lillian-lemmer/[Donate through Gratipay] image:https://img.shields.io/gratipay/lillian-lemmer.svg[Gratipay]
 
 == Documentation, Help, and Contact
 
