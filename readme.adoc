@@ -1,5 +1,7 @@
 image:media/logo/logo%20(185x46).png["Hypatia"]
 
+image:https://img.shields.io/github/license/mashape/apistatus.svg[MIT License]
+
 Hypatia is a 2D adventure game engine inspired by link:http://en.wikipedia.org/wiki/The_Legend_of_Zelda:_Oracle_of_Seasons_and_Oracle_of_Ages[_Legend of Zelda: Oracle of Ages_ and _Oracle of Seasons_].
 
 There is a functional demo (+example/game.py+) of Hypatia's current capabilities. Here it is in action:
@@ -12,16 +14,15 @@ This repository is in very early development. The development is being guided by
 
 Hypatia is a labor of love, crafted by Lillian Lemmer. Read more link:http://github.com/lillian-lemmer/hypatia/wiki/About-the-Creator[about the creator of Hypatia].
 
-=== Please Donate
+== Support this project
 
-We want to give back to the community to our fullest potential. Unfortunately, some things just cost money; there are things we need to buy and people we need to hire.
-
-There are two ways to donate to the Hypatia project (none of which require a sign in):
+We want to give back to the community to our fullest potential. Unfortunately, some things just cost money; there are things we need to buy and people we need to hire. There are three ways to donate to the Hypatia project (none of which require a sign in):
 
   * link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YFHB5TMMXMNT6[Donate through PayPal]
+  * link:https://www.bountysource.com/teams/hypatia[Donate, or demand features in exchange for cash, through Bountysource] image:https://img.shields.io/bountysource/team/hypatia/activity.svg[Bountysource]
   * link:https://gratipay.com/~lillian-lemmer/[Donate through Gratipay] image:https://img.shields.io/gratipay/lillian-lemmer.svg[Gratipay]
 
-== Documentation, Help, and Contact
+== Documentation, help, and contact
 
 All of the documentation is on the link:http://github.com/lillian-lemmer/hypatia/wiki[GitHub Wiki].
 
