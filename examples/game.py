@@ -1,3 +1,13 @@
+# examples/game.py
+# Lillian Lemmer <lillian.lynn.lemmer@gmail.com>
+#
+# This module is part of Hypatia and is released under the
+# MIT license: http://opensource.org/licenses/MIT
+
+"""This is a game demo which showcases Hypatia's features.
+
+"""
+
 import os
 import sys
 import collections

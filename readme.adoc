@@ -4,7 +4,7 @@ image:https://img.shields.io/github/license/mashape/apistatus.svg[MIT License]
 
 Hypatia is a 2D adventure game engine inspired by link:http://en.wikipedia.org/wiki/The_Legend_of_Zelda:_Oracle_of_Seasons_and_Oracle_of_Ages[_Legend of Zelda: Oracle of Ages_ and _Oracle of Seasons_].
 
-There is a functional demo (+example/game.py+) of Hypatia's current capabilities. Here it is in action:
+There is a functional demo (+examples/game.py+) of Hypatia's current capabilities. Here it is in action:
 
 image:https://camo.githubusercontent.com/17fdd3839c7b692a9069c206053edb1809b8d12d/687474703a2f2f692e696d6775722e636f6d2f463465526259532e676966["The demo game in action."]
 
