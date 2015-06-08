@@ -19,8 +19,8 @@ Hypatia is a labor of love, crafted by Lillian Lemmer. Read more link:http://git
 We want to give back to the community to our fullest potential. Unfortunately, some things just cost money; there are things we need to buy and people we need to hire. There are three ways to donate to the Hypatia project (none of which require a sign in):
 
   * link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YFHB5TMMXMNT6[Donate through PayPal]
-  * link:https://www.bountysource.com/teams/hypatia[Donate, or demand features in exchange for cash, through Bountysource] image:https://img.shields.io/bountysource/team/hypatia/activity.svg[Bountysource]
-  * link:https://gratipay.com/~lillian-lemmer/[Donate through Gratipay] image:https://img.shields.io/gratipay/lillian-lemmer.svg[Gratipay]
+  * link:https://www.bountysource.com/teams/hypatia[Donate, or demand features in exchange for cash, through Bountysource]
+  * link:https://gratipay.com/~lillian-lemmer/[Donate through Gratipay]
 
 == Documentation, help, and contact
 
