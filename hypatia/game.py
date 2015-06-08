@@ -1,7 +1,7 @@
 # engine/game.py
 # Lillian Lemmer <lillian.lynn.lemmer@gmail.com>
 #
-# This module is part of Hypatia Engine and is released under the
+# This module is part of Hypatia and is released under the
 # MIT License: http://opensource.org/licenses/MIT
 
 """Why stuff is drawn; logic flow for the game.

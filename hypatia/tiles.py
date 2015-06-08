@@ -1,7 +1,7 @@
 # engine/tiles.py
 # Lillian Lemmer <lillian.lynn.lemmer@gmail.com>
 #
-# This module is part of Hypatia Engine and is released under the
+# This module is part of Hypatia and is released under the
 # MIT License: http://opensource.org/licenses/MIT
 
 """Where stuff is being drawn; tile engine for maps.
@@ -372,11 +372,18 @@ class TileSheet(object):
 
 
 class Tile(object):
-    """
+    """A graphical map tile, referencing a rectangular area on a
+    tilesheet (reference surface), with meta data.
     
     Attributes:
-      --
-    
+      subsurface (pygame.?): the subsurface of the reference_surface
+        which consists this Tile().
+      flags (set): a set of strings, which denote attributes about
+        this tile, e.g., "impass_all."
+      tile_id (int): manually assigned tile identification number.
+      position_rect (pygame.Rect): the area/rect on the
+        reference_surface which this Tile() occupies.
+
     """
 
     def __init__(self, tile_id, surface, tile_size,
@@ -388,8 +395,8 @@ class Tile(object):
           tile_id (int): --
           surface (pygame.Surface): tilesheet surface
           tile_size (tuple): x, y dimensions of tiles in pixels
-          subsurface_position: the topleft coordinate of the tile
-            relative to the topleft of surface.
+          subsurface_position (tuple): coord (x, y) of the tile's
+            top left corner, relative to the topleft of surface.
           flags (set): properties belonging to this tile
 
         """
@@ -397,7 +404,6 @@ class Tile(object):
         position_rect = pygame.Rect(subsurface_position, tile_size)
         self.subsurface = surface.subsurface(position_rect)
         self.flags = flags or set()
-        self.rect = pygame.Rect((0, 0), tile_size)
         self.id = tile_id
         self.size = tile_size
 

@@ -5,7 +5,6 @@ Note:
   
 """
 
-
 import dialog
 import sprites
 import constants
