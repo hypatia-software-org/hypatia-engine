@@ -32,6 +32,11 @@ Additional resources:
   * Official IRC support channel: #hypatia on link:http://irc.lillian.link/[irc.lillian.link]
   * You can contact the author via her email: lillian.lynn.lemmer@mgmail.com
 
+=== Quickstart
+
+  - Follow the official link:http://github.com/lillian-lemmer/hypatia/wiki/Installation-Instructions[installation instructions]
+  - Either double-click +examples/game.py+ or run +python game.py+ or similar while in the +examples/+ directory
+
 == Key features
 
   * Great support for various platforms:
