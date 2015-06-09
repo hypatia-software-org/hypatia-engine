@@ -37,6 +37,9 @@ Additional resources:
   * Great support for various platforms:
 
    ** Operating systems supported: BSD, Linux, Windows, Mac
+
+     *** FreeBSD is the top priority
+
    ** Python 2 & 3 support
    ** Please checkout https://github.com/lillian-lemmer/hypatia-engine/wiki/support[the official wiki page on support].
 
