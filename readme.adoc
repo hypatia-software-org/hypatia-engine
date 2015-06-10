@@ -1,4 +1,4 @@
-image:media/logo/logo%20(185x46).png["Hypatia"]
+image:media/logo/logo-179x46.png["Hypatia"]
 
 image:https://img.shields.io/github/license/mashape/apistatus.svg[MIT License]
 
