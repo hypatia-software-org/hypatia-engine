@@ -21,6 +21,7 @@ We want to give back to the community to our fullest potential. Unfortunately, s
   * link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YFHB5TMMXMNT6[Donate through PayPal]
   * link:https://www.bountysource.com/teams/hypatia[Donate, or demand features in exchange for cash, through Bountysource]
   * link:https://gratipay.com/~lillian-lemmer/[Donate through Gratipay]
+  * link:http://amzn.com/w/NKBZ0CX162S9[Amazon Wishlist]
 
 == Documentation, help, and contact
 
