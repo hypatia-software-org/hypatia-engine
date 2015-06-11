@@ -27,9 +27,9 @@ import sys
 import pygame
 from pygame.locals import *
 
-import constants
-import dialog
-import render
+from hypatia import constants
+from hypatia import dialog
+from hypatia import render
 
 __author__ = "Lillian Lemmer"
 __copyright__ = "Copyright 2015, Lillian Lemmer"

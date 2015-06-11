@@ -24,12 +24,14 @@ import zlib
 import string
 import zipfile
 import itertools
-from StringIO import StringIO
+from io import BytesIO
 
 try:
     import ConfigParser as configparser
+    from cStringIO import StringIO
 except ImportError:
     import configparser
+    from io import StringIO
 
 import pygame
 
@@ -335,10 +337,13 @@ class TileSheet(object):
             zip_png = zip.open('tilesheet.png').read()
             config_file = zip.open('tilesheet.ini').read()
         
-        png_io = StringIO(zip_png)
+        png_io = BytesIO(zip_png)
         tilesheet_surface = pygame.image.load(png_io)
-        config_io = StringIO(config_file)
+        config_io = StringIO(config_file.decode('utf-8'))
         config = configparser.ConfigParser()
+
+        # NOTE: this still works in python 3, though it was
+        # replaced by config.read_file()
         config.readfp(config_io)
         
         flags = {int(k): set(v.split(',')) for k, v in config.items('flags')}
@@ -347,8 +352,8 @@ class TileSheet(object):
         tile_size = (tile_width, tile_height)
         tilesheet_width, tilesheet_height = tilesheet_surface.get_size()
         
-        x_positions = xrange(0, tilesheet_width, tile_width)
-        y_positions = xrange(0, tilesheet_height, tile_height)
+        x_positions = range(0, tilesheet_width, tile_width)
+        y_positions = range(0, tilesheet_height, tile_height)
         topleft_positions = []
         
         for y in y_positions:

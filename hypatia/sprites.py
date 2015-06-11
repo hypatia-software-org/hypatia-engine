@@ -25,8 +25,8 @@ import pyganim
 import pygame
 from PIL import Image
 
-import render
-import constants
+from hypatia import render
+from hypatia import constants
 
 __author__ = "Lillian Lemmer"
 __copyright__ = "Copyright 2015, Lillian Lemmer"

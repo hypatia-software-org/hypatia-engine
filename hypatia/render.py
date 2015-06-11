@@ -19,9 +19,8 @@ import pygame
 import pyganim
 from pygame.locals import *
 
-import constants
-import sprites
-import tiles
+from hypatia import constants
+from hypatia import tiles
 
 __author__ = "Lillian Lemmer"
 __copyright__ = "Copyright 2015, Lillian Lemmer"
