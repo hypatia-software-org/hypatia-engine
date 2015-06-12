@@ -1,4 +1,4 @@
-# engine/game.py
+# hypatia/game.py
 # Lillian Lemmer <lillian.lynn.lemmer@gmail.com>
 #
 # This module is part of Hypatia and is released under the
@@ -177,6 +177,7 @@ class Game(object):
         self.viewport.center_on(self.human_player.walkabout,
                                 first_tilemap_layer.get_rect())
         self.viewport.blit(first_tilemap_layer)
+        self.tilemap.blit_layer_animated_tiles(self.viewport, 0)
 
         # render each npc walkabout
         for npc in self.tilemap.npcs:

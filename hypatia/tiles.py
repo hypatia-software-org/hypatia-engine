@@ -35,6 +35,7 @@ except ImportError:
     from io import StringIO
 
 import pygame
+import pyganim
 
 __author__ = "Lillian Lemmer"
 __copyright__ = "Copyright 2015, Lillian Lemmer"
@@ -126,6 +127,7 @@ class TileMap(object):
         tiles = []
         layer_images = []
         impassable_rects = []
+        animated_tile_stack = {i: set() for i in range(depth_tiles)}
 
         for z, layer in enumerate(tile_ids):
             new_layer = pygame.Surface(layer_size, pygame.SRCALPHA, 32)
@@ -138,7 +140,7 @@ class TileMap(object):
                     tile_index = (((z - 1) * height_tiles * width_tiles) + 
                                   (y * width_tiles) + x)
                     tile = tilesheet[tile_id]
-                    
+
                     # if not on first layer, merge flags down to first
                     if z:
                         tile_index = (y * width_tiles) + x
@@ -155,6 +157,12 @@ class TileMap(object):
                     tile_position = (x * tile_width, y * tile_height)
                     new_layer.blit(tile.subsurface, tile_position)
                     
+                    # is this tile an animation?
+                    if tile.id in tilesheet.animated_tiles:
+                        animated_tile = tilesheet.animated_tiles[tile.id]
+                        animation_info = (animated_tile, tile_position)
+                        animated_tile_stack[z].add(animation_info)
+
                     # finally passability!
                     if 'impass_all' in tile.flags:
                         impassable_rects.append(pygame.Rect(tile_position,
@@ -166,6 +174,7 @@ class TileMap(object):
         self.layer_images = layer_images
         self.tiles = tiles
         self.impassable_rects = impassable_rects
+        self.animated_tile_stack = animated_tile_stack
         self.dimensions_in_tiles = dimensions_in_tiles
         self.npcs = npcs
         self._tile_ids = tile_ids
@@ -221,6 +230,12 @@ class TileMap(object):
 
         return self[(tile_x, tile_y)]
 
+    def blit_layer_animated_tiles(self, viewport, layer):
+        
+        for tile_pyganim, position in self.animated_tile_stack[layer]:
+            tile_pyganim.blit(viewport.surface,
+                              viewport.relative_position(position))
+
     def convert_layer_images(self):
         """Call once pygame screen is init'd for efficiency.
 
@@ -231,6 +246,11 @@ class TileMap(object):
         for image in layer_images:
             image.convert()
             image.convert_alpha()
+
+        for i, tile_pyganim in self.tilesheet.animated_tiles.items():
+            tile_pyganim.convert()
+            tile_pyganim.convert_alpha()
+            tile_pyganim.play()
 
         return None
 
@@ -294,10 +314,11 @@ class TileMap(object):
 
 class Tilesheet(object):
 
-    def __init__(self, surface, tiles, tile_size):
+    def __init__(self, surface, tiles, tile_size, animated_tiles=None):
         self.surface = surface
         self.tiles = tiles
         self.tile_size = tile_size
+        self.animated_tiles = animated_tiles
 
     def __getitem__(self, tile_id):
 
@@ -344,6 +365,7 @@ class Tilesheet(object):
         # replaced by config.read_file()
         config.readfp(config_io)
         
+        # build the meta
         flags = {int(k): set(v.split(',')) for k, v in config.items('flags')}
         tile_width = config.getint('meta', 'tile_width')
         tile_height = config.getint('meta', 'tile_height')
@@ -359,6 +381,7 @@ class Tilesheet(object):
             for x in x_positions:
                 topleft_positions.append((x, y))
                 
+        # tile initialization; buid all the tiles
         tiles = []
         
         for tile_id, top_left in enumerate(topleft_positions):
@@ -371,7 +394,33 @@ class Tilesheet(object):
                        )
             tiles.append(tile)
 
-        return Tilesheet(tilesheet_surface, tiles, tile_size)
+        # if animations are present, let's piece together some
+        # PygAnimations using tile data.
+        if config.has_section('animations'):
+            animated_tiles = {}
+
+            # used for checking which animation we're on
+            seen_tile_ids = set()
+            frame_buffer = []
+
+            for tile_id, animation_string in config.items('animations'):
+                tile_id = int(tile_id)
+                frame_duration, next_tile_id = animation_string.split(',')
+                frame_duration = float(frame_duration)
+                next_tile_id = int(next_tile_id)
+                frame_buffer.append((tiles[tile_id].subsurface,
+                                     frame_duration))
+
+                if next_tile_id in seen_tile_ids:
+                    tile_pyganim = pyganim.PygAnimation(frame_buffer)
+                    animated_tiles[next_tile_id] = tile_pyganim
+                    frame_buffer = []
+                    seen_tile_ids = set()
+
+                seen_tile_ids.add(tile_id)
+                
+        # end
+        return Tilesheet(tilesheet_surface, tiles, tile_size, animated_tiles)
 
 
 class Tile(object):

@@ -150,7 +150,16 @@ class Viewport(object):
             difference_y = difference_y - (potential_rect.bottom - master_rect.bottom)
             
         self.rect.move_ip(*(difference_x, difference_y))
-        
+
+    def relative_position(self, position):
+        x, y = position
+        offset = self.rect.topleft
+        x -= offset[0]
+        y -= offset[1]
+        position_on_screen = (x, y)
+
+        return position_on_screen
+
     def blit(self, surface):
         """Draw the correct portion of supplied surface onto viewport.
 
