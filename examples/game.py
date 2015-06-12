@@ -43,7 +43,7 @@ game = game.Game(viewport=viewport)
 
 # set human player
 hat = sprites.Walkabout('hat')
-human_walkabout = sprites.Walkabout(children=[hat])
+human_walkabout = sprites.Walkabout('debug', children=[hat])
 game.human_player = player.Player(walkabout=human_walkabout)
 
 # set game tilemap
@@ -57,7 +57,7 @@ tilemap = tiles.TileMap.from_string(blueprint_string)
 game.tilemap = tilemap
 
 # ... and set tilemap npcs
-npc_walkabout = sprites.Walkabout(position=(140, 140))
+npc_walkabout = sprites.Walkabout('debug', position=(140, 140))
 
 with open('npc-say.txt') as f:
     npc_say = f.read()

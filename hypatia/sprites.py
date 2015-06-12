@@ -226,7 +226,7 @@ class Walkabout(object):
 
     """
 
-    def __init__(self, directory='debug', position=None, children=None):
+    def __init__(self, directory, position=None, children=None):
         """
 
         Args:
@@ -238,7 +238,7 @@ class Walkabout(object):
             this Walkabout instance.
 
         Example:
-          >>> hat = Walkabout(directory='hat')
+          >>> hat = Walkabout('hat')
           >>> walkabout = Walkabout(position=(44, 55), children=[hat])
 
         """
