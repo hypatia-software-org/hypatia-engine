@@ -29,6 +29,7 @@ from io import BytesIO
 try:
     import ConfigParser as configparser
     from cStringIO import StringIO
+
 except ImportError:
     import configparser
     from io import StringIO
@@ -108,7 +109,7 @@ class TileMap(object):
         """
 
         # create the layer images and tile properties
-        tilesheet = TileSheet.from_name(tilesheet_name)
+        tilesheet = Tilesheet.from_name(tilesheet_name)
         first_layer = tile_ids[0]
         
         width_tiles = len(first_layer[0])
@@ -276,13 +277,9 @@ class TileMap(object):
           
         """
         
-        # blueprint legend and layers are separated by blank lines
-        # legend comes first, rest are layers
-        blueprint_split = blueprint_string.split('\n\n')
-        
-        # in the future the first few elements of blueprint_split
-        # will have some sort of meta
-        blueprint_strings = blueprint_split
+        # NOTE: I'm using strip('\n') because I can't seem to make
+        # the \n at the end of map-string.txt to go away.
+        blueprint_strings = blueprint_string.strip('\n').split('\n\n')
 
         # transform our characters into a 3D list of tile graphic names
         layers = []
@@ -295,11 +292,12 @@ class TileMap(object):
         return TileMap('debug', layers)
 
 
-class TileSheet(object):
+class Tilesheet(object):
 
-    def __init__(self, surface, tiles):
+    def __init__(self, surface, tiles, tile_size):
         self.surface = surface
         self.tiles = tiles
+        self.tile_size = tile_size
 
     def __getitem__(self, tile_id):
 
@@ -313,7 +311,7 @@ class TileSheet(object):
 
     @classmethod
     def from_name(self, tilesheet_name):
-        """Create a TileSheet from a name, corresponding to a path
+        """Create a Tilesheet from a name, corresponding to a path
         pointing to a tilesheet zip archive.
         
         Args:
@@ -321,7 +319,7 @@ class TileSheet(object):
             resources/tilesheets location.
         
         Returns:
-          TileSheet: initialized utilizing information from the
+          Tilesheet: initialized utilizing information from the
             respective tilesheet zip's tilesheet.png and tilesheet.ini.
           
         """
@@ -366,14 +364,14 @@ class TileSheet(object):
         for tile_id, top_left in enumerate(topleft_positions):
             tile = Tile(
                         tile_id=tile_id,
-                        surface=tilesheet_surface,
+                        tilesheet_surface=tilesheet_surface,
                         tile_size=tile_size,
-                        subsurface_position=top_left,
+                        subsurface_top_left=top_left,
                         flags=flags.get(tile_id, None)
                        )
             tiles.append(tile)
 
-        return TileSheet(tilesheet_surface, tiles)
+        return Tilesheet(tilesheet_surface, tiles, tile_size)
 
 
 class Tile(object):
@@ -386,28 +384,31 @@ class Tile(object):
       flags (set): a set of strings, which denote attributes about
         this tile, e.g., "impass_all."
       tile_id (int): manually assigned tile identification number.
-      position_rect (pygame.Rect): the area/rect on the
-        reference_surface which this Tile() occupies.
+      area_on_tilesheet (pygame.Rect): the area this tile consists
+        on the master surface.
 
     """
 
-    def __init__(self, tile_id, surface, tile_size,
-                 subsurface_position, flags=None):
+    def __init__(self, tile_id, tilesheet_surface, tile_size,
+                 subsurface_top_left, flags=None):
         """create subsurface of tilesheet surface using topleft
         position on tilesheet.
 
         Args:
-          tile_id (int): --
-          surface (pygame.Surface): tilesheet surface
-          tile_size (tuple): x, y dimensions of tiles in pixels
-          subsurface_position (tuple): coord (x, y) of the tile's
+          tile_id (int): a useful meta attribute.
+          tilesheet_surface (pygame.Surface): tilesheet surface to
+            pick an area from, representing this tile.
+          tile_size (tuple): x, y dimensions of this
+            tilesheet's tiles in pixels
+          subsurface_top_left (tuple): coord (x, y) of the tile's
             top left corner, relative to the topleft of surface.
           flags (set): properties belonging to this tile
 
         """
         
-        position_rect = pygame.Rect(subsurface_position, tile_size)
-        self.subsurface = surface.subsurface(position_rect)
+        position_rect = pygame.Rect(subsurface_top_left, tile_size)
+        self.area_on_tilesheet = position_rect
+        self.subsurface = tilesheet_surface.subsurface(position_rect)
         self.flags = flags or set()
         self.id = tile_id
         self.size = tile_size
