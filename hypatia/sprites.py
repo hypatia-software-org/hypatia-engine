@@ -275,10 +275,14 @@ class Walkabout(object):
             file_name, file_ext = os.path.splitext(sprite_path)
             file_name = os.path.split(file_name)[1]
 
-            action, direction = file_name.split('_', 1)
+            if file_name == 'only':
+                action = constants.Stand
+                direction = constants.Down
 
-            direction = getattr(constants, direction.title())
-            action = getattr(constants, action.title())
+            else:
+                action, direction = file_name.split('_', 1)
+                direction = getattr(constants, direction.title())
+                action = getattr(constants, action.title())
 
             self.actions.append(action)
             self.directions.append(direction)
@@ -292,12 +296,18 @@ class Walkabout(object):
                 self.animations[action] = {direction: animation}
 
             # load anchor points
-            anim_anchors = AnimAnchors(sprite_path)
+            ini_path = os.path.join(walkabout_directory, file_name + '.ini')
 
-            try:
-                self.animation_anchors[action][direction] = anim_anchors
-            except KeyError:
-                self.animation_anchors[action] = {direction: anim_anchors}
+            if os.path.exists(ini_path):
+                anim_anchors = AnimAnchors(sprite_path)
+
+                try:
+                    self.animation_anchors[action][direction] = anim_anchors
+                except KeyError:
+                    self.animation_anchors[action] = {direction: anim_anchors}
+
+            else:
+                self.animation_anchors = None
 
         # ... set the rest of the attribs
         self.size = animation.getMaxSize()
@@ -307,8 +317,6 @@ class Walkabout(object):
         self.direction = constants.Down
         self.speed_in_pixels_per_second = 20.0
         self.child_walkabouts = children or []
-
-        self.init()
 
     def __getitem__(self, key):
         """Fetch sprites associated with action (key).
@@ -417,6 +425,11 @@ class Walkabout(object):
         pyganim_gif = self.current_animation()
         pyganim_gif.blit(screen, position_on_screen)
 
+        # the rest of this is for children/anchors
+        if self.animation_anchors is None:
+
+            return None
+
         pyganim_frame_index = pyganim.findStartTime(pyganim_gif._startTimes,
                                                     pyganim_gif.elapsed)
         current_frame_surface = pyganim_gif.getFrame(pyganim_frame_index)
@@ -439,7 +452,7 @@ class Walkabout(object):
             child_anim = child_walkabout.current_animation()
             child_anim.blit(screen, child_position)
 
-    def init(self):
+    def runtime_setup(self):
         """Perform actions to setup the walkabout. Actions performed
         once pygame is running and walkabout has been initialized.
 
@@ -451,22 +464,24 @@ class Walkabout(object):
 
         """
 
-        actions = (constants.Walk, constants.Stand)
-        directions = (constants.Up, constants.Down,
-                      constants.Left, constants.Right)
+        if len(self.animations) == 1:
+            actions = (constants.Stand,)
+            directions = (constants.Down,)
+
+        else:
+            actions = (constants.Walk, constants.Stand)
+            directions = (constants.Up, constants.Down,
+                          constants.Left, constants.Right)
 
         for action in actions:
 
             for direction in directions:
                 animated_sprite = self.animations[action][direction]
                 animated_sprite.convert_alpha()
-                animated_sprite.convert()
-
-                # this is me being lazy and impatient
                 animated_sprite.play()
 
         for walkabout_child in self.child_walkabouts:
-            walkabout_child.init()
+            walkabout_child.runtime_setup()
 
 
 def load_gif(gif_path):

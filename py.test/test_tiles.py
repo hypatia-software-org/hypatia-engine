@@ -1,17 +1,21 @@
-# examples/test_tiles.py
+# py.test/test_tiles.py
 # Lillian Lemmer <lillian.lynn.lemmer@gmail.com>
 #
 # This module is part of Hypatia and is released under the
 # MIT license: http://opensource.org/licenses/MIT
 
-"""py.test unit testing for engine/tiles.py
+"""py.test unit testing for hypatia/tiles.py
 
 Run py.test on this module to assert hypatia.tiles is completely functional.
 
 """
 
+import os
+
 from hypatia import tiles
 import pygame
+
+os.chdir("../example")
 
 __author__ = "Lillian Lemmer"
 __copyright__ = "Copyright 2015, Lillian Lemmer"

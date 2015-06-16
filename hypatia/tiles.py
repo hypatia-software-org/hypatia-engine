@@ -37,6 +37,8 @@ except ImportError:
 import pygame
 import pyganim
 
+from hypatia import render
+
 __author__ = "Lillian Lemmer"
 __copyright__ = "Copyright 2015, Lillian Lemmer"
 __credits__ = ["Lillian Lemmer"]
@@ -83,11 +85,10 @@ class TileMap(object):
       flags:
       impassability:
       animated_tiles:
-      npcs:
 
     """
 
-    def __init__(self, tilesheet_name, tile_ids, npcs=None):
+    def __init__(self, tilesheet_name, tile_ids):
         """Stitch tiles from swatch to layer surfaces. 
 
         Piece together layers/surfaces from corresponding tile graphic
@@ -97,15 +98,11 @@ class TileMap(object):
         Args:
           tilesheet_name (str): directory name of the swatch to use
           tile_ids (list): 3d list where list[layer][row][tile]
-          npcs (list): list of player.Npc objects
 
         Examples:
           Make a 2x2x1 tilemap:
           >>> tiles = [[0, 0], [0, 0]]
           >>> tilemap = TileMap('debug', tiles)
-
-        Note:
-          Maybe this shouldn't hold npcs!
 
         """
 
@@ -176,10 +173,7 @@ class TileMap(object):
         self.impassable_rects = impassable_rects
         self.animated_tile_stack = animated_tile_stack
         self.dimensions_in_tiles = dimensions_in_tiles
-        self.npcs = npcs
         self._tile_ids = tile_ids
-        
-        self.convert_layer_images()
 
     def __getitem__(self, coord):
         """Fetch TileInfo by tile coordinate.
@@ -236,8 +230,9 @@ class TileMap(object):
             tile_pyganim.blit(viewport.surface,
                               viewport.relative_position(position))
 
-    def convert_layer_images(self):
-        """Call once pygame screen is init'd for efficiency.
+    def runtime_setup(self):
+        """This is for game.py. These need to be launched after pygame
+        has started.
 
         """
 
@@ -254,6 +249,7 @@ class TileMap(object):
 
         return None
 
+    # NOTE: BROKEN, DOES NOT OUTPUT SCENE NAME FIRST
     def to_string(self, separator=' '):
         """Create the user-unfriendly string for the tilemap.
         
@@ -284,32 +280,29 @@ class TileMap(object):
         return output_string
 
     @classmethod
-    def from_string(cls, blueprint_string, separator=' '):
+    def from_string(cls, map_string, separator=' '):
         """This is a debug feature. Create a 3D list of tile names using
         ASCII symbols. Supports layers.
        
-        Note:
-          In the future, there will be more "positionals" which follow
-          the legend block, e.g., npcs, which would then be followed by
-          all of the layers.
-          
-          What about swatch name? Shouldn't that be first?
-          
         """
         
+        # GET TILESHEET NAME FROM THE FIRST LINE, REMOVE FIRST LINE
+        tilesheet_name, layers_string = map_string.split('\n', 1)
+
         # NOTE: I'm using strip('\n') because I can't seem to make
         # the \n at the end of map-string.txt to go away.
-        blueprint_strings = blueprint_string.strip('\n').split('\n\n')
+        # watch the quirky wording; layers_string >> layer_strings
+        layer_strings = layers_string.strip('\n').split('\n\n')
 
         # transform our characters into a 3D list of tile graphic names
         layers = []
 
-        for layer_string in blueprint_strings:
+        for layer_string in layer_strings:
             layer = [[int(tile_id) for tile_id in row.split(separator)]
                      for row in layer_string.split('\n')]
             layers.append(layer)
 
-        return TileMap('debug', layers)
+        return TileMap(tilesheet_name, layers)
 
 
 class Tilesheet(object):
@@ -376,6 +369,7 @@ class Tilesheet(object):
         y_positions = range(0, tilesheet_height, tile_height)
         topleft_positions = []
         
+        # should use collections product for this duh
         for y in y_positions:
         
             for x in x_positions:
@@ -394,11 +388,12 @@ class Tilesheet(object):
                        )
             tiles.append(tile)
 
+        # for effects and animations
+        animated_tiles = {}
+
         # if animations are present, let's piece together some
         # PygAnimations using tile data.
         if config.has_section('animations'):
-            animated_tiles = {}
-
             # used for checking which animation we're on
             seen_tile_ids = set()
             frame_buffer = []
@@ -419,6 +414,15 @@ class Tilesheet(object):
 
                 seen_tile_ids.add(tile_id)
                 
+        # functions which return a PygAnimation, and accept a surface
+        if config.has_section('animate_effect'):
+            effects = {'cycle': render.palette_cycle}
+            
+            for tile_id, effect in config.items('animate_effect'):
+                tile_id = int(tile_id)
+                corresponding_tile = tiles[tile_id].subsurface
+                animated_tiles[tile_id] = effects[effect](corresponding_tile)
+
         # end
         return Tilesheet(tilesheet_surface, tiles, tile_size, animated_tiles)
 

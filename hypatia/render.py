@@ -11,6 +11,7 @@ Includes screen, viewport, and surface/animation manipulation.
 """
 
 import sys
+import copy
 import time
 import itertools
 import collections
@@ -20,7 +21,6 @@ import pyganim
 from pygame.locals import *
 
 from hypatia import constants
-from hypatia import tiles
 
 __author__ = "Lillian Lemmer"
 __copyright__ = "Copyright 2015, Lillian Lemmer"
@@ -207,20 +207,61 @@ def pil_to_pygame(pil_image, encoding):
                                   )
 
 
-def shift_palette(surface):
-    """Cycle the palette of surface after generating an index for it.
+# HUGELY IMPORTANT NOTE TO GO SOMEWHERE:
+# YUO CANNOT MIX SURFACES OF VARYING BITDEPTHS/SETTINGS.
+# IF YOU TRY TO DRAW AN 8 BIT IMAGE ON A 32 BIT SURFACE IT
+# WON'T SHOW UP
 
-    Args:
-      surface (pygame.Surface): the surface you wish to shift the
-        palette of.
+
+# should go into sprites or effects
+#def cycle_color_effect(surface):
+# should go to sprites or effects
+def palette_cycle(surface):
+    """get_palette is not sufficient; it generates superflous colors.
+
+    surface (pygame.Surface): 8 bit surface
 
     """
 
-    surface = surface.convert(8)
-    palette = collections.deque(surface.get_palette())
-    palette.rotate(1)
-    surface.set_palette(palette)
+    original_surface = surface.copy()  # don't touch! used for later calc
+    width, height = surface.get_size()
+    ordered_color_list = []
+    seen_colors = set()
 
-    return surface
+    for coordinate in itertools.product(range(0, width), range(0, height)):
+        color = surface.get_at(coordinate)
+        color = tuple(color)
 
+        if color in seen_colors:
+
+            continue
+
+        ordered_color_list.append(color)
+        seen_colors.add(color)
+
+    # reverse the color list but not the pixel arrays, then replace!
+    old_color_list = collections.deque(ordered_color_list)
+    new_surface = surface.copy()
+    frames = []
+
+    for rotation_i in range(len(ordered_color_list)):
+        new_surface = new_surface.copy()
+
+        new_color_list = copy.copy(old_color_list)
+        new_color_list.rotate(1)
+
+        color_translations = dict(zip(old_color_list, new_color_list))
+        
+        # replace each former color with the color from newcolor_list
+        for coordinate in itertools.product(range(0, width), range(0, height)):
+            color = new_surface.get_at(coordinate)
+            color = tuple(color)
+            new_color = color_translations[color]
+            new_surface.set_at(coordinate, new_color)
+
+        frame = new_surface.copy()
+        frames.append((frame, 0.2))
+        old_color_list = copy.copy(new_color_list)
+
+    return pyganim.PygAnimation(frames)
 
