@@ -37,7 +37,7 @@ For more information, please read about link:https://github.com/lillian-lemmer/h
 
 == Dependencies, Installation
 
-If you're using Windows, and just wanna try the demo, don't worry about this section. You can run +game.exe+ from +hypatia-demo-for-windows.zip+.
+If you're using Windows, and just wanna try the demo, don't worry about this section. You can run +game.exe+ from link:demo/hypatia-demo-for-windows.zip[].
 
 Hypatia uses the following libraries:
 
