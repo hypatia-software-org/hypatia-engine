@@ -24,7 +24,6 @@ Note:
 
 import os
 import sys
-import ConfigParser
 
 try:
     import ConfigParser as configparser
