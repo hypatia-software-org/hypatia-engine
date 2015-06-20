@@ -249,7 +249,7 @@ class Scene(object):
 
         # scene.ini
         scene_ini_path = os.path.join(scene_directory, 'scene.ini')
-        scene_ini = ConfigParser.ConfigParser()
+        scene_ini = configparser.ConfigParser()
         scene_ini.read(scene_ini_path)
 
         # .. scene data
@@ -275,7 +275,7 @@ class Scene(object):
 
         # npcs.ini
         npcs_ini_path = os.path.join(scene_directory, 'npcs.ini')
-        npcs_ini = ConfigParser.ConfigParser()
+        npcs_ini = configparser.ConfigParser()
         npcs_ini.read(npcs_ini_path)
 
         self.npcs = []
