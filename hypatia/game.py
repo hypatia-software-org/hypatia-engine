@@ -26,6 +26,12 @@ import os
 import sys
 import ConfigParser
 
+try:
+    import ConfigParser as configparser
+
+except ImportError:
+    import configparser
+
 import pygame
 from pygame.locals import *
 
