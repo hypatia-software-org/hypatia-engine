@@ -61,7 +61,7 @@ For people, checkout the link:https://github.com/lillian-lemmer/hypatia/wiki/Pro
 Additional resources:
 
   * http://lillian-lemmer.github.io/hypatia/[The official Hypatia website]
-  * Official support chat: irc://irc.freenode.net/hypatia[##hypatia on Freenode]
+  * Official support chat: irc://irc.freenode.net/#hypatia[##hypatia on Freenode]
   * You can contact the author via email: lillian.lynn.lemmer@gmail.com
 
 == License
