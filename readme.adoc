@@ -51,6 +51,7 @@ You should be able to install everything you need using one of the included +ins
 
   - Install Pygame (varies per platform)
   - pip install -r requirements.txt
+  - ./setup.py install --user
 
 For more info on installation, checkout the link:https://github.com/lillian-lemmer/hypatia/wiki/Installation-Instructions[installation instructions page].
 
