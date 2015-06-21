@@ -224,6 +224,8 @@ class Walkabout(object):
       direction (constnts.Direction): --
       topleft_float (x,y tuple): --
 
+      position_rect
+
     """
 
     def __init__(self, directory, position=None, children=None):
