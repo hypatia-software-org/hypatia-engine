@@ -10,6 +10,5 @@
 
 
 sudo pkg install python27 py27-pip py27-game
-pip install --user -r requirements.txt
-python27 setup.py install --user
+pip install --user -r requirements.txt .
 

@@ -23,7 +23,7 @@ The included demo allows you to mess with all of its resources (see the +resourc
       *** Set tile flags, like the +impass_all+ flag which makes a flag impassable to the player
 
   * link:https://github.com/lillian-lemmer/hypatia/wiki/tilemap.txt[Create tilemaps with an arbitrary number of layers, using plaintext files]
-  * link:https://github.com/lillian-lemmer/hypatia/wiki/Nonprogrammer-Guide[Create scenes, with configurable NPCs, configurable scene data (player start position)]
+  * link:https://github.com/lillian-lemmer/hypatia/wiki/Nonprogrammer-Guide#editing-scene-data[Create scenes, with configurable NPCs, configurable scene data (player start position)]
   * link:https://github.com/lillian-lemmer/hypatia/wiki/Walkabout-Sprites[Create character sprites using animated or non-animated GIFs]
 
 For more information, please read the link:https://github.com/lillian-lemmer/hypatia/wiki/Nonprogrammer-Guide[official wiki guide for non-programmers].
@@ -50,8 +50,7 @@ Hypatia uses the following libraries:
 You should be able to install everything you need using one of the included +install-*.sh+ shell scripts. It basically boils down to:
 
   - Install Pygame (varies per platform)
-  - +pip install -r requirements.txt+
-  - +./setup.py install --user+
+  - +pip install --user -r requirements.txt .+
 
 For more info on installation, checkout the link:https://github.com/lillian-lemmer/hypatia/wiki/Installation-Instructions[installation instructions page].
 
