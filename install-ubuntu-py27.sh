@@ -9,6 +9,5 @@
 
 
 sudo apt-get install python-pygame python-pip
-pip install --user -r requirements.txt
-python setup.py install --user
+pip install --user -r requirements.txt .
 

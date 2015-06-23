@@ -10,10 +10,11 @@ sudo apt-get install python3-pip python3-dev libsdl1.2-dev\
      libsdl1.2-dev libportmidi-dev libswscale-dev libavformat-dev\
      libavcodec-dev libsdl-sge-dev libsdl-sound1.2-dev\
      libportmidi-dev libsmpeg-dev
-pip3 install --user Image pyganim
 
 # compile pygame
 hg clone https://bitbucket.org/pygame/pygame
 cd pygame
 python3 setup.py build
-python3 setup.py install --user
+cd ..
+pip3 install --user -r requirements.txt .
+
