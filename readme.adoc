@@ -1,51 +1,74 @@
-image:media/logo/logo%20(185x46).png["Hypatia"]
+image:http://lillian-lemmer.github.io/hypatia/media/logos/logo-transparent-300x59.png["Hypatia 0.2"]
 
-Hypatia is a 2D adventure game engine inspired by link:http://en.wikipedia.org/wiki/The_Legend_of_Zelda:_Oracle_of_Seasons_and_Oracle_of_Ages[_Legend of Zelda: Oracle of Ages_ and _Oracle of Seasons_].
+*Hypatia 0.2 (project in alpha)*
 
-There is a functional demo (+example/game.py+) of Hypatia's current capabilities. Here it is in action:
+Hypatia is a game engine for single player 2D action adventure games. You can use it to make a game like link:http://en.wikipedia.org/wiki/The_Legend_of_Zelda:_Oracle_of_Seasons_and_Oracle_of_Ages[_Legend of Zelda: Oracle of Ages_ and _Oracle of Seasons_]. Hypatia is aimed at non-programmers _and_ programmers alike.
 
-image:https://camo.githubusercontent.com/17fdd3839c7b692a9069c206053edb1809b8d12d/687474703a2f2f692e696d6775722e636f6d2f463465526259532e676966["The demo game in action."]
+There is an included demo game (+demo/game.py+). Here it is in action:
 
-== About
+image:http://lillian-lemmer.github.io/hypatia/media/recordings/develop-2015-06-22.gif["The demo game in action."]
 
-This repository is in very early development. The development is being guided by the game and technical design documents being made for a game. More info to be announced...
+Hypatia is a labor of love, permissively licensed, and crafted by Lillian Lemmer. Read more about Hypatia on link:https://github.com/lillian-lemmer/hypatia/wiki/[the official Hypatia project wiki]. If you're curious about the creator, the wiki has an link:http://github.com/lillian-lemmer/hypatia/wiki/About-the-Creator[about the creator of Hypatia] page.
 
-Hypatia is a labor of love, crafted by Lillian Lemmer. Read more link:http://github.com/lillian-lemmer/hypatia/wiki/About-the-Creator[about the creator of Hypatia].
+== Dive in without any programming
 
-=== Please Donate
+The included demo allows you to mess with all of its resources (see the +resources+ directory!). With it you can:
 
-Please, link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YFHB5TMMXMNT6[make a donation, securely with PayPal], no account or sign up required.
+  * link:https://github.com/lillian-lemmer/hypatia/wiki/Tilesheets[Create tilesheets to make tilemaps]
 
-== Documentation, Help, and Contact
+    ** Configure tiles from the tilesheet
 
-All of the documentation is on the link:http://github.com/lillian-lemmer/hypatia/wiki[GitHub Wiki].
+      *** Chain tiles together to create animations
+      *** Apply the "cycle" effect, which takes a non-animated tile, and creates an animated tile by rotating the colors used in the tile
+      *** Set tile flags, like the +impass_all+ flag which makes a flag impassable to the player
+
+  * link:https://github.com/lillian-lemmer/hypatia/wiki/tilemap.txt[Create tilemaps with an arbitrary number of layers, using plaintext files]
+  * link:https://github.com/lillian-lemmer/hypatia/wiki/Nonprogrammer-Guide#editing-scene-data[Create scenes, with configurable NPCs, configurable scene data (player start position)]
+  * link:https://github.com/lillian-lemmer/hypatia/wiki/Walkabout-Sprites[Create character sprites using animated or non-animated GIFs]
+
+For more information, please read the link:https://github.com/lillian-lemmer/hypatia/wiki/Nonprogrammer-Guide[official wiki guide for non-programmers].
+
+== Support this project
+
+  * link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YFHB5TMMXMNT6[Donate through PayPal]
+  * link:https://www.bountysource.com/teams/hypatia[Donate, or demand features in exchange for cash, through Bountysource]
+  * link:https://gratipay.com/~lillian-lemmer/[Donate through Gratipay]
+  * link:http://amzn.com/w/NKBZ0CX162S9[The creator's Amazon Wishlist]
+
+For more information, please read about link:https://github.com/lillian-lemmer/hypatia/wiki/Support-the-Project[the ways you can support Hypatia].
+
+== Dependencies, Installation
+
+If you're using Windows, and just wanna try the demo, don't worry about this section. You can run +game.exe+ from link:demo/hypatia-demo-for-windows.zip[].
+
+Hypatia uses the following libraries:
+
+  * link:http://www.pygame.org/[Pygame]
+  * link:http://inventwithpython.com/pyganim/[PygAnim]
+  * link:https://python-pillow.github.io/[Pillow]
+
+You should be able to install everything you need using one of the included +install-*.sh+ shell scripts. It basically boils down to:
+
+  - Install Pygame (varies per platform)
+  - +pip install --user -r requirements.txt .+
+
+For more info on installation, checkout the link:https://github.com/lillian-lemmer/hypatia/wiki/Installation-Instructions[installation instructions page].
+
+== Resources
+
+All of the documentation is on the link:https://github.com/lillian-lemmer/hypatia/wiki/[GitHub Wiki].
+
+For people, checkout the link:https://github.com/lillian-lemmer/hypatia/wiki/Profiles[socialization and contact methods for the Hypatia project].
 
 Additional resources:
 
   * http://lillian-lemmer.github.io/hypatia/[The official Hypatia website]
-  * Official IRC support channel: #hypatia on link:http://irc.lillian.link/[irc.lillian.link]
-  * You can contact the author via her email: lillian.lynn.lemmer@mgmail.com
-
-== Key features
-
-  * Great support for various platforms:
-
-   ** Operating systems supported: BSD, Linux, Windows, Mac
-   ** Python 2 & 3 support
-   ** Please checkout https://github.com/lillian-lemmer/hypatia-engine/wiki/support[the official wiki page on support].
-
-  * Permissive MIT License
-  * OpenGL
-  * Framework spefically for 2D adventure games:
-
-    ** Tile map management
-    ** Sprite management
-    ** Game logic automation
-    ** Dialog management
+  * Official support chat: link:http://webchat.freenode.net/?channels=hypatia[#hypatia on Freenode]
+  * You can contact the author via email: lillian.lynn.lemmer@gmail.com
 
 == License
 
-Hypatia is MIT licensed, which means you don't have to ever worry about legal heat.
+Hypatia is MIT licensed, which means you can use it for whatever purpose you'd like.
 
 ----
 The MIT License (MIT)

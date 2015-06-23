@@ -5,10 +5,9 @@ Note:
   
 """
 
-
-import dialog
-import sprites
-import constants
+from hypatia import dialog
+from hypatia import sprites
+from hypatia import constants
 
 
 class Player(object):
