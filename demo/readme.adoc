@@ -1,7 +1,8 @@
 This directory contains:
 
-  * unit tests (through py.test)
   * engine demo game.py
   * engine demo resources (these are the resouces for the unit tests, too)
   * engine demo win32 standalone binary (zip archive), plus the tools to build it
+
+In the engine demo,  you use the arrow keys to move around and spacebar to talk to NPCs.
 

@@ -30,7 +30,7 @@ For more information, please read the link:https://github.com/lillian-lemmer/hyp
 
 == Support this project
 
-  * link:https://www.patreon.com/lilylemmer[Support me through Patreon]
+  * link:https://www.patreon.com/lilylemmer[Support/fund through Patreon]
   * link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YFHB5TMMXMNT6[Donate through PayPal]
   * link:https://www.bountysource.com/teams/hypatia[Donate, or demand features in exchange for cash, through Bountysource]
   * link:https://gratipay.com/~lillian-lemmer/[Donate through Gratipay]
