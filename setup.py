@@ -2,9 +2,9 @@
 
 from distutils.core import setup
 
-
+exec(open('hypatia/version.py').read())
 setup(name='hypatia',
-      #version='1.1',
+      version=__version__,
       description='2D adventure game engine',
       author='Lillian Lemmer',
       author_email='lillian.lynn.lemmer@gmail.com',
