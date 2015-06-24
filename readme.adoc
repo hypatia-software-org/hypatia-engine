@@ -28,6 +28,20 @@ The included demo allows you to mess with all of its resources (see the +resourc
 
 For more information, please read the link:https://github.com/lillian-lemmer/hypatia/wiki/Nonprogrammer-Guide[official wiki guide for non-programmers].
 
+== Quick Demo
+
+=== Windows
+
+Simply run +game.exe+ after extracting link:https://github.com/lillian-lemmer/hypatia/raw/master/demo/hypatia-demo-for-windows.zip[hypatia-demo-for-windows.zip].
+
+=== Other
+
+To get setup quickly and start tinkering around with the demo, simply issue the following commands:
+
+  - +pip install hypatia_engine+
+  - +cd demo+
+  - +python game.py+
+
 == Support this project
 
   * link:https://www.patreon.com/lilylemmer[Support/fund through Patreon]
@@ -40,7 +54,11 @@ For more information, please read about link:https://github.com/lillian-lemmer/h
 
 == Dependencies, Installation
 
+=== Windows
+
 If you're using Windows, and just wanna try the demo, don't worry about this section. You can run +game.exe+ from link:demo/hypatia-demo-for-windows.zip[].
+
+=== Other
 
 Hypatia uses the following libraries:
 
