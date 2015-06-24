@@ -3,11 +3,16 @@
 """Hypatia package installer.
 
 Notes:
-  $ python setup.py sdist bdist_wheel upload
+  $ setup.py sdist bdist_wheel
+  $ twine upload dist/hypatia-0.2.2.tar.gz dist/hypatia-0.2.2*.whl
+  $ rm -rf dist
+
+  You'll need the wheel, twine package for bdist_wheel. Don't forget
+  to clear your dist when finished.
 
 """
 
-from distutils.core import setup
+from setuptools import setup
 
 
 exec(open('hypatia/version.py').read())
