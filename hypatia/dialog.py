@@ -92,3 +92,4 @@ class DialogBox(object):
         
         if self.active:
             to_surface.blit(self.full_surface, (0, 0), self.viewport_rect)
+

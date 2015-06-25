@@ -265,3 +265,8 @@ def palette_cycle(surface):
 
     return pyganim.PygAnimation(frames)
 
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
+
