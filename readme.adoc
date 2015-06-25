@@ -32,7 +32,7 @@ For more information, please read the link:https://github.com/lillian-lemmer/hyp
 
 === Windows
 
-Simply run +game.exe+ after extracting link:https://github.com/lillian-lemmer/hypatia/raw/master/demo/hypatia-demo-for-windows.zip[hypatia-demo-for-windows.zip].
+Simply run +game.exe+ after extracting link:https://lillian-lemmer.github.io/releases/hypatia-demo-windows-current.zip[hypatia-demo-windows-current.zip].
 
 === Other
 
@@ -56,7 +56,7 @@ For more information, please read about link:https://github.com/lillian-lemmer/h
 
 === Windows
 
-If you're using Windows, and just wanna try the demo, don't worry about this section. You can run +game.exe+ from link:demo/hypatia-demo-for-windows.zip[].
+If you're using Windows, and just wanna try the demo, don't worry about this section. You can run +game.exe+ from link:https://lillian-lemmer.github.io/releases/hypatia-demo-windows-current.zip[hypatia-demo-windows-current.zip].
 
 === Other
 
