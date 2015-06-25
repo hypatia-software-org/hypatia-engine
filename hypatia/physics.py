@@ -45,3 +45,9 @@ class Position(object):
         self.float = (float(x), float(y))
         self.int = (x, y)
 
+
+# NOTE: this module will definitely be heavy on the tests in the future
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
+

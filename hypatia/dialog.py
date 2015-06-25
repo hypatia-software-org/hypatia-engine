@@ -57,7 +57,6 @@ class DialogBox(object):
         message_lines = textwrap.wrap(message, self.characters_wide)
         full_rect_height = self.character_size[1] * len(message_lines)
         full_rect_size = (self.viewport_width, full_rect_height)
-        full_rect = pygame.Rect((0, 0), full_rect_size)
         full_surface = pygame.Surface(full_rect_size)
         full_surface.fill((255, 0, 255))
         y_pos = 0
@@ -93,3 +92,4 @@ class DialogBox(object):
         
         if self.active:
             to_surface.blit(self.full_surface, (0, 0), self.viewport_rect)
+

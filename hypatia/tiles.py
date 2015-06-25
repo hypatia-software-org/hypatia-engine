@@ -48,10 +48,6 @@ __email__ = "lillian.lynn.lemmer@gmail.com"
 __status__ = "Development"
 
 
-# bad?
-coord_to_index = lambda width, x, y: (width * y) + x
-
-
 class BadTileName(Exception):
     """TileSwatch: non-existant tile name referenced. Inform the user
     of which tile name was attempted in vain
@@ -465,4 +461,28 @@ class Tile(object):
         self.flags = flags or set()
         self.id = tile_id
         self.size = tile_size
+
+
+def coord_to_index(width, x, y):
+    """Return the 1D index which corresponds to 2D position (x, y).
+
+    Examples:
+      If we have a 2D grid like this:
+
+      0 1 2
+      3 4 5
+      6 7 8
+
+      We can assert that element 8 is of the coordinate (2, 2):
+      >>> 8 == coord_to_index(3, 2, 2)
+      True
+
+    """
+
+    return (width * y) + x
+
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
 
