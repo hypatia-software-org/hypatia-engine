@@ -15,7 +15,8 @@ import os
 from hypatia import tiles
 import pygame
 
-os.chdir("../example")
+# this script must be ran from project root
+os.chdir("demo")
 
 __author__ = "Lillian Lemmer"
 __copyright__ = "Copyright 2015, Lillian Lemmer"
