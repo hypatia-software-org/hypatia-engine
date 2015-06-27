@@ -12,10 +12,9 @@ install:
   - "pip install ."
   - "pip install pytest-cov"
   - "pip install pytest-pep8"
-  - "pip install coverage"
+  - "pip install python-coveralls"
 # command to run tests
 script:
-#  - py.test tests/ --doctest-modules --pep8 hypatia -v --cov hypatia --cov-report term-missing
-  - coverage run --source=hypatia py.test tests/ --doctest-modules --pep8 -v --cov hypatia --cov-report term-missing
+  - py.test tests/ --doctest-modules --pep8 hypatia -v --cov hypatia --cov-report term-missing
 after_success:
-  coveralls
+  - coveralls
