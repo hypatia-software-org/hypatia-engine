@@ -1,5 +1,0 @@
-Had to install win32 pygame from gohlke
-had to pip install py2exe
-wiki forgot to say setup.py install --user for windows instructions
-it's "py" not "python" in cmd
-to build exe python 3 is required (for the latest version of py2exe). it is ont avail for py 2
