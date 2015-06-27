@@ -1,0 +1,3 @@
+Pillow==2.8.1
+pyganim==0.9.0
+enum34

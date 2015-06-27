@@ -2,11 +2,15 @@ language: python
 python:
   - "2.7"
   - "3.4"
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get build-dep -qq python-pygame
+  - sudo apt-get install -qq python-pygame
 # command to install dependencies
 install:
-  - "pip install --allow-external pygame"
-  - "pip install -r requirements/base.txt"
-  - "pip install -r requirements/python2.txt"
+  - "pip install -r requirements/travis.txt"
   - "pip install ."
 # command to run tests
-script: py.test
+script: py.test tests/*.py
+virtualenv:
+    system_site_packages: true
