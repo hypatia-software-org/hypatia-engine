@@ -283,8 +283,8 @@ class Walkabout(object):
 
             else:
                 action, direction = file_name.split('_', 1)
-                direction = getattr(constants, direction.title())
-                action = getattr(constants, action.title())
+                direction = getattr(constants.Direction, direction.title())
+                action = getattr(constants.Action, action.title())
 
             self.actions.append(action)
             self.directions.append(direction)
