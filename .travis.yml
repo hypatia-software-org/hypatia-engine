@@ -12,7 +12,8 @@ install:
   - "pip install ."
   - "pip install coveralls"
 # command to run tests
-script: py.test tests/*.py
+script:
+  coverage run --source=hypatia py.test tests/*.py
 after_success:
   coveralls
 virtualenv:
