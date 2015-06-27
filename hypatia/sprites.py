@@ -197,7 +197,7 @@ class AnchorPoint(object):
           (2, 1)
 
         """
- 
+
         return (self.x - other_anchor_point.x,
                 self.y - other_anchor_point.y)
 
