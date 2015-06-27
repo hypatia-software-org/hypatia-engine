@@ -22,14 +22,6 @@ import pygame
 # this script must be ran from project root
 os.chdir("demo")
 
-__author__ = "Lillian Lemmer"
-__copyright__ = "Copyright 2015, Lillian Lemmer"
-__credits__ = ["Lillian Lemmer"]
-__license__ = "MIT"
-__maintainer__ = "Lillian Lemmer"
-__email__ = "lillian.lynn.lemmer@gmail.com"
-__status__ = "Development"
-
 
 def test_coord_to_index():
     """Tests the coord_to_index lambda functoin from tiles.py"""
@@ -82,7 +74,7 @@ def test_tilesheet():
                                 tile_width)
     tilesheet_height_in_tiles = (tilesheet.surface.get_rect().height /
                                  tile_height)
-    
-    assert len(tilesheet.tiles) == (tilesheet_width_in_tiles
-                                    * tilesheet_height_in_tiles)
+
+    assert (len(tilesheet.tiles) == (tilesheet_width_in_tiles *
+                                     tilesheet_height_in_tiles))
     assert tilesheet[99].flags == set(['impass_all'])
