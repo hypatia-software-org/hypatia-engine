@@ -10,7 +10,10 @@ before_install:
 install:
   - "pip install -r requirements/travis.txt"
   - "pip install ."
+  - "pip install coveralls"
 # command to run tests
 script: py.test tests/*.py
+after_success:
+  coveralls
 virtualenv:
     system_site_packages: true
