@@ -10,9 +10,11 @@ install:
   - "pip install hg+http://bitbucket.org/pygame/pygame"
   - "pip install -r requirements/travis.txt"
   - "pip install ."
-  - "pip install coveralls"
+#  - "pip install coveralls"
+  - "pip install python-coveralls"
 # command to run tests
 script:
-  - py.test tests/*.py
+#  - py.test tests/*.py
+  - py.test tests/ --doctest-modules --pep8 coveralls -v --cov coveralls --cov-report term-missing
 after_success:
   coveralls
