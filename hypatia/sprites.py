@@ -76,8 +76,10 @@ class AnimAnchors(object):
 
         """
 
-        gif_file_name = os.path.splitext(os.path.basename(gif_path))[0] + '.ini'
-        anchor_ini_path = os.path.join(os.path.dirname(gif_path), gif_file_name)
+        gif_file_name = (os.path.splitext(os.path.basename(gif_path))[0]
+                         +  '.ini')
+        anchor_ini_path = os.path.join(os.path.dirname(gif_path),
+                                       gif_file_name)
         anchor_ini = configparser.ConfigParser()
         anchor_ini.read(anchor_ini_path)
         anchor_point_groups = anchor_ini.sections()
@@ -102,7 +104,7 @@ class AnimAnchors(object):
         Args:
           anchor_point_group (str): name of the anchor point group
           frame_index (int): which frame for group's anchor
-        
+
         Returns:
           AnchorPoint: --
 
@@ -395,7 +397,7 @@ class Walkabout(object):
           group colors.
 
         """
-    
+
         x, y = surface.get_size()
         debug_color = pygame.Color(255, 136, 255)
 
@@ -446,7 +448,8 @@ class Walkabout(object):
         for child_walkabout in self.child_walkabouts:
             # draw at position + difference in child anchor
             child_anim_anchor = (child_walkabout
-                                 .animation_anchors[self.action][self.direction])
+                                 .animation_anchors[self.action]
+                                 [self.direction])
             child_frame_anchor = (child_anim_anchor
                                   .get_anchor_point('head_anchor',
                                                     pyganim_frame_index))
@@ -529,4 +532,3 @@ def load_gif(gif_path):
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
-

@@ -17,13 +17,13 @@ class Player(object):
 
     def talk(self, npcs, dialogbox):
         """Attempt to talk in current direction.
-        
+
         """
-        
+
         # get the current direction, check a bit in front with a rect
         # to talk to npc if collide
         facing = self.walkabout.direction
-        
+
         if facing is constants.Direction.Up:
             disposition = (0, -1)
         elif facing is constants.Direction.Right:
@@ -35,9 +35,9 @@ class Player(object):
 
         talk_rect = self.walkabout.rect.copy()
         talk_rect.move_ip(disposition)
-        
+
         for npc in npcs:
-            
+
             if npc.walkabout.rect.colliderect(talk_rect):
                 npc.say(facing, dialogbox)
 
@@ -57,7 +57,6 @@ class Npc(Player):
                   constants.Direction.Down: constants.Direction.Up
                  }[at_direction]
         self.walkabout.direction = facing
-        
+
         if self.say_text:
             dialogbox.set_message(self.say_text)
-

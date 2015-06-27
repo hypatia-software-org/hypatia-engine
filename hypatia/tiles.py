@@ -1,4 +1,4 @@
-# engine/tiles.py
+# hypatia/tiles.py
 # Lillian Lemmer <lillian.lynn.lemmer@gmail.com>
 #
 # This module is part of Hypatia and is released under the
@@ -39,14 +39,6 @@ import pyganim
 
 from hypatia import render
 
-__author__ = "Lillian Lemmer"
-__copyright__ = "Copyright 2015, Lillian Lemmer"
-__credits__ = ["Lillian Lemmer"]
-__license__ = "MIT"
-__maintainer__ = "Lillian Lemmer"
-__email__ = "lillian.lynn.lemmer@gmail.com"
-__status__ = "Development"
-
 
 class BadTileName(Exception):
     """TileSwatch: non-existant tile name referenced. Inform the user
@@ -64,7 +56,7 @@ class BadTileName(Exception):
     """
 
     def __init__(self, swatch_name, bad_tile_name):
-        message = ('TileSwatch: no tile by name "%s"'  % bad_tile_name)
+        message = ('TileSwatch: no tile by name "%s"' % bad_tile_name)
         super(BadTileName, self).__init__(message)
 
 
@@ -85,7 +77,7 @@ class TileMap(object):
     """
 
     def __init__(self, tilesheet_name, tile_ids):
-        """Stitch tiles from swatch to layer surfaces. 
+        """Stitch tiles from swatch to layer surfaces.
 
         Piece together layers/surfaces from corresponding tile graphic
         names, using the specified tile swatch. Keep track of
@@ -105,7 +97,7 @@ class TileMap(object):
         # create the layer images and tile properties
         tilesheet = Tilesheet.from_name(tilesheet_name)
         first_layer = tile_ids[0]
-        
+
         width_tiles = len(first_layer[0])
         height_tiles = len(first_layer)
         depth_tiles = len(tile_ids)
@@ -125,7 +117,7 @@ class TileMap(object):
         for z, layer in enumerate(tile_ids):
             new_layer = pygame.Surface(layer_size, pygame.SRCALPHA, 32)
             new_layer.fill([0,0,0,0])
-        
+
             for y, row_of_tile_ids in enumerate(layer):
 
                 for x, tile_id in enumerate(row_of_tile_ids):
@@ -140,16 +132,16 @@ class TileMap(object):
                         tiles[tile_index].flags.update(tile.flags)
                     else:
                         tiles.append(tile)
-                        
+
                     # -1 is air/nothing
                     if tile.id == -1:
-                    
+
                         continue
-                    
+
                     # blit tile subsurface onto respective layer
                     tile_position = (x * tile_width, y * tile_height)
                     new_layer.blit(tile.subsurface, tile_position)
-                    
+
                     # is this tile an animation?
                     if tile.id in tilesheet.animated_tiles:
                         animated_tile = tilesheet.animated_tiles[tile.id]
@@ -160,7 +152,7 @@ class TileMap(object):
                     if 'impass_all' in tile.flags:
                         impassable_rects.append(pygame.Rect(tile_position,
                                                             tile_size))
-                    
+
             layer_images.append(new_layer)
 
         self.tilesheet = tilesheet
@@ -248,25 +240,25 @@ class TileMap(object):
     # NOTE: BROKEN, DOES NOT OUTPUT SCENE NAME FIRST
     def to_string(self, separator=' '):
         """Create the user-unfriendly string for the tilemap.
-        
+
         Args:
           separator (str): can be ''
-          
+
         """
 
         output_string = ''
-                    
+
         # create map layers
         layers = []
-        
+
         for layer in self._tile_ids:
             layer_lines = []
-        
+
             for row in layer:
                 row_string = separator.join([str(i) for i in row])
-                    
+
                 layer_lines.append(row_string)
-                    
+
             layer_string = '\n'.join(layer_lines)
             layers.append(layer_string)
 
@@ -279,9 +271,9 @@ class TileMap(object):
     def from_string(cls, map_string, separator=' '):
         """This is a debug feature. Create a 3D list of tile names using
         ASCII symbols. Supports layers.
-       
+
         """
-        
+
         # GET TILESHEET NAME FROM THE FIRST LINE, REMOVE FIRST LINE
         tilesheet_name, layers_string = map_string.split('\n', 1)
 
@@ -323,17 +315,17 @@ class Tilesheet(object):
     def from_name(self, tilesheet_name):
         """Create a Tilesheet from a name, corresponding to a path
         pointing to a tilesheet zip archive.
-        
+
         Args:
           tilesheet_name (str): this string is appended to the default
             resources/tilesheets location.
-        
+
         Returns:
           Tilesheet: initialized utilizing information from the
             respective tilesheet zip's tilesheet.png and tilesheet.ini.
-          
+
         """
-        
+
         # path to the zip containing tilesheet.png and tilesheet.ini
         zip_path = os.path.join(
                                 'resources',
@@ -344,7 +336,7 @@ class Tilesheet(object):
         with zipfile.ZipFile(zip_path) as zip:
             zip_png = zip.open('tilesheet.png').read()
             config_file = zip.open('tilesheet.ini').read()
-        
+
         png_io = BytesIO(zip_png)
         tilesheet_surface = pygame.image.load(png_io)
         config_io = StringIO(config_file.decode('utf-8'))
@@ -353,27 +345,27 @@ class Tilesheet(object):
         # NOTE: this still works in python 3, though it was
         # replaced by config.read_file()
         config.readfp(config_io)
-        
+
         # build the meta
         flags = {int(k): set(v.split(',')) for k, v in config.items('flags')}
         tile_width = config.getint('meta', 'tile_width')
         tile_height = config.getint('meta', 'tile_height')
         tile_size = (tile_width, tile_height)
         tilesheet_width, tilesheet_height = tilesheet_surface.get_size()
-        
+
         x_positions = range(0, tilesheet_width, tile_width)
         y_positions = range(0, tilesheet_height, tile_height)
         topleft_positions = []
-        
+
         # should use collections product for this duh
         for y in y_positions:
-        
+
             for x in x_positions:
                 topleft_positions.append((x, y))
-                
+
         # tile initialization; buid all the tiles
         tiles = []
-        
+
         for tile_id, top_left in enumerate(topleft_positions):
             tile = Tile(
                         tile_id=tile_id,
@@ -409,11 +401,11 @@ class Tilesheet(object):
                     seen_tile_ids = set()
 
                 seen_tile_ids.add(tile_id)
-                
+
         # functions which return a PygAnimation, and accept a surface
         if config.has_section('animate_effect'):
             effects = {'cycle': render.palette_cycle}
-            
+
             for tile_id, effect in config.items('animate_effect'):
                 tile_id = int(tile_id)
                 corresponding_tile = tiles[tile_id].subsurface
@@ -426,7 +418,7 @@ class Tilesheet(object):
 class Tile(object):
     """A graphical map tile, referencing a rectangular area on a
     tilesheet (reference surface), with meta data.
-    
+
     Attributes:
       subsurface (pygame.?): the subsurface of the reference_surface
         which consists this Tile().
@@ -440,6 +432,7 @@ class Tile(object):
 
     def __init__(self, tile_id, tilesheet_surface, tile_size,
                  subsurface_top_left, flags=None):
+
         """create subsurface of tilesheet surface using topleft
         position on tilesheet.
 
@@ -454,7 +447,7 @@ class Tile(object):
           flags (set): properties belonging to this tile
 
         """
-        
+
         position_rect = pygame.Rect(subsurface_top_left, tile_size)
         self.area_on_tilesheet = position_rect
         self.subsurface = tilesheet_surface.subsurface(position_rect)
@@ -485,4 +478,3 @@ def coord_to_index(width, x, y):
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
-

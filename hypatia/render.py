@@ -36,7 +36,7 @@ class Screen(object):
 
     Notes:
       --
-     
+
     CONSTANTS:
       FPS (int): frames per second limit
 
@@ -48,7 +48,7 @@ class Screen(object):
       screen (pygame.display surface): --
 
     """
-    
+
     FPS = 60
 
     def __init__(self, filters=None):
@@ -77,7 +77,7 @@ class Screen(object):
         rescaling for fullscreen.
 
         """
-        
+
         scaled_surface = pygame.transform.scale(surface, self.screen_size)
 
         if self.filters:
@@ -116,10 +116,10 @@ class Viewport(object):
 
     def center_on(self, entity, master_rect):
         """Center the viewport rectangle on an object.
-        
+
         Note:
           entity must have entity.rect (pygame.Rect)
-          
+
           Does not center if centering would render off-surface;
           finds nearest.
 
@@ -131,24 +131,26 @@ class Viewport(object):
           bool: --
           
         """
-        
+
         entity_position_x, entity_position_y = entity.rect.center
         difference_x = entity_position_x - self.rect.centerx
-        difference_y = entity_position_y - self.rect.centery 
+        difference_y = entity_position_y - self.rect.centery
         potential_rect = self.rect.move(*(difference_x, difference_y))
-        
+
         if potential_rect.left < 0:
             difference_x = 0
-        
+
         if potential_rect.top < 0:
             difference_y = 0
 
         if potential_rect.right > master_rect.right:
-            difference_x = difference_x - (potential_rect.right - master_rect.right)
+            difference_x = (difference_x
+                            - (potential_rect.right - master_rect.right))
 
         if potential_rect.bottom > master_rect.bottom:
-            difference_y = difference_y - (potential_rect.bottom - master_rect.bottom)
-            
+            difference_y = (difference_y
+                            - (potential_rect.bottom - master_rect.bottom)
+
         self.rect.move_ip(*(difference_x, difference_y))
 
     def relative_position(self, position):
@@ -214,8 +216,6 @@ def pil_to_pygame(pil_image, encoding):
 
 
 # should go into sprites or effects
-#def cycle_color_effect(surface):
-# should go to sprites or effects
 def palette_cycle(surface):
     """get_palette is not sufficient; it generates superflous colors.
 
@@ -251,7 +251,7 @@ def palette_cycle(surface):
         new_color_list.rotate(1)
 
         color_translations = dict(zip(old_color_list, new_color_list))
-        
+
         # replace each former color with the color from newcolor_list
         for coordinate in itertools.product(range(0, width), range(0, height)):
             color = new_surface.get_at(coordinate)
@@ -269,4 +269,3 @@ def palette_cycle(surface):
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
-

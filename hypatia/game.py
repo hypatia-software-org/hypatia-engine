@@ -53,7 +53,9 @@ __status__ = "Development"
 class Game(object):
     """Simulates the interaction between game components."""
 
-    def __init__(self, screen=None, scene_name=None, viewport_size=None, dialogbox=None):
+    def __init__(self, screen=None, scene_name=None,
+                 viewport_size=None, dialogbox=None):
+
         self.screen = screen or render.Screen()
         self.viewport = render.Viewport(viewport_size)
         self.dialogbox = dialogbox or dialog.DialogBox(self.viewport.rect.size)
@@ -72,27 +74,29 @@ class Game(object):
             false if escape pressed.
 
         """
-        
+
         for event in pygame.event.get():
 
             if event.type == KEYUP:
-                self.scene.human_player.walkabout.action = constants.Action.Stand
+                (self.scene.human_player
+                 .walkabout.action) = constants.Action.Stand
             
             # need to trap player in a next loop, release when no next
             if event.type == KEYDOWN and event.key == K_SPACE:
 
-                # do until 
+                # do until
                 if self.dialogbox.active:
                     self.dialogbox.next()
                 else:
-                    self.scene.human_player.talk(self.scene.npcs, self.dialogbox)
-        
+                    (self.scene.human_player
+                     .talk(self.scene.npcs, self.dialogbox))
+
         if self.dialogbox.active:
-            
+
             return True
-            
+
         pressed_keys = pygame.key.get_pressed()
-        
+
         if pressed_keys[K_ESCAPE]:
 
             return False
@@ -118,7 +122,7 @@ class Game(object):
         Note:
           Will round down to nearest probable step
           if full step is impassable.
-          
+
           Needs to use velocity instead...
 
         Args:
@@ -152,7 +156,8 @@ class Game(object):
                 new_topleft_x -= pixels * adj_speed
 
             destination_rect = pygame.Rect((new_topleft_x, new_topleft_y),
-                                           self.scene.human_player.walkabout.size)
+                                           (self.scene.human_player
+                                            .walkabout.size))
             collision_rect = player.walkabout.rect.union(destination_rect)
 
             if not self.collide_check(collision_rect):
@@ -173,11 +178,11 @@ class Game(object):
 
     def collide_check(self, rect):
         """Returns True if there are collisions with rect.
-        
+
         """
-        
+
         possible_collisions = self.scene.tilemap.impassable_rects
-        
+
         for npc in self.scene.npcs:
             possible_collisions.append(npc.walkabout.rect)
 
@@ -210,7 +215,7 @@ class Game(object):
         for i, layer in enumerate(self.scene.tilemap.layer_images[1:], 1):
             self.viewport.blit(layer)
             self.scene.tilemap.blit_layer_animated_tiles(self.viewport, i)
-            
+
         self.dialogbox.blit(self.viewport.surface)
 
     def start_loop(self):
@@ -269,7 +274,8 @@ class Scene(object):
         # .. create player with player scene data
         hat = sprites.Walkabout('hat')
         human_walkabout = sprites.Walkabout('debug',
-                                            position=self.player_start_position,
+                                            position=(self
+                                                      .player_start_position),
                                             children=[hat])
         self.human_player = player.Player(walkabout=human_walkabout)
 
@@ -308,4 +314,3 @@ class Scene(object):
 
         for object_to_setup in objects_to_setup + npcs_to_setup:
             object_to_setup.runtime_setup()
-

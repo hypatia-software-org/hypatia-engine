@@ -37,14 +37,14 @@ def test_coord_to_index():
     # coords_to_index(row_width, x, y)
 
     #    0  1  2
-    #------------
+    # -----------
     # 0| 00 01 02
     # 1| 03 04 05
     # 2| 06 07 08
     assert tiles.coord_to_index(3, 2, 2) == 8
 
     #    0  1  2  3  4
-    #------------------
+    # -----------------
     # 0| 00 01 02 03 04
     # 1| 05 06 07 08 09
     # 2| 10 11 12 13 14
@@ -61,7 +61,8 @@ def test_tile():
     tile_flags = set(['impass_all'])
     subsurface_topleft = (20, 30)
     # ... create tile
-    tile = tiles.Tile(tile_id, faux_tilesheet, tile_size, subsurface_topleft, tile_flags)
+    tile = tiles.Tile(tile_id, faux_tilesheet, tile_size,
+                      subsurface_topleft, tile_flags)
 
     # test tile
     assert tile.size == tile_size
@@ -85,4 +86,3 @@ def test_tilesheet():
     assert len(tilesheet.tiles) == (tilesheet_width_in_tiles
                                     * tilesheet_height_in_tiles)
     assert tilesheet[99].flags == set(['impass_all'])
-
