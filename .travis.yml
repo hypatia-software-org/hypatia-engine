@@ -4,7 +4,7 @@ python:
   - "3.4"
 # command to install dependencies
 install:
-  - "pip install pygame --allow-external"
+  - "pip install --allow-external pygame"
   - "pip install -r requirements/base.txt"
   - "pip install -r requirements/python2.txt"
   - "pip install ."
