@@ -1,4 +1,4 @@
-image:https://api.travis-ci.org/lillian-lemmer/hypatia.png["Travis CI",link="https://travis-ci.org/lillian-lemmer/hypatia"]
+image:https://api.travis-ci.org/lillian-lemmer/hypatia.png["Travis CI",link="https://travis-ci.org/lillian-lemmer/hypatia"] image:https://coveralls.io/repos/lillian-lemmer/hypatia/badge.svg["Coveralls",link="https://coveralls.io/r/lillian-lemmer/hypatia"]
 
 image:http://lillian-lemmer.github.io/hypatia/media/logos/logo-transparent-300x59.png["Hypatia 0.2"]
 
