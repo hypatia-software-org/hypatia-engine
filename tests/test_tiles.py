@@ -6,7 +6,11 @@
 
 """py.test unit testing for hypatia/tiles.py
 
-Run py.test on this module to assert hypatia.tiles is completely functional.
+Run py.test on this module to assert hypatia.tiles
+is completely functional.
+
+Example:
+  $ py.test tests/
 
 """
 
