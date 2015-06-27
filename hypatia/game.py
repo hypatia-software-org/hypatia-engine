@@ -80,7 +80,7 @@ class Game(object):
             if event.type == KEYUP:
                 (self.scene.human_player
                  .walkabout.action) = constants.Action.Stand
-            
+
             # need to trap player in a next loop, release when no next
             if event.type == KEYDOWN and event.key == K_SPACE:
 

@@ -76,8 +76,8 @@ class AnimAnchors(object):
 
         """
 
-        gif_file_name = (os.path.splitext(os.path.basename(gif_path))[0]
-                         +  '.ini')
+        gif_file_name = (os.path.splitext(os.path.basename(gif_path))[0] +
+                         '.ini')
         anchor_ini_path = os.path.join(os.path.dirname(gif_path),
                                        gif_file_name)
         anchor_ini = configparser.ConfigParser()

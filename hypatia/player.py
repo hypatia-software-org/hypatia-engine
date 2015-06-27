@@ -2,7 +2,7 @@
 
 Note:
   Could even be something like a sign! Or the human player.
-  
+
 """
 
 from hypatia import dialog

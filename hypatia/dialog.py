@@ -73,7 +73,7 @@ class DialogBox(object):
         self.full_surface = full_surface
         self.active = True
         self.reset_viewport_rect()
- 
+
     def next(self):
         # NOTE: i forgot what these notes are...
         # will stay off beause viewport rect never resets!

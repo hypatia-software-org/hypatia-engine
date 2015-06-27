@@ -116,13 +116,13 @@ class TileMap(object):
 
         for z, layer in enumerate(tile_ids):
             new_layer = pygame.Surface(layer_size, pygame.SRCALPHA, 32)
-            new_layer.fill([0,0,0,0])
+            new_layer.fill([0, 0, 0, 0])
 
             for y, row_of_tile_ids in enumerate(layer):
 
                 for x, tile_id in enumerate(row_of_tile_ids):
                     # is this right...?
-                    tile_index = (((z - 1) * height_tiles * width_tiles) + 
+                    tile_index = (((z - 1) * height_tiles * width_tiles) +
                                   (y * width_tiles) + x)
                     tile = tilesheet[tile_id]
 
@@ -213,7 +213,7 @@ class TileMap(object):
         return self[(tile_x, tile_y)]
 
     def blit_layer_animated_tiles(self, viewport, layer):
-        
+
         for tile_pyganim, position in self.animated_tile_stack[layer]:
             tile_pyganim.blit(viewport.surface,
                               viewport.relative_position(position))

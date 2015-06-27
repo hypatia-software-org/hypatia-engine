@@ -129,7 +129,7 @@ class Viewport(object):
 
         Returns:
           bool: --
-          
+
         """
 
         entity_position_x, entity_position_y = entity.rect.center
@@ -144,12 +144,12 @@ class Viewport(object):
             difference_y = 0
 
         if potential_rect.right > master_rect.right:
-            difference_x = (difference_x
-                            - (potential_rect.right - master_rect.right))
+            difference_x = (difference_x -
+                            (potential_rect.right - master_rect.right))
 
         if potential_rect.bottom > master_rect.bottom:
-            difference_y = (difference_y
-                            - (potential_rect.bottom - master_rect.bottom)
+            difference_y = (difference_y -
+                            (potential_rect.bottom - master_rect.bottom))
 
         self.rect.move_ip(*(difference_x, difference_y))
 
