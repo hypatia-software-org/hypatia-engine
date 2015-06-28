@@ -2,7 +2,7 @@ image:https://api.travis-ci.org/lillian-lemmer/hypatia.png["Travis CI",link="htt
 
 image:http://lillian-lemmer.github.io/hypatia/media/logos/logo-transparent-300x59.png["Hypatia 0.2"]
 
-*Hypatia Game Engine 0.2.6 (project in alpha)*: make 2D action adventure games. For programmers and nonprogrammers alike.
+*Hypatia Game Engine 0.2.6 (alpha)*: make 2D action adventure games. For programmers and nonprogrammers alike.
 
 With Hypatia you can create a games like link:http://en.wikipedia.org/wiki/The_Legend_of_Zelda:_Oracle_of_Seasons_and_Oracle_of_Ages[_Legend of Zelda: Oracle of Ages_ and _Oracle of Seasons_].
 
