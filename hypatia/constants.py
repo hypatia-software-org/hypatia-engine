@@ -18,6 +18,8 @@ Examples:
 
 """
 
+from enum import Enum
+
 __author__ = "Lillian Lemmer"
 __copyright__ = "Copyright 2015, Lillian Lemmer"
 __credits__ = ["Lillian Lemmer"]
@@ -27,39 +29,14 @@ __email__ = "lillian.lynn.lemmer@gmail.com"
 __status__ = "Development"
 
 
-class Direction(object):
+class Direction(Enum):
     """Specific to movement of a sprite/surface."""
-    pass
+    Up = 1
+    Down = 2
+    Left = 3
+    Right = 4
 
 
-class Up(Direction):
-    """Move in direction: up"""
-    pass
-
-
-class Right(Direction):
-    """Move in direction: right"""
-    pass
-
-
-class Down(Direction):
-    """Move in direction: down"""
-    pass
-
-
-class Left(Direction):
-    """Move in direction: left"""
-    pass
-
-
-class Action(object):
-    pass
-
-
-class Walk(Action):
-    pass
-
-
-class Stand(Action):
-    pass
-
+class Action(Enum):
+    Walk = 1
+    Stand = 2

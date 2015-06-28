@@ -2,7 +2,7 @@
 
 Note:
   Could even be something like a sign! Or the human player.
-  
+
 """
 
 from hypatia import dialog
@@ -17,27 +17,27 @@ class Player(object):
 
     def talk(self, npcs, dialogbox):
         """Attempt to talk in current direction.
-        
+
         """
-        
+
         # get the current direction, check a bit in front with a rect
         # to talk to npc if collide
         facing = self.walkabout.direction
-        
-        if facing is constants.Up:
+
+        if facing is constants.Direction.Up:
             disposition = (0, -1)
-        elif facing is constants.Right:
+        elif facing is constants.Direction.Right:
             disposition = (1, 0)
-        elif facing is constants.Down:
+        elif facing is constants.Direction.Down:
             disposition = (0, 1)
-        elif facing is constants.Left:
+        elif facing is constants.Direction.Left:
             disposition = (-1, 0)
 
         talk_rect = self.walkabout.rect.copy()
         talk_rect.move_ip(disposition)
-        
+
         for npc in npcs:
-            
+
             if npc.walkabout.rect.colliderect(talk_rect):
                 npc.say(facing, dialogbox)
 
@@ -51,13 +51,12 @@ class Npc(Player):
 
     def say(self, at_direction, dialogbox):
         facing = {
-                  constants.Up: constants.Down,
-                  constants.Right: constants.Left,
-                  constants.Left: constants.Right,
-                  constants.Down: constants.Up
+                  constants.Direction.Up: constants.Direction.Down,
+                  constants.Direction.Right: constants.Direction.Left,
+                  constants.Direction.Left: constants.Direction.Right,
+                  constants.Direction.Down: constants.Direction.Up
                  }[at_direction]
         self.walkabout.direction = facing
-        
+
         if self.say_text:
             dialogbox.set_message(self.say_text)
-

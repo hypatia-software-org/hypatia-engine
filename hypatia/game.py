@@ -53,7 +53,9 @@ __status__ = "Development"
 class Game(object):
     """Simulates the interaction between game components."""
 
-    def __init__(self, screen=None, scene_name=None, viewport_size=None, dialogbox=None):
+    def __init__(self, screen=None, scene_name=None,
+                 viewport_size=None, dialogbox=None):
+
         self.screen = screen or render.Screen()
         self.viewport = render.Viewport(viewport_size)
         self.dialogbox = dialogbox or dialog.DialogBox(self.viewport.rect.size)
@@ -72,42 +74,44 @@ class Game(object):
             false if escape pressed.
 
         """
-        
+
         for event in pygame.event.get():
 
             if event.type == KEYUP:
-                self.scene.human_player.walkabout.action = constants.Stand
-            
+                (self.scene.human_player
+                 .walkabout.action) = constants.Action.Stand
+
             # need to trap player in a next loop, release when no next
             if event.type == KEYDOWN and event.key == K_SPACE:
 
-                # do until 
+                # do until
                 if self.dialogbox.active:
                     self.dialogbox.next()
                 else:
-                    self.scene.human_player.talk(self.scene.npcs, self.dialogbox)
-        
+                    (self.scene.human_player
+                     .talk(self.scene.npcs, self.dialogbox))
+
         if self.dialogbox.active:
-            
+
             return True
-            
+
         pressed_keys = pygame.key.get_pressed()
-        
+
         if pressed_keys[K_ESCAPE]:
 
             return False
 
         if pressed_keys[K_UP]:
-            self.move_player(constants.Up)
+            self.move_player(constants.Direction.Up)
 
         if pressed_keys[K_RIGHT]:
-            self.move_player(constants.Right)
+            self.move_player(constants.Direction.Right)
 
         if pressed_keys[K_DOWN]:
-            self.move_player(constants.Down)
+            self.move_player(constants.Direction.Down)
 
         if pressed_keys[K_LEFT]:
-            self.move_player(constants.Left)
+            self.move_player(constants.Direction.Left)
 
         return True
 
@@ -118,11 +122,11 @@ class Game(object):
         Note:
           Will round down to nearest probable step
           if full step is impassable.
-          
+
           Needs to use velocity instead...
 
         Args:
-          direction (constants.Direction): may be one of: up, right, down, left
+          direction (constants.Direction): may be one of: Up, Right, Down, Left
 
         """
 
@@ -142,23 +146,24 @@ class Game(object):
             if pixels == 2:
                 adj_speed = 1
 
-            if direction == constants.Up:
+            if direction == constants.Direction.Up:
                 new_topleft_y -= pixels * adj_speed
-            elif direction == constants.Right:
+            elif direction == constants.Direction.Right:
                 new_topleft_x += pixels * adj_speed
-            elif direction == constants.Down:
+            elif direction == constants.Direction.Down:
                 new_topleft_y += pixels * adj_speed
-            elif direction == constants.Left:
+            elif direction == constants.Direction.Left:
                 new_topleft_x -= pixels * adj_speed
 
             destination_rect = pygame.Rect((new_topleft_x, new_topleft_y),
-                                           self.scene.human_player.walkabout.size)
+                                           (self.scene.human_player
+                                            .walkabout.size))
             collision_rect = player.walkabout.rect.union(destination_rect)
 
             if not self.collide_check(collision_rect):
                 # we're done, we can move!
                 new_topleft = (new_topleft_x, new_topleft_y)
-                player.walkabout.action = constants.Walk
+                player.walkabout.action = constants.Action.Walk
                 animation = player.walkabout.current_animation()
                 player.walkabout.size = animation.getMaxSize()
                 player.walkabout.rect = destination_rect
@@ -167,17 +172,17 @@ class Game(object):
                 return True
 
         # never found an applicable destination
-        player.walkabout.action = constants.Stand
+        player.walkabout.action = constants.Action.Stand
 
         return False
 
     def collide_check(self, rect):
         """Returns True if there are collisions with rect.
-        
+
         """
-        
+
         possible_collisions = self.scene.tilemap.impassable_rects
-        
+
         for npc in self.scene.npcs:
             possible_collisions.append(npc.walkabout.rect)
 
@@ -210,7 +215,7 @@ class Game(object):
         for i, layer in enumerate(self.scene.tilemap.layer_images[1:], 1):
             self.viewport.blit(layer)
             self.scene.tilemap.blit_layer_animated_tiles(self.viewport, i)
-            
+
         self.dialogbox.blit(self.viewport.surface)
 
     def start_loop(self):
@@ -269,7 +274,8 @@ class Scene(object):
         # .. create player with player scene data
         hat = sprites.Walkabout('hat')
         human_walkabout = sprites.Walkabout('debug',
-                                            position=self.player_start_position,
+                                            position=(self
+                                                      .player_start_position),
                                             children=[hat])
         self.human_player = player.Player(walkabout=human_walkabout)
 
@@ -308,4 +314,3 @@ class Scene(object):
 
         for object_to_setup in objects_to_setup + npcs_to_setup:
             object_to_setup.runtime_setup()
-

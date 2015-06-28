@@ -76,8 +76,10 @@ class AnimAnchors(object):
 
         """
 
-        gif_file_name = os.path.splitext(os.path.basename(gif_path))[0] + '.ini'
-        anchor_ini_path = os.path.join(os.path.dirname(gif_path), gif_file_name)
+        gif_file_name = (os.path.splitext(os.path.basename(gif_path))[0] +
+                         '.ini')
+        anchor_ini_path = os.path.join(os.path.dirname(gif_path),
+                                       gif_file_name)
         anchor_ini = configparser.ConfigParser()
         anchor_ini.read(anchor_ini_path)
         anchor_point_groups = anchor_ini.sections()
@@ -102,7 +104,7 @@ class AnimAnchors(object):
         Args:
           anchor_point_group (str): name of the anchor point group
           frame_index (int): which frame for group's anchor
-        
+
         Returns:
           AnchorPoint: --
 
@@ -195,7 +197,7 @@ class AnchorPoint(object):
           (2, 1)
 
         """
- 
+
         return (self.x - other_anchor_point.x,
                 self.y - other_anchor_point.y)
 
@@ -278,13 +280,13 @@ class Walkabout(object):
             file_name = os.path.split(file_name)[1]
 
             if file_name == 'only':
-                action = constants.Stand
-                direction = constants.Down
+                action = constants.Action.Stand
+                direction = constants.Direction.Down
 
             else:
                 action, direction = file_name.split('_', 1)
-                direction = getattr(constants, direction.title())
-                action = getattr(constants, action.title())
+                direction = getattr(constants.Direction, direction.title())
+                action = getattr(constants.Action, action.title())
 
             self.actions.append(action)
             self.directions.append(direction)
@@ -315,8 +317,8 @@ class Walkabout(object):
         self.size = animation.getMaxSize()
         self.rect = pygame.Rect(position, self.size)
         self.topleft_float = topleft_float
-        self.action = constants.Stand
-        self.direction = constants.Down
+        self.action = constants.Action.Stand
+        self.direction = constants.Direction.Down
         self.speed_in_pixels_per_second = 20.0
         self.child_walkabouts = children or []
 
@@ -332,7 +334,7 @@ class Walkabout(object):
 
         Examples:
           >>> walkabout = Walkabout()
-          >>> walkabout[constants.Walk][constants.Up]
+          >>> walkabout[constants.Action.Walk][constants.Direction.Up]
           <PygAnim Object>
 
         """
@@ -395,7 +397,7 @@ class Walkabout(object):
           group colors.
 
         """
-    
+
         x, y = surface.get_size()
         debug_color = pygame.Color(255, 136, 255)
 
@@ -446,7 +448,8 @@ class Walkabout(object):
         for child_walkabout in self.child_walkabouts:
             # draw at position + difference in child anchor
             child_anim_anchor = (child_walkabout
-                                 .animation_anchors[self.action][self.direction])
+                                 .animation_anchors[self.action]
+                                 [self.direction])
             child_frame_anchor = (child_anim_anchor
                                   .get_anchor_point('head_anchor',
                                                     pyganim_frame_index))
@@ -467,13 +470,13 @@ class Walkabout(object):
         """
 
         if len(self.animations) == 1:
-            actions = (constants.Stand,)
-            directions = (constants.Down,)
+            actions = (constants.Action.Stand,)
+            directions = (constants.Direction.Down,)
 
         else:
-            actions = (constants.Walk, constants.Stand)
-            directions = (constants.Up, constants.Down,
-                          constants.Left, constants.Right)
+            actions = (constants.Action.Walk, constants.Action.Stand)
+            directions = (constants.Direction.Up, constants.Direction.Down,
+                          constants.Direction.Left, constants.Direction.Right)
 
         for action in actions:
 
@@ -529,4 +532,3 @@ def load_gif(gif_path):
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
-
