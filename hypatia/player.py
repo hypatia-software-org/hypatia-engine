@@ -8,12 +8,13 @@ Note:
 from hypatia import dialog
 from hypatia import sprites
 from hypatia import constants
+from hypatia import actor
 
 
-class Player(object):
+class Player(actor.Actor):
 
     def __init__(self, walkabout=None):
-        self.walkabout = walkabout or sprites.Walkabout()
+        super(Player, self).__init__(walkabout)
 
     def talk(self, npcs, dialogbox):
         """Attempt to talk in current direction.
