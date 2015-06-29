@@ -1,3 +1,4 @@
+#!/bin/sh
 # Hypatia installation script for Linuxmint and Python 3.4.
 #
 # Forgot which version this was tested in.
