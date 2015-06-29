@@ -5,8 +5,6 @@ Note:
 
 """
 
-from hypatia import dialog
-from hypatia import sprites
 from hypatia import constants
 from hypatia import actor
 
