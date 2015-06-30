@@ -13,9 +13,8 @@ before_install:
 # command to install dependencies
 install:
   - "pip install ."
-  - py.test tests --cov=/usr/local/lib/$(python -c 'import sys; print(".".join(str(x) for x in sys.version_info[0:2]))')/hypatia
 # command to run tests
 script:
-  - py.test tests/ --doctest-modules --pep8 -v --cov hypatia --cov-report term-missing
+  - py.test tests --doctest-modules --pep8 -v --cov-report term-missing --cov=/usr/local/lib/$(python -c 'import sys; print(".".join(str(x) for x in sys.version_info[0:2]))')/hypatia
 after_success:
   - coveralls
