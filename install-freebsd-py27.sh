@@ -1,3 +1,4 @@
+#!/bin/sh
 # Hypatia installation script for FreeBSD.
 #
 # Tested on FreeBSD 10.1-RELEASE-p10. ZSH.
