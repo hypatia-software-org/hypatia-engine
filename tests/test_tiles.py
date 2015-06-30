@@ -10,14 +10,18 @@ Run py.test on this module to assert hypatia.tiles
 is completely functional.
 
 Example:
-  $ py.test tests/
+  Use from project root like so:
+
+  $ py.test tests
 
 """
 
 import os
 
-from hypatia import tiles
 import pygame
+import pytest
+
+from hypatia import tiles
 
 # this script must be ran from project root
 os.chdir("demo")
@@ -65,9 +69,14 @@ def test_tile():
 
 
 def test_tilesheet():
-    """Tests Tilesheet() from tiles.py"""
+    """Tests Tilesheet() from tiles.py.
 
-    tilesheet_name = 'debug'
+    Note:
+      We use the 'debug' resources for predictable output. Could
+      be a lot more thorough.
+
+    """
+
     tilesheet = tiles.Tilesheet.from_name('debug')
     tile_width, tile_height = tilesheet.tile_size
     tilesheet_width_in_tiles = (tilesheet.surface.get_rect().width /
@@ -75,6 +84,37 @@ def test_tilesheet():
     tilesheet_height_in_tiles = (tilesheet.surface.get_rect().height /
                                  tile_height)
 
+    # Assert the number of tiles consisting the tilesheet is the
+    # product of its width and height in tiles.
     assert (len(tilesheet.tiles) == (tilesheet_width_in_tiles *
                                      tilesheet_height_in_tiles))
+
+    # Assert a known tile's properties to be impassable, as tile #99
+    # in the debug tilesheet is defined as impassable.
     assert tilesheet[99].flags == set(['impass_all'])
+
+    # test tile animations
+
+    # The debug tilesheet has three animated tiles. Chained water
+    # animation, a waterfall which uses cycle palette effect, and
+    # a chained torch animation.
+    assert len(tilesheet.animated_tiles) == 3
+
+    # Assert known animated tiles by the PROPER id. The proper ID is
+    # either its ID, or the ID of the first tile in a chain animation.
+    assert 29 in tilesheet.animated_tiles  # the water tile chain
+    assert 21 in tilesheet.animated_tiles  # cycle effect waterfall
+    assert 60 in tilesheet.animated_tiles  # torch
+
+    # Assure that invalid tile IDs raise a BadTileID
+    with pytest.raises(tiles.BadTileID):
+        # tile #999 does not exist in the debug tilesheet
+        tilesheet[999]
+
+
+def test_tilemap():
+    """Test the Tilemap class from the tiles module.
+
+    """
+
+    pass
