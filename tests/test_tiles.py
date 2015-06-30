@@ -10,14 +10,18 @@ Run py.test on this module to assert hypatia.tiles
 is completely functional.
 
 Example:
-  $ py.test tests/
+  Use from project root like so:
+
+  $ py.test tests
 
 """
 
 import os
 
-from hypatia import tiles
 import pygame
+import pytest
+
+from hypatia import tiles
 
 # this script must be ran from project root
 os.chdir("demo")
@@ -90,13 +94,18 @@ def test_tilesheet():
 
     # test tile animations
 
-    # The debug tilesheet has two animated tiles. One is animated
-    # through chaining, the other is animated through the palette
-    # cycle effect.
-    assert len(tilesheet.tile_animations) == 2
+    # The debug tilesheet has three animated tiles. Chained water
+    # animation, a waterfall which uses cycle palette effect, and
+    # a chained torch animation.
+    assert len(tilesheet.animated_tiles) == 3
 
     # Assert known animated tiles by the PROPER id. The proper ID is
     # either its ID, or the ID of the first tile in a chain animation.
-    assert 29 in tilesheet.tile_animations  # the water tile chain
-    assert 21 in tilesheet.tile_animations  # cycle effect waterfall
+    assert 29 in tilesheet.animated_tiles  # the water tile chain
+    assert 21 in tilesheet.animated_tiles  # cycle effect waterfall
+    assert 60 in tilesheet.animated_tiles  # torch
 
+    # Assure that invalid tile IDs raise a BadTileID
+    with pytest.raises(tiles.BadTileID):
+        # tile #999 does not exist in the debug tilesheet
+        tilesheet[999]

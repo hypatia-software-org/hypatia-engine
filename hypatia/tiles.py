@@ -40,24 +40,22 @@ import pyganim
 from hypatia import render
 
 
-class BadTileName(Exception):
-    """TileSwatch: non-existant tile name referenced. Inform the user
-    of which tile name was attempted in vain
+class BadTileID(Exception):
+    """Tilesheet: tile was referenced by an ID which does not exist.
 
     Args:
-      swatch_name (str): the name of the swatch used, whereas a
-        lookup for bad_tile_name was performed, but raised KeyError
-      bad_tile_name (str): the tile name which was looked up, but
-        didn't exist/have a corresponding value in swatch.
+      bad_tile_id (int): the tile id referenced which does not actually
+        exist in a Tilesheet.
 
     Attributes:
-      message: printed error message; prints the tile name attempted
+      bad_tile_id (int): the tile ID referenced which does not exist.
 
     """
 
-    def __init__(self, swatch_name, bad_tile_name):
-        message = ('TileSwatch: no tile by name "%s"' % bad_tile_name)
-        super(BadTileName, self).__init__(message)
+    def __init__(self, bad_tile_id):
+        message = ('no tile by id #%d' % bad_tile_id)
+        super(BadTileID, self).__init__(message)
+        self.bad_tile_id = bad_tile_id
 
 
 class TileMap(object):
@@ -294,8 +292,29 @@ class TileMap(object):
 
 
 class Tilesheet(object):
+    """An image consisting of uniformly sized squares called "tiles."
+
+    Attributes:
+      surface (pygame.Surface): --
+      tiles (tuple/list?): --
+      tile_size (tuple): (x, y) pixel dimensions of the tiles which
+        comprise the Tilesheet surface.
+      animated_tiles (dict): tile_id -> pyganimation
+
+    """
 
     def __init__(self, surface, tiles, tile_size, animated_tiles=None):
+        """
+
+        Args:
+          surface (pygame.Surface): --
+          tiles (list?): --
+          tile_size (tuple): (x, y) pixel dimensions of the tiles which
+            comprise the Tilesheet surface.
+          animated_tiles (dict): tile_id -> pyganimation
+
+        """
+
         self.surface = surface
         self.tiles = tiles
         self.tile_size = tile_size
@@ -307,9 +326,9 @@ class Tilesheet(object):
 
             return self.tiles[tile_id]
 
-        except KeyError:
+        except IndexError:
 
-            raise BadTileName(self.name, tile_id)
+            raise BadTileID(tile_id)
 
     @classmethod
     def from_name(self, tilesheet_name):
