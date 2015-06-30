@@ -15,6 +15,6 @@ install:
   - "pip install ."
 # command to run tests
 script:
-  - py.test tests --doctest-modules --pep8 -v --cov-report term-missing --cov=/usr/local/lib/python$(python -c 'import sys; print(".".join(str(x) for x in sys.version_info[0:2]))')/site-packages/hypatia
+  - py.test tests --doctest-modules --pep8 -v --cov-report term-missing --cov=/usr/local/lib/python$(python -c 'import sys; print(".".join(str(x) for x in sys.version_info[0:2]))')/site-packages/hypatia_engine
 after_success:
   - coveralls
