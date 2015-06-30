@@ -65,9 +65,13 @@ def test_tile():
 
 
 def test_tilesheet():
-    """Tests Tilesheet() from tiles.py"""
+    """Tests Tilesheet() from tiles.py.
 
-    tilesheet_name = 'debug'
+    Note:
+      We use the 'debug' resources for predictable output.
+
+    """
+
     tilesheet = tiles.Tilesheet.from_name('debug')
     tile_width, tile_height = tilesheet.tile_size
     tilesheet_width_in_tiles = (tilesheet.surface.get_rect().width /
@@ -75,6 +79,24 @@ def test_tilesheet():
     tilesheet_height_in_tiles = (tilesheet.surface.get_rect().height /
                                  tile_height)
 
+    # Assert the number of tiles consisting the tilesheet is the
+    # product of its width and height in tiles.
     assert (len(tilesheet.tiles) == (tilesheet_width_in_tiles *
                                      tilesheet_height_in_tiles))
+
+    # Assert a known tile's properties to be impassable, as tile #99
+    # in the debug tilesheet is defined as impassable.
     assert tilesheet[99].flags == set(['impass_all'])
+
+    # test tile animations
+
+    # The debug tilesheet has two animated tiles. One is animated
+    # through chaining, the other is animated through the palette
+    # cycle effect.
+    assert len(tilesheet.tile_animations) == 2
+
+    # Assert known animated tiles by the PROPER id. The proper ID is
+    # either its ID, or the ID of the first tile in a chain animation.
+    assert 29 in tilesheet.tile_animations  # the water tile chain
+    assert 21 in tilesheet.tile_animations  # cycle effect waterfall
+
