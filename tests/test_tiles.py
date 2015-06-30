@@ -72,7 +72,8 @@ def test_tilesheet():
     """Tests Tilesheet() from tiles.py.
 
     Note:
-      We use the 'debug' resources for predictable output.
+      We use the 'debug' resources for predictable output. Could
+      be a lot more thorough.
 
     """
 
@@ -109,3 +110,11 @@ def test_tilesheet():
     with pytest.raises(tiles.BadTileID):
         # tile #999 does not exist in the debug tilesheet
         tilesheet[999]
+
+
+def test_tilemap():
+    """Test the Tilemap class from the tiles module.
+
+    """
+
+    pass
