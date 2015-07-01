@@ -13,8 +13,6 @@ about tiles (tile properties).
 
 For more information see: http://en.wikipedia.org/wiki/Tile_engine
 
-Important equation: (width_in_tiles * y) + x
-
 """
 
 import os

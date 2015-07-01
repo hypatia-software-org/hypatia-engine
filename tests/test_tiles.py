@@ -17,6 +17,8 @@ Example:
 """
 
 import os
+import zipfile
+from io import BytesIO
 
 import pygame
 import pytest
@@ -117,4 +119,17 @@ def test_tilemap():
 
     """
 
-    pass
+    with open('resources/scenes/debug/tilemap.txt') as f:
+        map_string = f.read()
+
+    tilemap = tiles.TileMap.from_string(map_string)
+    tilemap_tilesheet = pygame.PixelArray(tilemap.tilesheet.surface)
+
+    with zipfile.ZipFile('resources/tilesheets/debug.zip') as zip:
+        debug_tilesheet = BytesIO(zip.open('tilesheet.png').read())
+
+    debug_tilesheet = pygame.image.load(debug_tilesheet)
+    debug_tilesheet = pygame.PixelArray(debug_tilesheet)
+
+    assert debug_tilesheet == tilemap_tilesheet
+    
