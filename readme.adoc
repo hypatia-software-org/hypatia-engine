@@ -12,6 +12,8 @@ image:http://lillian-lemmer.github.io/hypatia/media/recordings/2015-06-28-develo
 
 Hypatia is a labor of love, permissively licensed, and crafted by Lillian Lemmer. Read more about Hypatia on link:https://github.com/lillian-lemmer/hypatia/wiki/[the official Hypatia project wiki]. If you're curious about the creator, the wiki has an link:http://github.com/lillian-lemmer/hypatia/wiki/About-the-Creator[about the creator of Hypatia] page.
 
+It's also worth noting that while link:https://github.com/lillian-lemmer/hypatia/wiki/Platform-Support[Hypatia is a cross-platform project (Windows, Mac, Linux, BSD), it puts FreeBSD development first].
+
 == Dive in without any programming
 
 The included demo allows you to mess with all of its resources (see the +resources+ directory!). With it you can:
