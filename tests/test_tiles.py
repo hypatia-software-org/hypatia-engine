@@ -123,13 +123,7 @@ def test_tilemap():
         map_string = f.read()
 
     tilemap = tiles.TileMap.from_string(map_string)
-    tilemap_tilesheet = pygame.PixelArray(tilemap.tilesheet.surface)
 
-    with zipfile.ZipFile('resources/tilesheets/debug.zip') as zip:
-        debug_tilesheet = BytesIO(zip.open('tilesheet.png').read())
-
-    debug_tilesheet = pygame.image.load(debug_tilesheet)
-    debug_tilesheet = pygame.PixelArray(debug_tilesheet)
-
-    assert debug_tilesheet == tilemap_tilesheet
-    
+    # there are x impassable rects in the debug tilemap
+    assert len(tilemap.impassable_rects) == 208
+   
