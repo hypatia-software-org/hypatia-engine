@@ -9,6 +9,7 @@ __copyright__  = "Copyright 2015 Lillian Lemmer"
 __credits__    = ["Lillian Lemmer"]
 __license__    = "MIT"
 __maintainer__ = __author__
+__site__       = "http://lillian-lemmer.github.io/hypatia/"
 __email__      = "lillian.lynn.lemmer@gmail.com"
 __status__     = "Development"
 __version__    = "0.2.8"
