@@ -13,3 +13,9 @@ __site__       = "http://lillian-lemmer.github.io/hypatia/"
 __email__      = "lillian.lynn.lemmer@gmail.com"
 __status__     = "Development"
 __version__    = "0.2.8"
+
+__contributors__ = [
+    "Lillian Lemmer",
+    "Brian Houston Morrow",
+    "Eric James Michael Ritz"
+]
