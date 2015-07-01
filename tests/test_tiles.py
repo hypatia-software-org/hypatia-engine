@@ -126,4 +126,3 @@ def test_tilemap():
 
     # there are x impassable rects in the debug tilemap
     assert len(tilemap.impassable_rects) == 208
-   
