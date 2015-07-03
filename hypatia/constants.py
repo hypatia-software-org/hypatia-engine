@@ -13,15 +13,19 @@ parameters.
 Examples:
   >>> import sprites
   >>> sprite = sprites.Walkabout()
-  >>> sprite.animations[Walk][Right]
+  >>> sprite.animations[Action.Walk][Direction.Right]
   <Animation Object>
 
 """
 
 from enum import Enum
 
+
 class Direction(Enum):
-    """Specific to movement of a sprite/surface."""
+    """Specific to movement of a sprite/surface.
+
+    """
+
     Up = 1
     Down = 2
     Left = 3
@@ -29,5 +33,9 @@ class Direction(Enum):
 
 
 class Action(Enum):
+    """Specific to movement of a sprite/surface.
+
+    """
+
     Walk = 1
     Stand = 2

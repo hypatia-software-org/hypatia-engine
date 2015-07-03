@@ -23,7 +23,6 @@ from pygame.locals import *
 from hypatia import constants
 
 
-
 class Screen(object):
     """Everything blits to screen!
 
