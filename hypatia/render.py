@@ -173,6 +173,33 @@ class Viewport(object):
                          )
 
 
+def pil_to_pygame(pil_image, encoding):
+    """Convert PIL Image() to pygame Surface.
+
+    Note:
+      NOT for animations, use Animation() for that!
+    Args:
+      pil_image (Image): image to convert to pygame.Surface().
+      encoding (str): image encoding, e.g., RGBA
+
+    Returns:
+      pygame.Surface: the converted image
+
+    Example:
+       >>> pil_to_pygame(gif, "RGBA")
+       <pygame.Surface>
+
+    """
+
+    image_as_string = pil_image.convert('RGBA').tostring()
+
+    return pygame.image.fromstring(
+                                   image_as_string,
+                                   pil_image.size,
+                                   'RGBA'
+                                  )
+
+
 # should go into sprites or effects
 def palette_cycle(surface):
     """get_palette is not sufficient; it generates superflous colors.
