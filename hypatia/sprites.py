@@ -29,7 +29,6 @@ from hypatia import render
 from hypatia import constants
 
 
-
 class BadWalkabout(Exception):
     """The supplied directory has no files which match *.gif.
 

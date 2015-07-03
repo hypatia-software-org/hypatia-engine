@@ -42,7 +42,6 @@ from hypatia import sprites
 from hypatia import constants
 
 
-
 class Game(object):
     """Simulates the interaction between game components."""
 

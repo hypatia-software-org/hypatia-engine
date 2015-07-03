@@ -20,22 +20,13 @@ import sys
 import glob
 import zlib
 import string
-import zipfile
 import itertools
-from io import BytesIO
-
-try:
-    import ConfigParser as configparser
-    from cStringIO import StringIO
-
-except ImportError:
-    import configparser
-    from io import StringIO
 
 import pygame
 import pyganim
 
 from hypatia import render
+from hypatia import util
 
 
 class BadTileID(Exception):
@@ -91,7 +82,7 @@ class TileMap(object):
         """
 
         # create the layer images and tile properties
-        tilesheet = Tilesheet.from_name(tilesheet_name)
+        tilesheet = Tilesheet.from_resources(tilesheet_name)
         first_layer = tile_ids[0]
 
         width_tiles = len(first_layer[0])
@@ -130,7 +121,7 @@ class TileMap(object):
                         tiles.append(tile)
 
                     # -1 is air/nothing
-                    if tile.id == -1:
+                    if tile.tilesheet_id == -1:
 
                         continue
 
@@ -139,8 +130,9 @@ class TileMap(object):
                     new_layer.blit(tile.subsurface, tile_position)
 
                     # is this tile an animation?
-                    if tile.id in tilesheet.animated_tiles:
-                        animated_tile = tilesheet.animated_tiles[tile.id]
+                    if tile.tilesheet_id in tilesheet.animated_tiles:
+                        animated_tile = (tilesheet.
+                                         animated_tiles[tile.tilesheet_id])
                         animation_info = (animated_tile, tile_position)
                         animated_tile_stack[z].add(animation_info)
 
@@ -233,7 +225,6 @@ class TileMap(object):
 
         return None
 
-    # NOTE: BROKEN, DOES NOT OUTPUT SCENE NAME FIRST
     def to_string(self, separator=' '):
         """Create the user-unfriendly string for the tilemap.
 
@@ -245,7 +236,7 @@ class TileMap(object):
         output_string = ''
 
         # create map layers
-        layers = []
+        layers = [self.tilesheet.name + '\n']
 
         for layer in self._tile_ids:
             layer_lines = []
@@ -293,26 +284,29 @@ class Tilesheet(object):
     """An image consisting of uniformly sized squares called "tiles."
 
     Attributes:
+      name (str): --
       surface (pygame.Surface): --
-      tiles (tuple/list?): --
+      tiles (iter): --
       tile_size (tuple): (x, y) pixel dimensions of the tiles which
         comprise the Tilesheet surface.
       animated_tiles (dict): tile_id -> pyganimation
 
     """
 
-    def __init__(self, surface, tiles, tile_size, animated_tiles=None):
+    def __init__(self, name, surface, tiles, tile_size, animated_tiles=None):
         """
 
         Args:
+          name (str): --
           surface (pygame.Surface): --
-          tiles (list?): --
+          tiles (iter): --
           tile_size (tuple): (x, y) pixel dimensions of the tiles which
             comprise the Tilesheet surface.
           animated_tiles (dict): tile_id -> pyganimation
 
         """
 
+        self.name = name
         self.surface = surface
         self.tiles = tiles
         self.tile_size = tile_size
@@ -329,7 +323,7 @@ class Tilesheet(object):
             raise BadTileID(tile_id)
 
     @classmethod
-    def from_name(self, tilesheet_name):
+    def from_resources(cls, tilesheet_name):
         """Create a Tilesheet from a name, corresponding to a path
         pointing to a tilesheet zip archive.
 
@@ -344,24 +338,14 @@ class Tilesheet(object):
         """
 
         # path to the zip containing tilesheet.png and tilesheet.ini
+        resource = util.Resource('tilesheets', tilesheet_name)
         zip_path = os.path.join(
                                 'resources',
                                 'tilesheets',
                                 tilesheet_name + '.zip'
                                )
-
-        with zipfile.ZipFile(zip_path) as zip:
-            zip_png = zip.open('tilesheet.png').read()
-            config_file = zip.open('tilesheet.ini').read()
-
-        png_io = BytesIO(zip_png)
-        tilesheet_surface = pygame.image.load(png_io)
-        config_io = StringIO(config_file.decode('utf-8'))
-        config = configparser.ConfigParser()
-
-        # NOTE: this still works in python 3, though it was
-        # replaced by config.read_file()
-        config.readfp(config_io)
+        tilesheet_surface = pygame.image.load(resource['tilesheet.png'])
+        config = resource['tilesheet.ini']
 
         # build the meta
         flags = {int(k): set(v.split(',')) for k, v in config.items('flags')}
@@ -369,28 +353,18 @@ class Tilesheet(object):
         tile_height = config.getint('meta', 'tile_height')
         tile_size = (tile_width, tile_height)
         tilesheet_width, tilesheet_height = tilesheet_surface.get_size()
-
-        x_positions = range(0, tilesheet_width, tile_width)
-        y_positions = range(0, tilesheet_height, tile_height)
-        topleft_positions = []
-
-        # should use collections product for this duh
-        for y in y_positions:
-
-            for x in x_positions:
-                topleft_positions.append((x, y))
+        tilesheet_width_in_tiles = tilesheet_width // tile_width
+        tilesheet_height_in_tiles = tilesheet_height // tile_height
+        total_tiles = tilesheet_width_in_tiles * tilesheet_height_in_tiles
 
         # tile initialization; buid all the tiles
         tiles = []
 
-        for tile_id, top_left in enumerate(topleft_positions):
-            tile = Tile(
-                        tile_id=tile_id,
+        for tilesheet_id in range(total_tiles):
+            tile = Tile(tilesheet_id=tilesheet_id,
                         tilesheet_surface=tilesheet_surface,
                         tile_size=tile_size,
-                        subsurface_top_left=top_left,
-                        flags=flags.get(tile_id, None)
-                       )
+                        flags=flags.get(tilesheet_id, None))
             tiles.append(tile)
 
         # for effects and animations
@@ -428,8 +402,8 @@ class Tilesheet(object):
                 corresponding_tile = tiles[tile_id].subsurface
                 animated_tiles[tile_id] = effects[effect](corresponding_tile)
 
-        # end
-        return Tilesheet(tilesheet_surface, tiles, tile_size, animated_tiles)
+        return Tilesheet(tilesheet_name, tilesheet_surface,
+                         tiles, tile_size, animated_tiles)
 
 
 class Tile(object):
@@ -437,39 +411,36 @@ class Tile(object):
     tilesheet (reference surface), with meta data.
 
     Attributes:
-      subsurface (pygame.?): the subsurface of the reference_surface
-        which consists this Tile().
-      flags (set): a set of strings, which denote attributes about
-        this tile, e.g., "impass_all."
-      tile_id (int): manually assigned tile identification number.
-      area_on_tilesheet (pygame.Rect): the area this tile consists
-        on the master surface.
 
     """
 
-    def __init__(self, tile_id, tilesheet_surface, tile_size,
-                 subsurface_top_left, flags=None):
-
+    def __init__(self, tilesheet_id, tilesheet_surface, tile_size, flags=None):
         """create subsurface of tilesheet surface using topleft
         position on tilesheet.
 
         Args:
-          tile_id (int): a useful meta attribute.
-          tilesheet_surface (pygame.Surface): tilesheet surface to
-            pick an area from, representing this tile.
-          tile_size (tuple): x, y dimensions of this
-            tilesheet's tiles in pixels
-          subsurface_top_left (tuple): coord (x, y) of the tile's
-            top left corner, relative to the topleft of surface.
-          flags (set): properties belonging to this tile
+          tilesheet_id (int): Index belonging to this Tile in its
+            respective Tilesheet. The tile number on a Tilesheet.
+          tilesheet_surface (Surface): Surface used for
+            creating Tile subsurface.
+          tile_size (tuple): (x, y) where x and y are integers
+            defining the pixel dimensions of a tile.
+          flags (set): Set of strings which acts as attributes, e.g.,
+            "impass_all."
 
         """
 
+        tilesheet_width_in_tiles = (tilesheet_surface.get_size()[0] /
+                                    tile_size[0])
+        top_left_in_tiles = index_to_coord(tilesheet_width_in_tiles,
+                                           tilesheet_id)
+        subsurface_top_left = (top_left_in_tiles[0] * tile_size[0],
+                               top_left_in_tiles[1] * tile_size[1])
         position_rect = pygame.Rect(subsurface_top_left, tile_size)
         self.area_on_tilesheet = position_rect
         self.subsurface = tilesheet_surface.subsurface(position_rect)
         self.flags = flags or set()
-        self.id = tile_id
+        self.tilesheet_id = tilesheet_id
         self.size = tile_size
 
 
@@ -490,6 +461,31 @@ def coord_to_index(width, x, y):
     """
 
     return (width * y) + x
+
+
+def index_to_coord(width, i):
+    """Return the 2D position (x, y) which corresponds to 1D index.
+
+    Examples:
+      If we have a 2D grid like this:
+
+      0 1 2
+      3 4 5
+      6 7 8
+
+      We can assert that element 8 is of the coordinate (2, 2):
+      >>> 2 == index_to_coord(3, 2)
+      True
+
+    """
+
+    if i == 0:
+
+        return (0, 0)
+
+    else:
+
+        return ((i % width), (i // width))
 
 
 if __name__ == "__main__":

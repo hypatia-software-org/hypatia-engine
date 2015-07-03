@@ -25,6 +25,7 @@ alia, a common example being statistics like hit-points.
 from hypatia import sprites
 from hypatia import constants
 
+
 class Actor(object):
     """The base class for any entity which can perform actions.
 
@@ -52,25 +53,32 @@ class Actor(object):
         """Constructs a new Actor.
 
         Keyword arguments:
-        
+
         walkabout -- An instance of sprites.Walkabout(), which is then
         accessible via the 'walkabout' property.  This argument is
         optional and defaults to new instance of sprites.Walkabout().
 
         """
+
         self.walkabout = walkabout or sprites.Walkabout()
 
         @property
         def direction(self):
+
             return self.walkabout.direction
 
         @direction.setter
         def direction(self, new_direction):
+
             if not isinstance(new_direction, constants.Direction):
-                raise AttributeError("Direction must be a valid constants.Direction value")
+
+                raise AttributeError(("Direction must be a valid "
+                                      "constants.Direction value"))
+
             else:
                 self.walkabout.direction = new_direction
 
         @direction.deleter
         def direction(self):
+
             raise TypeError("Cannot delete the 'direction' of an Actor")
