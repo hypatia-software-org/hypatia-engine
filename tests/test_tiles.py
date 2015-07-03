@@ -17,6 +17,8 @@ Example:
 """
 
 import os
+import zipfile
+from io import BytesIO
 
 import pygame
 import pytest
@@ -117,4 +119,10 @@ def test_tilemap():
 
     """
 
-    pass
+    with open('resources/scenes/debug/tilemap.txt') as f:
+        map_string = f.read()
+
+    tilemap = tiles.TileMap.from_string(map_string)
+
+    # there are 208 impassable rects in the debug tilemap
+    assert len(tilemap.impassable_rects) == 208
