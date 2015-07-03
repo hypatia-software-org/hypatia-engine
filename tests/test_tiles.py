@@ -138,9 +138,12 @@ def test_tilemap():
     """
 
     with open('resources/scenes/debug/tilemap.txt') as f:
-        map_string = f.read()
+        map_string = f.read().strip()
 
     tilemap = tiles.TileMap.from_string(map_string)
 
     # there are 208 impassable rects in the debug tilemap
     assert len(tilemap.impassable_rects) == 208
+
+    # make sure from string/to string works reproducibly
+    assert map_string == tilemap.to_string()

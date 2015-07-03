@@ -236,13 +236,15 @@ class TileMap(object):
         output_string = ''
 
         # create map layers
-        layers = [self.tilesheet.name + '\n']
+        layers = []
+        max_digits = len(str(len(self.tilesheet.tiles))) - 1
+        id_format = '%0' + str(max_digits) + 'd'
 
         for layer in self._tile_ids:
             layer_lines = []
 
             for row in layer:
-                row_string = separator.join([str(i) for i in row])
+                row_string = separator.join([id_format % i for i in row])
 
                 layer_lines.append(row_string)
 
@@ -252,7 +254,7 @@ class TileMap(object):
         layers_string = '\n\n'.join(layers)
         output_string += layers_string
 
-        return output_string
+        return self.tilesheet.name + '\n' + output_string
 
     @classmethod
     def from_string(cls, map_string, separator=' '):
