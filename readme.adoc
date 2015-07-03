@@ -1,4 +1,4 @@
-image:https://api.travis-ci.org/lillian-lemmer/hypatia.png["Travis CI",link="https://travis-ci.org/lillian-lemmer/hypatia"] image:https://coveralls.io/repos/lillian-lemmer/hypatia/badge.svg["Coveralls",link="https://coveralls.io/r/lillian-lemmer/hypatia"] image:https://d3s6mut3hikguw.cloudfront.net/github/lillian-lemmer/hypatia/badges/gpa.svg["Code Climate",link="https://codeclimate.com/github/lillian-lemmer/hypatia"]
+image:https://api.travis-ci.org/lillian-lemmer/hypatia.png["Travis CI",link="https://travis-ci.org/lillian-lemmer/hypatia"] image:https://coveralls.io/repos/lillian-lemmer/hypatia/badge.svg["Coveralls",link="https://coveralls.io/r/lillian-lemmer/hypatia"] image:https://d3s6mut3hikguw.cloudfront.net/github/lillian-lemmer/hypatia/badges/gpa.svg["Code Climate",link="https://codeclimate.com/github/lillian-lemmer/hypatia"] image:http://badge.fury.io/py/hypatia_engine["PyPi Version",link="https://pypi.python.org/pypi/hypatia_engine/"]
 
 image:http://lillian-lemmer.github.io/hypatia/media/logos/logo-transparent-300x59.png["Hypatia 0.2"]
 
