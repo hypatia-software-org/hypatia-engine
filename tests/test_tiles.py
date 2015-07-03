@@ -1,4 +1,4 @@
-# py.test/test_tiles.py
+# tests/test_tiles.py
 # Lillian Lemmer <lillian.lynn.lemmer@gmail.com>
 #
 # This module is part of Hypatia and is released under the
