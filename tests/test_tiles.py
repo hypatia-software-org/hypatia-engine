@@ -17,6 +17,8 @@ Example:
 """
 
 import os
+import zipfile
+from io import BytesIO
 
 import pygame
 import pytest
@@ -28,7 +30,7 @@ os.chdir("demo")
 
 
 def test_coord_to_index():
-    """Tests the coord_to_index lambda functoin from tiles.py"""
+    """Tests the coord_to_index function from tiles.py"""
 
     # coords_to_index(row_width, x, y)
 
@@ -47,25 +49,43 @@ def test_coord_to_index():
     assert tiles.coord_to_index(5, 4, 2) == 14
 
 
+def test_index_to_coord():
+    """Tests the index_to_coord function from tiles.py"""
+
+    #    0  1  2
+    # -----------
+    # 0| 00 01 02
+    # 1| 03 04 05
+    # 2| 06 07 08
+    assert tiles.index_to_coord(3, 2) == (2, 0)
+
+    #    0  1  2  3  4
+    # -----------------
+    # 0| 00 01 02 03 04
+    # 1| 05 06 07 08 09
+    # 2| 10 11 12 13 14
+    assert tiles.index_to_coord(5, 11) == (1, 2)
+
+
 def test_tile():
     """Tests Tile() from tiles.py"""
 
     # first let's be clear about our variables
     faux_tilesheet = pygame.Surface((800, 600))
-    tile_id = 1
     tile_size = (10, 10)
+    tilesheet_id = 16
     tile_flags = set(['impass_all'])
-    subsurface_topleft = (20, 30)
-    # ... create tile
-    tile = tiles.Tile(tile_id, faux_tilesheet, tile_size,
-                      subsurface_topleft, tile_flags)
+    tile = tiles.Tile(tilesheet_id=tilesheet_id,
+                      tilesheet_surface=faux_tilesheet,
+                      tile_size=tile_size,
+                      flags=tile_flags)
 
     # test tile
     assert tile.size == tile_size
-    assert tile.id == tile_id
+    assert tile.tilesheet_id == tilesheet_id
     assert tile.flags == tile_flags
     assert tile.subsurface.get_rect().topleft == (0, 0)
-    assert tile.area_on_tilesheet.topleft == (20, 30)
+    assert tile.area_on_tilesheet.topleft == (160, 0)
 
 
 def test_tilesheet():
@@ -77,7 +97,7 @@ def test_tilesheet():
 
     """
 
-    tilesheet = tiles.Tilesheet.from_name('debug')
+    tilesheet = tiles.Tilesheet.from_resources('debug')
     tile_width, tile_height = tilesheet.tile_size
     tilesheet_width_in_tiles = (tilesheet.surface.get_rect().width /
                                 tile_width)
@@ -117,4 +137,10 @@ def test_tilemap():
 
     """
 
-    pass
+    with open('resources/scenes/debug/tilemap.txt') as f:
+        map_string = f.read()
+
+    tilemap = tiles.TileMap.from_string(map_string)
+
+    # there are 208 impassable rects in the debug tilemap
+    assert len(tilemap.impassable_rects) == 208

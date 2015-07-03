@@ -14,7 +14,7 @@ to clear your dist when finished.
 from setuptools import setup
 
 
-exec(open('hypatia/version.py').read())
+exec(open('hypatia/__init__.py').read())
 setup(name='hypatia_engine',
       version=__version__,
       description='2D action adventure game engine',
