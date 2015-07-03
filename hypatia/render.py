@@ -173,45 +173,13 @@ class Viewport(object):
                          )
 
 
-def pil_to_pygame(pil_image, encoding):
-    """Convert PIL Image() to pygame Surface.
-
-    Note:
-      NOT for animations, use Animation() for that!
-
-    Args:
-      pil_image (Image): image to convert to pygame.Surface().
-      encoding (str): image encoding, e.g., RGBA
-
-    Returns:
-      pygame.Surface: the converted image
-
-    Example:
-       >>> pil_to_pygame(gif, "RGBA")
-       <pygame.Surface>
-
-    """
-
-    image_as_string = pil_image.convert('RGBA').tostring()
-
-    return pygame.image.fromstring(
-                                   image_as_string,
-                                   pil_image.size,
-                                   'RGBA'
-                                  )
-
-
-# HUGELY IMPORTANT NOTE TO GO SOMEWHERE:
-# YUO CANNOT MIX SURFACES OF VARYING BITDEPTHS/SETTINGS.
-# IF YOU TRY TO DRAW AN 8 BIT IMAGE ON A 32 BIT SURFACE IT
-# WON'T SHOW UP
-
-
 # should go into sprites or effects
 def palette_cycle(surface):
     """get_palette is not sufficient; it generates superflous colors.
 
-    surface (pygame.Surface): 8 bit surface
+    Note:
+      Need to see if I can convert 32bit alpha to 8 bit temporarily,
+      to be converted back at end of palette/color manipulations.
 
     """
 
