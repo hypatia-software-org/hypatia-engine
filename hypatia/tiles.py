@@ -485,7 +485,7 @@ def index_to_coord(width, i):
 
     else:
 
-        return ((i % width), (i / width))
+        return ((i % width), (i // width))
 
 
 if __name__ == "__main__":
