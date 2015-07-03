@@ -193,7 +193,7 @@ class TileMap(object):
 
         """
 
-        tile_width, tile_height = self.layer_images[0].get_size()
+        tile_width, tile_height = self.tilesheet.tile_size
         pixel_x, pixel_y = coord
         tile_x = pixel_x // tile_width
         tile_y = pixel_y // tile_height

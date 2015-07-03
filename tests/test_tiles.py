@@ -147,3 +147,8 @@ def test_tilemap():
 
     # make sure from string/to string works reproducibly
     assert map_string == tilemap.to_string()
+
+    # fetching tile info
+    assert tilemap[(2, 4)] is tilemap.tilesheet[11]
+    assert tilemap.get_info((2 * 16, 4 * 16)) is tilemap.tilesheet[11]
+    assert tilemap.get_info((2 * 16, 4 * 16)) is tilemap[(2, 4)]
