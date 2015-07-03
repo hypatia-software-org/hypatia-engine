@@ -20,3 +20,4 @@ import pygame
 import pytest
 
 from hypatia import render
+
