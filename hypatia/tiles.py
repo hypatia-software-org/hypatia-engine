@@ -353,8 +353,8 @@ class Tilesheet(object):
         tile_height = config.getint('meta', 'tile_height')
         tile_size = (tile_width, tile_height)
         tilesheet_width, tilesheet_height = tilesheet_surface.get_size()
-        tilesheet_width_in_tiles = tilesheet_width / tile_width
-        tilesheet_height_in_tiles = tilesheet_height / tile_height
+        tilesheet_width_in_tiles = tilesheet_width // tile_width
+        tilesheet_height_in_tiles = tilesheet_height // tile_height
         total_tiles = tilesheet_width_in_tiles * tilesheet_height_in_tiles
 
         # tile initialization; buid all the tiles
