@@ -16,7 +16,6 @@ Example:
 
 """
 
-import os
 import zipfile
 from io import BytesIO
 
@@ -24,9 +23,6 @@ import pygame
 import pytest
 
 from hypatia import tiles
-
-# this script must be ran from project root
-os.chdir("demo")
 
 
 def test_coord_to_index():

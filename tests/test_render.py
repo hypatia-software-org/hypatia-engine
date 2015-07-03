@@ -16,13 +16,7 @@ Example:
 
 """
 
-import os
-
 import pygame
 import pytest
 
 from hypatia import render
-
-# this script must be ran from project root
-os.chdir("demo")
-
