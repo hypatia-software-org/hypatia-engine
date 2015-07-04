@@ -12,9 +12,9 @@ parameters.
 
 Examples:
   >>> import sprites
-  >>> sprite = sprites.Walkabout()
+  >>> sprite = sprites.Walkabout('debug')
   >>> sprite.animations[Action.Walk][Direction.Right]
-  <Animation Object>
+  <pyganim.PygAnimation object at 0x...>
 
 """
 
