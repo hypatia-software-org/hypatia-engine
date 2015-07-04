@@ -7,3 +7,5 @@ I had to do the following to get setup:
   . +sphinx-apidoc -f -F -o sphinx-source/ ../hypatia+
   . edit +config.py+ and add +'sphinxcontrib.napoleon'+ to the +extensions+ list
   . +sphinx-build sphinx-source api+
+
+Then I added a +.nojekyll+ to the +api+ directory, so I can use directories beginning with an underscore.
