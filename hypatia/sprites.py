@@ -346,7 +346,7 @@ class Walkabout(object):
         Example:
           >>> walkabout = Walkabout('debug')
           >>> walkabout.current_animation()
-          <pyganim.PygAnimation object at 0x8...>
+          <pyganim.PygAnimation object at 0x...>
 
         """
 
