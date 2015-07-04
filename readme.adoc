@@ -79,7 +79,7 @@ For more info on installation, checkout the link:https://github.com/lillian-lemm
 
 == Resources
 
-All of the documentation is on the link:https://github.com/lillian-lemmer/hypatia/wiki/[GitHub Wiki].
+Most of the documentation is on the link:https://github.com/lillian-lemmer/hypatia/wiki/[GitHub Wiki]. link:http://lillian-lemmer.github.io/hypatia/api/[The API docs are on the website].
 
 For people, checkout the link:https://github.com/lillian-lemmer/hypatia/wiki/Profiles[socialization and contact methods for the Hypatia project].
 
