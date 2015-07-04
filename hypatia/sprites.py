@@ -105,9 +105,10 @@ class AnimAnchors(object):
           isn't defined for frame.
 
         Example:
-          >>> animation_anchors = AnimAnchors('default.gif')
+          >>> path = 'resources/walkabouts/debug/walk_up.gif'
+          >>> animation_anchors = AnimAnchors(path)
           >>> animation_anchors.get_anchor_point('head_anchor', 0)
-          (2, 3)
+          <hypatia.sprites.AnchorPoint object at 0x...>
 
         """
 
@@ -235,7 +236,8 @@ class Walkabout(object):
 
         Example:
           >>> hat = Walkabout('hat')
-          >>> walkabout = Walkabout(position=(44, 55), children=[hat])
+          >>> Walkabout('debug', position=(44, 55), children=[hat])
+          <hypatia.sprites.Walkabout object at 0x...>
 
         """
 
@@ -325,9 +327,9 @@ class Walkabout(object):
           dict: sprites associated with action supplied (key)
 
         Examples:
-          >>> walkabout = Walkabout()
+          >>> walkabout = Walkabout('debug')
           >>> walkabout[constants.Action.Walk][constants.Direction.Up]
-          <PygAnim Object>
+          <pyganim.PygAnimation object at 0x...>
 
         """
 
@@ -342,9 +344,9 @@ class Walkabout(object):
             current action and direction.
 
         Example:
-          >>> walkabout = Walkabout()
+          >>> walkabout = Walkabout('debug')
           >>> walkabout.current_animation()
-          <PygAnim Object>
+          <pyganim.PygAnimation object at 0x...>
 
         """
 
@@ -492,8 +494,8 @@ def load_gif(gif_path):
         referenced in gif_path.
 
     Example:
-      >>> load_gif('default.gif')
-      <PygAnim Object>
+      >>> load_gif('resources/walkabouts/debug/walk_up.gif')
+      <pyganim.PygAnimation object at 0x...>
 
     """
 

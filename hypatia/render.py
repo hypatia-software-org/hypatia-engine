@@ -99,7 +99,7 @@ class Viewport(object):
           size (tuple): (int x, int y) pixel dimensions of viewport.
 
         Example:
-          >>> viewport = Viewport(master_surface, (320, 240))
+          >>> viewport = Viewport((320, 240))
 
         """
 
@@ -162,7 +162,9 @@ class Viewport(object):
             by viewport coordinates.
 
         Example:
-          >>> viewport.blit(tilemap.layer_images[0])
+          >>> viewport = Viewport((100, 100))
+          >>> surface = pygame.Surface((800, 600))
+          >>> viewport.blit(surface)
 
         """
 
@@ -178,7 +180,6 @@ def pil_to_pygame(pil_image, encoding):
 
     Note:
       NOT for animations, use Animation() for that!
-
     Args:
       pil_image (Image): image to convert to pygame.Surface().
       encoding (str): image encoding, e.g., RGBA
@@ -187,8 +188,10 @@ def pil_to_pygame(pil_image, encoding):
       pygame.Surface: the converted image
 
     Example:
+       >>> from PIL import Image
+       >>> gif = Image.open('resources/walkabouts/debug/walk_up.gif')
        >>> pil_to_pygame(gif, "RGBA")
-       <pygame.Surface>
+       <Surface(6x8x32 SW)>
 
     """
 
@@ -201,17 +204,13 @@ def pil_to_pygame(pil_image, encoding):
                                   )
 
 
-# HUGELY IMPORTANT NOTE TO GO SOMEWHERE:
-# YUO CANNOT MIX SURFACES OF VARYING BITDEPTHS/SETTINGS.
-# IF YOU TRY TO DRAW AN 8 BIT IMAGE ON A 32 BIT SURFACE IT
-# WON'T SHOW UP
-
-
 # should go into sprites or effects
 def palette_cycle(surface):
     """get_palette is not sufficient; it generates superflous colors.
 
-    surface (pygame.Surface): 8 bit surface
+    Note:
+      Need to see if I can convert 32bit alpha to 8 bit temporarily,
+      to be converted back at end of palette/color manipulations.
 
     """
 
