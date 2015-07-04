@@ -1,0 +1,9 @@
+The +sphinx-source+ directory of this project is for Sphinx. I'm using autodoc and Napoleon for Google-style docstrings. See: http://sphinxcontrib-napoleon.readthedocs.org/en/latest/
+
+I had to do the following to get setup:
+
+  . +pkg install py27-sphinx+
+  . +pip install --user sphinxcontrib-napoleon+
+  . +sphinx-apidoc -f -F -o sphinx-source/ ../hypatia+
+  . edit +config.py+ and add +'sphinxcontrib.napoleon'+ to the +extensions+ list
+  . +sphinx-build sphinx-source api+
