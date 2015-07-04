@@ -99,7 +99,7 @@ class Viewport(object):
           size (tuple): (int x, int y) pixel dimensions of viewport.
 
         Example:
-          >>> viewport = Viewport(master_surface, (320, 240))
+          >>> viewport = Viewport((320, 240))
 
         """
 
@@ -162,7 +162,9 @@ class Viewport(object):
             by viewport coordinates.
 
         Example:
-          >>> viewport.blit(tilemap.layer_images[0])
+          >>> viewport = Viewport((100, 100))
+          >>> surface = pygame.Surface((800, 600))
+          >>> viewport.blit(surface)
 
         """
 
@@ -186,8 +188,10 @@ def pil_to_pygame(pil_image, encoding):
       pygame.Surface: the converted image
 
     Example:
+       >>> from PIL import Image
+       >>> gif = Image.open('resources/walkabouts/debug/walk_up.gif')
        >>> pil_to_pygame(gif, "RGBA")
-       <pygame.Surface>
+       <Surface(6x8x32 SW)>
 
     """
 

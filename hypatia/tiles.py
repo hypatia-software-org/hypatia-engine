@@ -76,7 +76,7 @@ class TileMap(object):
 
         Examples:
           Make a 2x2x1 tilemap:
-          >>> tiles = [[0, 0], [0, 0]]
+          >>> tiles = [[[0, 0], [0, 0]]]
           >>> tilemap = TileMap('debug', tiles)
 
         """
@@ -162,9 +162,9 @@ class TileMap(object):
           TileProperties
 
         Examples:
-          >>> tiles = [['default', 'default'], ['default', 'water']]
+          >>> tiles = [[[0, 0], [0, 0]]]
           >>> tilemap = TileMap('debug', tiles)
-          >>> 'impass_all' in tilemap[(1, 1)].properties
+          >>> 'impass_all' in tilemap[(1, 1)].flags
           True
 
         """
@@ -186,9 +186,9 @@ class TileMap(object):
 
         Examples:
           Let's assume 10x10 tiles...
-          >>> tiles = [['default', 'default'], ['default', 'water']]
+          >>> tiles = [[[0, 10], [-1, 4]]]
           >>> tilemap = TileMap('debug', tiles)
-          >>> 'impass_all' in tilemap.get_properties((12, 12)).properties
+          >>> 'impass_all' in tilemap.get_info((12, 12)).flags
           True
 
         """
@@ -476,7 +476,7 @@ def index_to_coord(width, i):
       6 7 8
 
       We can assert that element 8 is of the coordinate (2, 2):
-      >>> 2 == index_to_coord(3, 2)
+      >>> (2, 2) == index_to_coord(3, 8)
       True
 
     """

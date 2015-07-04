@@ -11,7 +11,7 @@ direction and action specifications. These classes are to be passed as
 parameters.
 
 Examples:
-  >>> import sprites
+  >>> from hypatia import sprites
   >>> sprite = sprites.Walkabout('debug')
   >>> sprite.animations[Action.Walk][Direction.Right]
   <pyganim.PygAnimation object at 0x...>
