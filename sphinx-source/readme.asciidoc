@@ -8,4 +8,4 @@ I had to do the following to get setup:
   . edit +config.py+ and add +'sphinxcontrib.napoleon'+ to the +extensions+ list
   . +sphinx-build sphinx-source api+
 
-Then I added a +.nojekyll+ to the +api+ directory, so I can use directories beginning with an underscore.
+Then I added a +.nojekyll+ to the root of the +gh-pages+ branch, so I can use directories beginning with an underscore (which sphinx needs).
