@@ -1,5 +1,12 @@
-Changelog for Hypatia 0.2.13
-============================
+= Changelog
+
+Uses http://keepachangelog.com/ as a guideline.
+
+== [Unreleased] - Unreleased
+
+    * Fancier changelog
+
+== [0.2.13] - 2015-07-05
 
 Hello Lovelies,
 
