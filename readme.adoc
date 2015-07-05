@@ -12,7 +12,16 @@ image:http://lillian-lemmer.github.io/hypatia/media/recordings/2015-06-28-develo
 
 link:https://github.com/lillian-lemmer/hypatia/wiki/Platform-Support[Hypatia is a cross-platform project (Windows, Mac, Linux, BSD), and it puts FreeBSD development first].
 
-Hypatia is a labor of love, link:license.txt[permissively (MIT) licensed], and crafted by link:http://github.com/lillian-lemmer/hypatia/wiki/About-the-Creator[Lillian Lemmer]. Read more about Hypatia on link:https://github.com/lillian-lemmer/hypatia/wiki/[the official Hypatia project wiki].
+Hypatia is a labor of love, link:license.txt[permissively (MIT) licensed], and crafted by link:http://github.com/lillian-lemmer/hypatia/wiki/About-the-Creator[Lillian Lemmer].
+
+More resources:
+
+  * link:https://github.com/lillian-lemmer/hypatia/wiki/[Hypatia Wiki] (great resource for nonprogrammers, too!)
+  * link:https://lillian-lemmer.github.io/hypatia/api[Hypatia API Docs]
+  * For people, checkout the link:[socialization and contact methods for the Hypatia project].
+  * http://lillian-lemmer.github.io/hypatia/[The official Hypatia website]
+  * Official support chat: link:http://webchat.freenode.net/?channels=hypatia[#hypatia on Freenode (webui!)]
+  * You can contact the author via email: lillian.lynn.lemmer@gmail.com, link:https:/twitter.com/LilyLemmer[@LilyLemmer] on Twitter. link:https://github.com/lillian-lemmer/hypatia/wiki/Profiles[There are many ways to socialize with the developers and other enthusiasts].
 
 == Dive in without any programming
 
@@ -46,16 +55,6 @@ To get setup quickly and start tinkering around with the demo, simply issue the 
   - +cd demo+
   - +python game.py+
 
-== Support this project
-
-  * link:https://www.patreon.com/lilylemmer[Support/fund through Patreon]
-  * link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YFHB5TMMXMNT6[Donate through PayPal]
-  * link:https://www.bountysource.com/teams/hypatia[Donate, or demand features in exchange for cash, through Bountysource]
-  * link:https://gratipay.com/~lillian-lemmer/[Donate through Gratipay]
-  * link:http://amzn.com/w/NKBZ0CX162S9[The creator's Amazon Wishlist]
-
-For more information, please read about link:https://github.com/lillian-lemmer/hypatia/wiki/Support-the-Project[the ways you can support Hypatia].
-
 == Dependencies, Installation
 
 === Windows
@@ -73,21 +72,23 @@ Hypatia uses the following libraries:
 You should be able to install everything you need using one of the included +install-*.sh+ shell scripts. It basically boils down to:
 
   - Install Pygame (varies per platform)
-  - +pip install --user -r requirements.txt .+
+  - +pip install --user -r requirements/base.txt .+
+
+Also, if you're running Python 2, you'll need:
+
+  * +pip install --user -r requirements/python2.txt+
 
 For more info on installation, checkout the link:https://github.com/lillian-lemmer/hypatia/wiki/Installation-Instructions[installation instructions page].
 
-== Resources
+== Support this project
 
-Most of the documentation is on the link:https://github.com/lillian-lemmer/hypatia/wiki/[GitHub Wiki]. link:http://lillian-lemmer.github.io/hypatia/api/[The API docs are on the website].
+  * link:https://www.patreon.com/lilylemmer[Support/fund through Patreon]
+  * link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YFHB5TMMXMNT6[Donate through PayPal]
+  * link:https://www.bountysource.com/teams/hypatia[Donate, or demand features in exchange for cash, through Bountysource]
+  * link:https://gratipay.com/~lillian-lemmer/[Donate through Gratipay]
+  * link:http://amzn.com/w/NKBZ0CX162S9[The creator's Amazon Wishlist]
 
-For people, checkout the link:https://github.com/lillian-lemmer/hypatia/wiki/Profiles[socialization and contact methods for the Hypatia project].
-
-Additional resources:
-
-  * http://lillian-lemmer.github.io/hypatia/[The official Hypatia website]
-  * Official support chat: link:http://webchat.freenode.net/?channels=hypatia[#hypatia on Freenode]
-  * You can contact the author via email: lillian.lynn.lemmer@gmail.com
+For more information, please read about link:https://github.com/lillian-lemmer/hypatia/wiki/Support-the-Project[the ways you can support Hypatia].
 
 == License
 
