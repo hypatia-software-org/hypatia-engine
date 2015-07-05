@@ -9,3 +9,5 @@ I had to do the following to get setup:
   . +sphinx-build sphinx-source api+
 
 Then I added a +.nojekyll+ to the root of the +gh-pages+ branch, so I can use directories beginning with an underscore (which sphinx needs).
+
+What you'll wanna do is use the +make-sphinx.sh+ script whenever you update the docstrings.
