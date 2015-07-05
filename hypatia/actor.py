@@ -26,7 +26,6 @@ from hypatia import animations
 from hypatia import constants
 
 
-
 class Actor(object):
     """The base class for any entity which can perform actions.
 
