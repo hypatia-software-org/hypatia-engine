@@ -38,8 +38,8 @@ from hypatia import tiles
 from hypatia import dialog
 from hypatia import render
 from hypatia import player
-from hypatia import sprites
 from hypatia import constants
+from hypatia import animations
 
 
 class Game(object):
@@ -264,11 +264,11 @@ class Scene(object):
         self.player_start_position = (player_start_x, player_start_y)
 
         # .. create player with player scene data
-        hat = sprites.Walkabout('hat')
-        human_walkabout = sprites.Walkabout('debug',
-                                            position=(self
-                                                      .player_start_position),
-                                            children=[hat])
+        hat = animations.Walkabout('hat')
+        start_position = self.player_start_position
+        human_walkabout = animations.Walkabout('debug',
+                                               position=start_position,
+                                               children=[hat])
         self.human_player = player.Player(walkabout=human_walkabout)
 
         # npcs.ini
@@ -284,8 +284,8 @@ class Scene(object):
             position_y = npcs_ini.getint(npc_name, 'position_y')
             position = (position_x, position_y)
 
-            npc_walkabout = sprites.Walkabout(walkabout_name,
-                                              position=position)
+            npc_walkabout = animations.Walkabout(walkabout_name,
+                                                 position=position)
 
             if npcs_ini.has_option(npc_name, 'say'):
                 say_text = npcs_ini.get(npc_name, 'say')

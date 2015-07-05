@@ -1,3 +1,6 @@
+# This module is part of Hypatia and is released under the
+# MIT license: http://opensource.org/licenses/MIT
+
 import os
 import zipfile
 from io import BytesIO
@@ -10,6 +13,10 @@ except ImportError:
     import configparser
     from io import StringIO
 
+import pygame
+import pyganim
+from PIL import Image
+
 
 class Resource(object):
     """A zip archive in the resources directory, located by
@@ -17,7 +24,7 @@ class Resource(object):
 
     Attributes:
       files (dict): Key is file name, value can be one of StringIO,
-        BytesIO, or ConfigParser objects.
+        BytesIO, PygAnim, or ConfigParser objects.
 
     """
 
@@ -41,6 +48,13 @@ class Resource(object):
 
             for file_name in zip_file.namelist():
                 file_data = zip_file.open(file_name).read()
+                file_name = os.path.basename(file_name)
+
+                # because namelist will also generate
+                # the current directory
+                if not file_name:
+
+                    continue
 
                 try:
                     file_data = StringIO(file_data.decode('utf-8'))
@@ -57,6 +71,9 @@ class Resource(object):
                 except ValueError:
                     file_data = BytesIO(file_data)
 
+                    if os.path.splitext(file_name)[1] == '.gif':
+                        file_data = load_gif(file_data)
+
                 files[file_name] = file_data
 
         self.files = files
@@ -64,3 +81,105 @@ class Resource(object):
     def __getitem__(self, file_name):
 
         return self.files[file_name]
+
+    def get_type(self, file_extension):
+        """Return a dictionary of files which have the file extension
+        specified. Remember to include the dot, e.g., ".gif"!
+
+        Arg:
+            file_extension (str): the file extension (including dot) of
+                the files to return.
+
+        Warning:
+            Remember to include the dot in the file extension, e.g., ".gif".
+
+        Returns:
+            dict|None: {file name: file content} of files which have the
+                file extension specified. If no files match,
+                None is returned.
+
+        """
+
+        matching_files = {}
+
+        for file_name, file_content in self.files.items():
+
+            if os.path.splitext(file_name)[1] == file_extension:
+                matching_files[file_name] = file_content
+
+        return matching_files or None
+
+
+def load_gif(path_or_bytesio):
+    """Create a PygAnim object by reading a GIF from path or
+    a BytesIO object.
+
+    Args:
+        path_or_bytesio (str|BytesIO): create animation using either
+            a string file path to a GIF, or provide a BytesIO of a GIF.
+
+    Returns:
+        PygAnim: the PygAnim animation which accurately depicts the GIF
+            referenced in gif_path.
+
+    Example:
+        >>> path = 'resources/walkabouts/debug.zip'
+        >>> file_name = 'debug/walk_up.gif'
+        >>> sample = zipfile.ZipFile(path).open(file_name).read()
+        >>> load_gif(BytesIO(sample))
+        <pyganim.PygAnimation object at 0x...>
+
+    """
+
+    pil_gif = Image.open(path_or_bytesio)
+
+    frame_index = 0
+    frames = []
+
+    try:
+
+        while 1:
+            duration = pil_gif.info['duration'] / 1000.0
+            frame_as_pygame_image = pil_to_pygame(pil_gif, "RGBA")
+            frames.append((frame_as_pygame_image, duration))
+            frame_index += 1
+            pil_gif.seek(pil_gif.tell() + 1)
+
+    except EOFError:
+
+        pass  # end of sequence
+
+    gif = pyganim.PygAnimation(frames)
+    gif.anchor(pyganim.CENTER)
+
+    return gif
+
+
+def pil_to_pygame(pil_image, encoding):
+    """Convert PIL Image() to pygame Surface.
+
+    Args:
+        pil_image (Image): image to convert to pygame.Surface().
+        encoding (str): image encoding, e.g., RGBA
+
+    Returns:
+        pygame.Surface: the converted image
+
+    Example:
+        >>> from PIL import Image
+        >>> path = 'resources/walkabouts/debug.zip'
+        >>> file_name = 'debug/walk_up.gif'
+        >>> sample = zipfile.ZipFile(path).open(file_name).read()
+        >>> gif = Image.open(BytesIO(sample))
+        >>> pil_to_pygame(gif, "RGBA")
+        <Surface(6x8x32 SW)>
+
+    """
+
+    image_as_string = pil_image.convert('RGBA').tostring()
+
+    return pygame.image.fromstring(
+                                   image_as_string,
+                                   pil_image.size,
+                                   'RGBA'
+                                  )

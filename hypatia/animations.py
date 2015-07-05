@@ -1,14 +1,27 @@
-# engine/sprites.py
-# Lillian Lemmer <lillian.lynn.lemmer@gmail.com>
-#
 # This module is part of Hypatia and is released under the
 # MIT license: http://opensource.org/licenses/MIT
 
-"""The stuff being drawn; sprites
+"""Animations and tools for animation. Complex animation types like
+Walkabout. Animation sources are GIFS from disk, which have been made
+into a PygAnim [1]_ object.
+
+Handles the models for animations, and less-so any image
+manipulations. For cool ways to manipulate sprites see the render
+module.
+
+References:
+    .. [1] PygAnim:
+       http://inventwithpython.com/pyganim/
+
+Warning:
+    Sometimes an "animation" can consist of one frame.
 
 Note:
-  I wanna add support for loading character animations
-  from sprite sheets.
+    I wanna add support for loading character animations
+    from sprite sheets.
+
+See Also:
+    The render module. The Actor module.
 
 """
 
@@ -21,59 +34,94 @@ try:
 except ImportError:
     import configparser
 
-import pyganim
 import pygame
+import pyganim
 from PIL import Image
 
+from hypatia import util
 from hypatia import render
 from hypatia import constants
 
 
 class BadWalkabout(Exception):
-    """The supplied directory has no files which match *.gif.
+    """The supplied directory has no files which match *.gif. The
+    walkabout resource specified does not contain any GIFs.
+
+    See Also:
+        Walkabout.__init__()
 
     """
 
-    def __init__(self, supplied_directory):
-        super(BadWalkabout, self).__init__(supplied_directory)
-
-
-class AnimAnchors(object):
-    """Named/labeled anchor points whose coordinates depend on the
-    frame of the corresponding PygAnim object.
-
-    See: AnchorPoint()
-
-    Attributes:
-      anchor_points (dict): key is anchor label/group, value is a list
-        of AnchorPoint()s whose index corresponds to respective PygAnim
-        frame index.
-      anchor_groups (list): the names/labels of the anchor groups, e.g.,
-        "head_anchor."
-
-    """
-
-    def __init__(self, gif_path):
-        """Loads the INI associated with a GIF (defined in gif_path).
+    def __init__(self, supplied_archive):
+        """
 
         Args:
-          gif_path (str): path to the GIF animation you want to load the
-            anchor data thereof.
-
-        Returns:
-          dict: frame: (x, y) anchor definition dictionary.
-
-        Example:
-          >>> animation_anchors = AnimAnchors('default.gif')
+            supplied_archive (str): Walkabout resource archive which
+                *should* have contained files of pattern *.gif,
+                but didn't.
 
         """
 
-        gif_file_name = (os.path.splitext(os.path.basename(gif_path))[0] +
-                         '.ini')
-        anchor_ini_path = os.path.join(os.path.dirname(gif_path),
-                                       gif_file_name)
-        anchor_ini = configparser.ConfigParser()
-        anchor_ini.read(anchor_ini_path)
+        super(BadWalkabout, self).__init__(supplied_archive)
+
+
+class AnimAnchors(object):
+    """Anchors which help keep one animation "pinned" to another. This
+    helps you give an effect like: a character wearing something,
+    damage decal, etc.
+
+    The general idea is allowing you to "glue" one animation to
+    another, so when one moves, so do the rest.
+
+    Named/labeled anchor points whose coordinates depend on the
+    frame of the corresponding PygAnim object.
+
+    Attributes:
+        anchor_points (dict): key is anchor label/group, value is a list
+            of AnchorPoint()s whose index corresponds to respective
+            PygAnim frame index.
+        anchor_groups (list): the names/labels of the anchor groups,
+            e.g., "head_anchor."
+
+    Example:
+        >>> resource = util.Resource('walkabouts', 'debug')
+        >>> anchors = AnimAnchors.from_config(resource['walk_up.ini'])
+        >>> anchors.anchor_points['head_anchor']
+        [<hypatia.animations.AnchorPoint object at 0x...>, ...]
+        >>> anchors.anchor_groups
+        ['head_anchor']
+
+    Note:
+        You can modify anchors--there's no reason they have to be
+        immutable. You can even build them yourself.
+
+    See Also:
+        AnchorPoint(), Walkabout.blit()
+
+    """
+
+    def __init__(self, anchor_points, anchor_groups):
+        self.anchor_points = anchor_points
+        self.anchor_groups = anchor_groups
+
+    @classmethod
+    def from_config(cls, anchor_ini):
+        """Parses the INI to create an AnimAnchors object.
+
+        Note:
+            anchor_ini should be provided from a Resource().
+
+        Args:
+            anchor_ini: configparser object.
+
+        Example:
+            --
+
+        Returns:
+            AnimAnchors: anchor points and groups collected from an INI
+
+        """
+
         anchor_point_groups = anchor_ini.sections()
 
         # key is group, value is list of frame coord positions
@@ -86,29 +134,29 @@ class AnimAnchors(object):
                 anchor_point = AnchorPoint(int(x), int(y))
                 anchors[anchor_point_group].append(anchor_point)
 
-        self.anchor_points = anchors
-        self.anchor_groups = anchor_point_groups
+        return AnimAnchors(anchors, anchor_point_groups)
 
     def get_anchor_point(self, anchor_point_group, frame_index):
         """Return an AnchorPoint corresponding to group name and frame
         index.
 
         Args:
-          anchor_point_group (str): name of the anchor point group
-          frame_index (int): which frame for group's anchor
+            anchor_point_group (str): name of the anchor point group
+            frame_index (int): which frame for group's anchor
 
         Returns:
-          AnchorPoint: --
+            AnchorPoint: --
 
         Note:
-          Will simply return last anchor point for group if an anchor
-          isn't defined for frame.
+            Will simply return last anchor point for group if an anchor
+            isn't defined for frame.
 
         Example:
-          >>> path = 'resources/walkabouts/debug/walk_up.gif'
-          >>> animation_anchors = AnimAnchors(path)
-          >>> animation_anchors.get_anchor_point('head_anchor', 0)
-          <hypatia.sprites.AnchorPoint object at 0x...>
+            >>> resource = util.Resource('walkabouts', 'debug')
+            >>> config = resource['walk_up.ini']
+            >>> animation_anchors = AnimAnchors.from_config(config)
+            >>> animation_anchors.get_anchor_point('head_anchor', 0)
+            <hypatia.animations.AnchorPoint object at 0x...>
 
         """
 
@@ -127,8 +175,8 @@ class AnchorPoint(object):
     another, lining up their corresponding anchorpoints.
 
     Attributes:
-      x (int): x-axis coordinate on a surface to place anchor at
-      y (int): x-axis coordinate on a surface to place anchor at
+        x (int): x-axis coordinate on a surface to place anchor at
+        y (int): x-axis coordinate on a surface to place anchor at
 
     """
 
@@ -136,15 +184,15 @@ class AnchorPoint(object):
         """Create an AnchorPoint at coordinate (x, y).
 
         Args:
-          x (int): the x-axis pixel position
-          y (int): the y-axis pixel position
+            x (int): the x-axis pixel position
+            y (int): the y-axis pixel position
 
         Example:
-          >>> anchor_point = AnchorPoint(5, 3)
-          >>> anchor_point.x
-          5
-          >>> anchor_point.y
-          3
+            >>> anchor_point = AnchorPoint(5, 3)
+            >>> anchor_point.x
+            5
+            >>> anchor_point.y
+            3
 
         """
 
@@ -155,17 +203,17 @@ class AnchorPoint(object):
         """Adds the x, y values of this and another anchor point.
 
         Args:
-          other_anchor_point (AnchorPoint): the AnchorPoint coordinates
-            to add to this AnchorPoint's coordinates.
+            other_anchor_point (AnchorPoint): the AnchorPoint
+                coordinates to add to this AnchorPoint's coordinates.
 
         Returns:
-          (x, y) tuple: the new x, y coordinate
+            (x, y) tuple: the new x, y coordinate
 
         Example:
-          >>> anchor_point_a = AnchorPoint(4, 1)
-          >>> anchor_point_b = AnchorPoint(2, 0)
-          >>> anchor_point_a + anchor_point_b
-          (6, 1)
+            >>> anchor_point_a = AnchorPoint(4, 1)
+            >>> anchor_point_b = AnchorPoint(2, 0)
+            >>> anchor_point_a + anchor_point_b
+            (6, 1)
 
         """
 
@@ -176,18 +224,19 @@ class AnchorPoint(object):
         """Find the difference between this anchor and another.
 
         Args:
-          other_anchor_point (AnchorPoint): the AnchorPoint coordinates
-            to subtract from this AnchorPoint's coordinates.
+            other_anchor_point (AnchorPoint): the AnchorPoint
+                coordinates to subtract from this
+                AnchorPoint's coordinates.
 
         Returns:
-          (x, y) tuple: the x, y difference between this anchor point
-            and the other supplied.
+            (x, y) tuple: the x, y difference between this
+                anchor point and the other supplied.
 
         Example:
-          >>> anchor_point_a = AnchorPoint(4, 1)
-          >>> anchor_point_b = AnchorPoint(2, 0)
-          >>> anchor_point_a - anchor_point_b
-          (2, 1)
+            >>> anchor_point_a = AnchorPoint(4, 1)
+            >>> anchor_point_b = AnchorPoint(2, 0)
+            >>> anchor_point_a - anchor_point_b
+            (2, 1)
 
         """
 
@@ -198,28 +247,28 @@ class AnchorPoint(object):
 class Walkabout(object):
     """Sprite animations for a character which walks around.
 
-    Note:
-      The walkabout sprites specified to be therein
-      walkabout_directory, are files with an action__direction.gif
-      filename convention.
+    Notes:
+        The walkabout sprites specified to be therein
+        walkabout_directory, are files with an action__direction.gif
+        filename convention.
 
-      ASSUMPTION: walkabout_directory contains sprites for
-      walk AND run actions.
+        ASSUMPTION: walkabout_directory contains sprites for
+        walk AND run actions.
 
-      Blits its children relative to its own anchor.
+        Blits its children relative to its own anchor.
 
     Attributes:
-      animations (dict): 2D dictionary [action][direction] whose
-        values are PygAnimations.
-      animation_anchors (dict): 2D dictionary [action][direction] whose
-        values are AnimAnchors.
-      rect (pygame.Rect): position on tilemap
-      size (tuple): the size of the animation in pixels.
-      action (constants.Action): --
-      direction (constnts.Direction): --
-      topleft_float (x,y tuple): --
-
-      position_rect
+        resource (Resource): --
+        animations (dict): 2D dictionary [action][direction] whose
+            values are PygAnimations.
+        animation_anchors (dict): 2D dictionary [action][direction]
+            whose values are AnimAnchors.
+        rect (pygame.Rect): position on tilemap
+        size (tuple): the size of the animation in pixels.
+        action (constants.Action): --
+        direction (constnts.Direction): --
+        topleft_float (x,y tuple): --
+        position_rect
 
     """
 
@@ -227,17 +276,17 @@ class Walkabout(object):
         """
 
         Args:
-          directory (str): directory containing (animated)
+            directory (str): directory containing (animated)
             walkabout GIFs. Assumed parent is data/walkabouts/
-          position (tuple): (x, y) coordinates (integers)
-            referring to absolute pixel coordinate.
-          children (list|None): Walkabout objects drawn relative to
-            this Walkabout instance.
+            position (tuple): (x, y) coordinates (integers)
+                referring to absolute pixel coordinate.
+            children (list|None): Walkabout objects drawn relative to
+                this Walkabout instance.
 
         Example:
-          >>> hat = Walkabout('hat')
-          >>> Walkabout('debug', position=(44, 55), children=[hat])
-          <hypatia.sprites.Walkabout object at 0x...>
+            >>> hat = Walkabout('hat')
+            >>> Walkabout('debug', position=(44, 55), children=[hat])
+            <hypatia.animations.Walkabout object at 0x...>
 
         """
 
@@ -254,22 +303,16 @@ class Walkabout(object):
         topleft_float = (float(position[0]), float(position[1]))
 
         # specify the files to load
-        walkabout_directory = os.path.join(
-                                           'resources',
-                                           'walkabouts',
-                                           directory
-                                          )
-        sprite_name_pattern = os.path.join(walkabout_directory, '*.gif')
-
-        # get all the animations in this directory
-        sprite_paths = glob.glob(sprite_name_pattern)
+        # how will i glob a resource
+        resource = util.Resource('walkabouts', directory)
+        sprite_files = resource.get_type('.gif')
 
         # no sprites matching pattern!
-        if not sprite_paths:
+        if not sprite_files:
 
             raise BadWalkabout(directory)
 
-        for sprite_path in sprite_paths:
+        for sprite_path in sprite_files.keys():
             file_name, file_ext = os.path.splitext(sprite_path)
             file_name = os.path.split(file_name)[1]
 
@@ -286,7 +329,7 @@ class Walkabout(object):
             self.directions.append(direction)
 
             # load pyganim from gif file
-            animation = load_gif(sprite_path)
+            animation = sprite_files[sprite_path]
 
             try:
                 self.animations[action][direction] = animation
@@ -294,10 +337,9 @@ class Walkabout(object):
                 self.animations[action] = {direction: animation}
 
             # load anchor points
-            ini_path = os.path.join(walkabout_directory, file_name + '.ini')
-
-            if os.path.exists(ini_path):
-                anim_anchors = AnimAnchors(sprite_path)
+            if file_name + '.ini' in sprite_files:
+                anchors_ini = resource[file_name + '.ini']
+                anim_anchors = AnimAnchors.from_config(file_name + ini)
 
                 try:
                     self.animation_anchors[action][direction] = anim_anchors
@@ -308,6 +350,7 @@ class Walkabout(object):
                 self.animation_anchors = None
 
         # ... set the rest of the attribs
+        self.resource = resource
         self.size = animation.getMaxSize()
         self.rect = pygame.Rect(position, self.size)
         self.topleft_float = topleft_float
@@ -320,16 +363,16 @@ class Walkabout(object):
         """Fetch sprites associated with action (key).
 
         Args:
-          key (constants.Action): return dictionary of sprites for
-            this action (key).
+            key (constants.Action): return dictionary of
+                sprites for this action (key).
 
         Returns:
-          dict: sprites associated with action supplied (key)
+            dict: sprites associated with action supplied (key)
 
         Examples:
-          >>> walkabout = Walkabout('debug')
-          >>> walkabout[constants.Action.Walk][constants.Direction.Up]
-          <pyganim.PygAnimation object at 0x...>
+            >>> walkabout = Walkabout('debug')
+            >>> walkabout[constants.Action.Walk][constants.Direction.Up]
+            <pyganim.PygAnimation object at 0x...>
 
         """
 
@@ -340,13 +383,13 @@ class Walkabout(object):
         and direction.
 
         Returns:
-          PygAnim: the animation associated with this Walkabout's
-            current action and direction.
+            PygAnim: the animation associated with this Walkabout's
+                current action and direction.
 
         Example:
-          >>> walkabout = Walkabout('debug')
-          >>> walkabout.current_animation()
-          <pyganim.PygAnimation object at 0x...>
+            >>> walkabout = Walkabout('debug')
+            >>> walkabout.current_animation()
+            <pyganim.PygAnimation object at 0x...>
 
         """
 
@@ -356,9 +399,9 @@ class Walkabout(object):
         """Get anchors per frame in a GIF by identifying th ecoordinate
         of a specific color.
 
-        Note:
-          This is an old, but still useful way of loading anchors for
-          an animation.
+        Warning:
+            This is an old, but still useful way of loading anchors for
+            an animation.
 
         """
 
@@ -379,16 +422,14 @@ class Walkabout(object):
         coordinate matches color.
 
         Args:
-          surface (pygame.Surface): surface to scan for color and
-            return the coord which color appears
+            surface (pygame.Surface): surface to scan for color and
+                return the coord which color appears
 
         Returns:
-          (x, y): pixel coordinate where color shows up.
+            (x, y): pixel coordinate where color shows up.
 
-        Note:
-          Old way of defining anchor points, but still handy! I was
-          thinking about making it so you can define anchor point
-          group colors.
+        Warning:
+            Old way of defining anchor points, but still handy!
 
         """
 
@@ -405,13 +446,13 @@ class Walkabout(object):
         """Draw the appropriate/active animation to screen.
 
         Note:
-          Should go to render module?
+            Should go to render module?
 
         Args:
           screen (pygame.Surface): the primary display/screen.
           offset (x, y tuple): the x, y coords of the absolute
-            starting top left corner for the current screen/viewport
-            position.
+              starting top left corner for the current screen/viewport
+              position.
 
         """
 
@@ -458,8 +499,8 @@ class Walkabout(object):
         Convert and play all the animations, run init for children.
 
         Note:
-          It MAY be bad to leave the sprites in play mode in startup
-          by default.
+            It MAY be bad to leave the sprites in play mode in startup
+            by default.
 
         """
 
@@ -481,46 +522,6 @@ class Walkabout(object):
 
         for walkabout_child in self.child_walkabouts:
             walkabout_child.runtime_setup()
-
-
-def load_gif(gif_path):
-    """Load the PygAnim animation abstraction of a GIF from path.
-
-    Args:
-      gif_path (str): create animation using file path to GIF
-
-    Returns:
-      PygAnim: the PygAnim animation which accurately depicts the GIF
-        referenced in gif_path.
-
-    Example:
-      >>> load_gif('resources/walkabouts/debug/walk_up.gif')
-      <pyganim.PygAnimation object at 0x...>
-
-    """
-
-    pil_gif = Image.open(gif_path)
-
-    frame_index = 0
-    frames = []
-
-    try:
-
-        while 1:
-            duration = pil_gif.info['duration'] / 1000.0
-            frame_as_pygame_image = render.pil_to_pygame(pil_gif, "RGBA")
-            frames.append((frame_as_pygame_image, duration))
-            frame_index += 1
-            pil_gif.seek(pil_gif.tell() + 1)
-
-    except EOFError:
-
-        pass  # end of sequence
-
-    gif = pyganim.PygAnimation(frames)
-    gif.anchor(pyganim.CENTER)
-
-    return gif
 
 
 if __name__ == "__main__":

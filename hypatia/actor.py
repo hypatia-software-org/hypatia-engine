@@ -22,7 +22,7 @@ alia, a common example being statistics like hit-points.
 
 """
 
-from hypatia import sprites
+from hypatia import animations
 from hypatia import constants
 
 
@@ -39,7 +39,7 @@ class Actor(object):
 
     Public Properties:
 
-    walkabout -- An instance of sprites.Walkabout()
+    walkabout -- An instance of animations.Walkabout()
 
     direction -- An insance of constants.Direction() which indicates
     the direction the actor is facing.  Is it possible to set this
@@ -54,13 +54,13 @@ class Actor(object):
 
         Keyword arguments:
 
-        walkabout -- An instance of sprites.Walkabout(), which is then
+        walkabout -- An instance of animations.Walkabout(), which is then
         accessible via the 'walkabout' property.  This argument is
-        optional and defaults to new instance of sprites.Walkabout().
+        optional and defaults to new instance of animations.Walkabout().
 
         """
 
-        self.walkabout = walkabout or sprites.Walkabout()
+        self.walkabout = walkabout or animations.Walkabout()
 
         @property
         def direction(self):

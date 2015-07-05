@@ -20,6 +20,7 @@ import pygame
 import pyganim
 from pygame.locals import *
 
+from hypatia import util
 from hypatia import constants
 
 
@@ -173,35 +174,6 @@ class Viewport(object):
                           (0, 0),
                           self.rect
                          )
-
-
-def pil_to_pygame(pil_image, encoding):
-    """Convert PIL Image() to pygame Surface.
-
-    Note:
-      NOT for animations, use Animation() for that!
-    Args:
-      pil_image (Image): image to convert to pygame.Surface().
-      encoding (str): image encoding, e.g., RGBA
-
-    Returns:
-      pygame.Surface: the converted image
-
-    Example:
-       >>> from PIL import Image
-       >>> gif = Image.open('resources/walkabouts/debug/walk_up.gif')
-       >>> pil_to_pygame(gif, "RGBA")
-       <Surface(6x8x32 SW)>
-
-    """
-
-    image_as_string = pil_image.convert('RGBA').tostring()
-
-    return pygame.image.fromstring(
-                                   image_as_string,
-                                   pil_image.size,
-                                   'RGBA'
-                                  )
 
 
 # should go into sprites or effects
