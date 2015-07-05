@@ -2,8 +2,15 @@
 # MIT license: http://opensource.org/licenses/MIT
 
 """Tools for animation. Animation sources are GIFs from disk, which
-have been made into a PygAnim [1]_ object. Stateful animations which
-represent objects, e.g., Walkabout represents an Actor.
+have been made into a PygAnimation [1]_ object. Stateful animations
+which represent objects, e.g., :class:`Walkabout` represents an
+:class:`actor.Actor`.
+
+Examples of "tools":
+
+* functions for creating an animation from a single suface
+* loading animations from disk
+* adding frame-dependent positional data
 
 References:
     .. [1] PygAnim:
@@ -17,7 +24,9 @@ Note:
     from sprite sheets.
 
 See Also:
-    The render module. The Actor module.
+
+    * :mod:`render`
+    * :mod:`actor`
 
 """
 
@@ -42,11 +51,11 @@ from hypatia import constants
 
 
 class BadWalkabout(Exception):
-    """The supplied directory has no files which match *.gif. The
+    """The supplied directory has no files which match ``*.gif.`` The
     walkabout resource specified does not contain any GIFs.
 
     See Also:
-        Walkabout.__init__()
+        :meth:`Walkabout.__init__`
 
     """
 
@@ -54,9 +63,9 @@ class BadWalkabout(Exception):
         """
 
         Args:
-            supplied_archive (str): Walkabout resource archive which
-                *should* have contained files of pattern *.gif,
-                but didn't.
+            supplied_archive (str): :class:`Walkabout` resource archive
+                which *should* have contained files of pattern
+                ``*.gif,`` but didn't.
 
         """
 
@@ -64,20 +73,20 @@ class BadWalkabout(Exception):
 
 
 class AnimAnchors(object):
-    """The anchors per frame of a PygAnimation. Anchors are
-    coordinates belonging to a surface, which can be translated
-    to coordinates belonging to another surface.
+    """The anchors per frame of a :class:`pyganim.PygAnimation`. Anchors
+    are coordinates belonging to a :class:`pygame.Surface`, which can be
+    translated to coordinates belonging to another surface.
 
-    With AnimAnchors you can keep one animation "pinned" or "glued"
-    to another. This can help with adding decals to a Walkabout
-    animation (like a hat!).
+    With :class:`AnimAnchors` you can keep one animation "pinned" or
+    "glued" to another. This can help with adding decals to a
+    :class;`Walkabout` animation (like a hat!).
 
     Attributes:
         anchor_points (dict): key is anchor label/group, value is a list
-            of AnchorPoint()s whose index corresponds to respective
-            PygAnim frame index.
+            of :class:`AnchorPoint` instances whose index corresponds to
+            respective :class:`pyganim.PygAnimation` frame index.
         anchor_groups (list): the names/labels of the anchor groups,
-            e.g., "head_anchor."
+            e.g., *head_anchor*.
 
     Example:
         >>> resource = util.Resource('walkabouts', 'debug')
@@ -93,7 +102,9 @@ class AnimAnchors(object):
         tall cacti from Mario? How about a spinning mace?
 
     See Also:
-        AnchorPoint(), Walkabout.blit()
+
+        * :class:`AnchorPoint`
+        * :meth:`Walkabout.blit`
 
     """
 
@@ -112,16 +123,19 @@ class AnimAnchors(object):
             1=1,3
             2=2,2
 
-        [head_anchor] is the anchor label. The stuff below it is
-        head_anchor's position for frames 0, 1, and 2.
+        `[head_anchor]` is the anchor label. The stuff below it is
+        `head_anchor`'s position for frames 0, 1, and 2.
 
-        In the above example, head_anchor has a coordinate (anchor)
-        for three different frames: frame 0 at (0, 2), frame 1 at
-        (1, 3), and frame 2 at (2, 2).
+        In the above example, `head_anchor` has a coordinate (anchor)
+        for three different frames:
+
+        * frame 0 at (0, 2)
+        * frame 1 at (1, 3)
+        * frame 2 at (2, 2)
 
         Note:
-            anchor_ini should be provided from a Resource(). See
-            example below.
+            `anchor_ini` should be provided from a
+            :class:`util.Resource`. See example below.
 
         Args:
             anchor_ini (configparser): configparser object.
@@ -151,8 +165,8 @@ class AnimAnchors(object):
         return AnimAnchors(anchors, anchor_point_groups)
 
     def get_anchor_point(self, anchor_point_group, frame_index):
-        """Return an AnchorPoint corresponding to group name and frame
-        index.
+        """Return an :class:`AnchorPoint` corresponding to group name
+        and frame index.
 
         Args:
             anchor_point_group (str): name of the anchor point group
@@ -243,7 +257,7 @@ class AnchorPoint(object):
                 AnchorPoint's coordinates.
 
         Returns:
-            (x, y) tuple: the x, y difference between this
+            tuple: the (x, y) difference between this
                 anchor point and the other supplied.
 
         Example:
@@ -261,15 +275,11 @@ class AnchorPoint(object):
 class Walkabout(object):
     """Sprite animations for a character which walks around.
 
-    Notes:
-        The walkabout sprites specified to be therein
-        walkabout_directory, are files with an action__direction.gif
-        filename convention.
+    The walkabout sprites specified to be therein
+    walkabout_directory, are files with an action__direction.gif
+    filename convention.
 
-        ASSUMPTION: walkabout_directory contains sprites for
-        walk AND run actions.
-
-        Blits its children relative to its own anchor.
+    Blits its children relative to its own anchor.
 
     Attributes:
         resource (Resource): --
@@ -440,7 +450,7 @@ class Walkabout(object):
                 return the coord which color appears
 
         Returns:
-            (x, y): pixel coordinate where color shows up.
+            tuple: (x, y) pixel coordinate where color shows up.
 
         Warning:
             Old way of defining anchor points, but still handy!
