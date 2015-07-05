@@ -1,4 +1,3 @@
-#!/usr/local/bin/bash
 # Makefile for Sphinx documentation
 #
 

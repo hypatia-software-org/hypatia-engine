@@ -12,6 +12,14 @@ hypatia.actor module
     :undoc-members:
     :show-inheritance:
 
+hypatia.animations module
+-------------------------
+
+.. automodule:: hypatia.animations
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 hypatia.constants module
 ------------------------
 
@@ -64,14 +72,6 @@ hypatia.sound module
 --------------------
 
 .. automodule:: hypatia.sound
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-hypatia.sprites module
-----------------------
-
-.. automodule:: hypatia.sprites
     :members:
     :undoc-members:
     :show-inheritance:

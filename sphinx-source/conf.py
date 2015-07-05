@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # hypatia documentation build configuration file, created by
-# sphinx-quickstart on Fri Jul  3 22:35:26 2015.
+# sphinx-quickstart on Sat Jul  4 22:51:18 2015.
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
