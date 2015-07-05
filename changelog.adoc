@@ -5,6 +5,7 @@ Uses http://keepachangelog.com/ as a guideline.
 == [Unreleased] - Unreleased
 
     * Fancier changelog
+    * Actor module docstrings enhanced
 
 == [0.2.13] - 2015-07-05
 
