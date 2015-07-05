@@ -16,7 +16,14 @@ Example:
 
 """
 
+import os
+
 import pygame
 import pytest
 
 from hypatia import render
+
+try:
+    os.chdir('demo')
+except OSError:
+    pass
