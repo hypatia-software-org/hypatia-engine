@@ -5,9 +5,8 @@
 Walkabout. Animation sources are GIFS from disk, which have been made
 into a PygAnim [1]_ object.
 
-Handles the models for animations, and less-so any image
-manipulations. For cool ways to manipulate sprites see the render
-module.
+Aformentioned "complex animations" are those which represent objects,
+e.g., Walkabout for Actor objects.
 
 References:
     .. [1] PygAnim:
@@ -26,8 +25,10 @@ See Also:
 """
 
 import os
+import copy
 import glob
 import itertools
+import collections
 
 try:
     import ConfigParser as configparser
@@ -112,10 +113,12 @@ class AnimAnchors(object):
             anchor_ini should be provided from a Resource().
 
         Args:
-            anchor_ini: configparser object.
+            anchor_ini (configparser): configparser object.
 
         Example:
-            --
+            >>> resource = util.Resource('walkabouts', 'debug')
+            >>> AnimAnchors.from_config(resource['walk_up.ini'])
+            <hypatia.animations.AnimAnchors object at 0x...>
 
         Returns:
             AnimAnchors: anchor points and groups collected from an INI
@@ -522,6 +525,110 @@ class Walkabout(object):
 
         for walkabout_child in self.child_walkabouts:
             walkabout_child.runtime_setup()
+
+
+def palette_cycle(surface):
+    """get_palette is not sufficient; it generates superflous colors.
+
+    Note:
+      Need to see if I can convert 32bit alpha to 8 bit temporarily,
+      to be converted back at end of palette/color manipulations.
+
+    """
+
+    original_surface = surface.copy()  # don't touch! used for later calc
+    width, height = surface.get_size()
+    ordered_color_list = []
+    seen_colors = set()
+
+    for coordinate in itertools.product(range(0, width), range(0, height)):
+        color = surface.get_at(coordinate)
+        color = tuple(color)
+
+        if color in seen_colors:
+
+            continue
+
+        ordered_color_list.append(color)
+        seen_colors.add(color)
+
+    # reverse the color list but not the pixel arrays, then replace!
+    old_color_list = collections.deque(ordered_color_list)
+    new_surface = surface.copy()
+    frames = []
+
+    for rotation_i in range(len(ordered_color_list)):
+        new_surface = new_surface.copy()
+
+        new_color_list = copy.copy(old_color_list)
+        new_color_list.rotate(1)
+
+        color_translations = dict(zip(old_color_list, new_color_list))
+
+        # replace each former color with the color from newcolor_list
+        for coordinate in itertools.product(range(0, width), range(0, height)):
+            color = new_surface.get_at(coordinate)
+            color = tuple(color)
+            new_color = color_translations[color]
+            new_surface.set_at(coordinate, new_color)
+
+        frame = new_surface.copy()
+        frames.append((frame, 0.2))
+        old_color_list = copy.copy(new_color_list)
+
+    return pyganim.PygAnimation(frames)
+
+
+def palette_cycle(surface):
+    """get_palette is not sufficient; it generates superflous colors.
+
+    Note:
+        Need to see if I can convert 32bit alpha to 8 bit temporarily,
+        to be converted back at end of palette/color manipulations.
+
+    """
+
+    original_surface = surface.copy()  # don't touch! used for later calc
+    width, height = surface.get_size()
+    ordered_color_list = []
+    seen_colors = set()
+
+    for coordinate in itertools.product(range(0, width), range(0, height)):
+        color = surface.get_at(coordinate)
+        color = tuple(color)
+
+        if color in seen_colors:
+
+            continue
+
+        ordered_color_list.append(color)
+        seen_colors.add(color)
+
+    # reverse the color list but not the pixel arrays, then replace!
+    old_color_list = collections.deque(ordered_color_list)
+    new_surface = surface.copy()
+    frames = []
+
+    for rotation_i in range(len(ordered_color_list)):
+        new_surface = new_surface.copy()
+
+        new_color_list = copy.copy(old_color_list)
+        new_color_list.rotate(1)
+
+        color_translations = dict(zip(old_color_list, new_color_list))
+
+        # replace each former color with the color from newcolor_list
+        for coordinate in itertools.product(range(0, width), range(0, height)):
+            color = new_surface.get_at(coordinate)
+            color = tuple(color)
+            new_color = color_translations[color]
+            new_surface.set_at(coordinate, new_color)
+
+        frame = new_surface.copy()
+        frames.append((frame, 0.2))
+        old_color_list = copy.copy(new_color_list)
+
+    return pyganim.PygAnimation(frames)
 
 
 if __name__ == "__main__":

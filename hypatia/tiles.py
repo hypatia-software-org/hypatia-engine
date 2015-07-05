@@ -1,6 +1,3 @@
-# hypatia/tiles.py
-# Lillian Lemmer <lillian.lynn.lemmer@gmail.com>
-#
 # This module is part of Hypatia and is released under the
 # MIT License: http://opensource.org/licenses/MIT
 
@@ -25,8 +22,8 @@ import itertools
 import pygame
 import pyganim
 
-from hypatia import render
 from hypatia import util
+from hypatia import animations
 
 
 class BadTileID(Exception):
@@ -397,7 +394,7 @@ class Tilesheet(object):
 
         # functions which return a PygAnimation, and accept a surface
         if config.has_section('animate_effect'):
-            effects = {'cycle': render.palette_cycle}
+            effects = {'cycle': animations.palette_cycle}
 
             for tile_id, effect in config.items('animate_effect'):
                 tile_id = int(tile_id)
