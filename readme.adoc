@@ -10,9 +10,9 @@ There is an included demo game (+demo/game.py+). Here it is in action:
 
 image:http://lillian-lemmer.github.io/hypatia/media/recordings/2015-06-28-develop-640x480.gif["The demo game in action."]
 
-Hypatia is a labor of love, permissively licensed, and crafted by Lillian Lemmer. Read more about Hypatia on link:https://github.com/lillian-lemmer/hypatia/wiki/[the official Hypatia project wiki]. If you're curious about the creator, the wiki has an link:http://github.com/lillian-lemmer/hypatia/wiki/About-the-Creator[about the creator of Hypatia] page.
+link:https://github.com/lillian-lemmer/hypatia/wiki/Platform-Support[Hypatia is a cross-platform project (Windows, Mac, Linux, BSD), but it does put FreeBSD development first].
 
-It's also worth noting that while link:https://github.com/lillian-lemmer/hypatia/wiki/Platform-Support[Hypatia is a cross-platform project (Windows, Mac, Linux, BSD), it puts FreeBSD development first].
+Hypatia is a labor of love, link:license.txt[permissively (MIT) licensed], and crafted by link:http://github.com/lillian-lemmer/hypatia/wiki/About-the-Creator[Lillian Lemmer]. Read more about Hypatia on link:https://github.com/lillian-lemmer/hypatia/wiki/[the official Hypatia project wiki].
 
 == Dive in without any programming
 
