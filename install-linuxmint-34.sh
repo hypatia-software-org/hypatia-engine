@@ -17,5 +17,4 @@ hg clone https://bitbucket.org/pygame/pygame
 cd pygame
 python3 setup.py build
 cd ..
-pip3 install --user -r requirements.txt .
-
+pip3 install --user -r requirements/base.txt .

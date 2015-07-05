@@ -8,7 +8,7 @@
 #   2. Installs Python package requirements through PIP as normal user.
 #   3. Installs the Hypatia package as normal user.
 
-
 sudo apt-get install python-pygame
-pip install --user -r requirements.txt .
+pip install --user -r requirements/base.txt
+pip install --user -r requirements/python2.txt .
 
