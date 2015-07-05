@@ -25,7 +25,10 @@ import pytest
 
 from hypatia import tiles
 
-os.chdir('demo')
+try:
+    os.chdir('demo')
+except OSError:
+    pass
 
 
 def test_coord_to_index():

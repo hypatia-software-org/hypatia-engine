@@ -1,12 +1,9 @@
-# tests/test_render.py
-# Lillian Lemmer <lillian.lynn.lemmer@gmail.com>
-#
 # This module is part of Hypatia and is released under the
 # MIT license: http://opensource.org/licenses/MIT
 
-"""py.test unit testing for hypatia/render.py
+"""py.test unit testing for hypatia.animations
 
-Run py.test on this module to assert hypatia.render
+Run py.test on this module to assert hypatia.animations
 is completely functional.
 
 Example:
