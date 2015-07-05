@@ -14,11 +14,11 @@ link:https://github.com/lillian-lemmer/hypatia/wiki/Platform-Support[Hypatia is 
 
 Hypatia is a labor of love, link:license.txt[permissively (MIT) licensed], and crafted by link:http://github.com/lillian-lemmer/hypatia/wiki/About-the-Creator[Lillian Lemmer].
 
-More resources:
+== Resources
 
   * link:https://github.com/lillian-lemmer/hypatia/wiki/[Hypatia Wiki] (great resource for nonprogrammers, too!)
   * link:https://lillian-lemmer.github.io/hypatia/api[Hypatia API Docs]
-  * For people, checkout the link:[socialization and contact methods for the Hypatia project].
+  * For people, checkout the link:https://github.com/lillian-lemmer/hypatia/wiki/Profiles[socialization and contact methods for the Hypatia project].
   * http://lillian-lemmer.github.io/hypatia/[The official Hypatia website]
   * Official support chat: link:http://webchat.freenode.net/?channels=hypatia[#hypatia on Freenode (webui!)]
   * You can contact the author via email: lillian.lynn.lemmer@gmail.com, link:https:/twitter.com/LilyLemmer[@LilyLemmer] on Twitter. link:https://github.com/lillian-lemmer/hypatia/wiki/Profiles[There are many ways to socialize with the developers and other enthusiasts].
