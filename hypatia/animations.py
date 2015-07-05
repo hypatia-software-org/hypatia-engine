@@ -1,12 +1,9 @@
 # This module is part of Hypatia and is released under the
 # MIT license: http://opensource.org/licenses/MIT
 
-"""Animations and tools for animation. Complex animation types like
-Walkabout. Animation sources are GIFS from disk, which have been made
-into a PygAnim [1]_ object.
-
-Aformentioned "complex animations" are those which represent objects,
-e.g., Walkabout for Actor objects.
+"""Tools for animation. Animation sources are GIFs from disk, which
+have been made into a PygAnim [1]_ object. Stateful animations which
+represent objects, e.g., Walkabout represents an Actor.
 
 References:
     .. [1] PygAnim:
@@ -67,15 +64,13 @@ class BadWalkabout(Exception):
 
 
 class AnimAnchors(object):
-    """Anchors which help keep one animation "pinned" to another. This
-    helps you give an effect like: a character wearing something,
-    damage decal, etc.
+    """The anchors per frame of a PygAnimation. Anchors are
+    coordinates belonging to a surface, which can be translated
+    to coordinates belonging to another surface.
 
-    The general idea is allowing you to "glue" one animation to
-    another, so when one moves, so do the rest.
-
-    Named/labeled anchor points whose coordinates depend on the
-    frame of the corresponding PygAnim object.
+    With AnimAnchors you can keep one animation "pinned" or "glued"
+    to another. This can help with adding decals to a Walkabout
+    animation (like a hat!).
 
     Attributes:
         anchor_points (dict): key is anchor label/group, value is a list
@@ -94,7 +89,8 @@ class AnimAnchors(object):
 
     Note:
         You can modify anchors--there's no reason they have to be
-        immutable. You can even build them yourself.
+        immutable. You can even build them yourself. Remember the
+        tall cacti from Mario? How about a spinning mace?
 
     See Also:
         AnchorPoint(), Walkabout.blit()
@@ -107,10 +103,25 @@ class AnimAnchors(object):
 
     @classmethod
     def from_config(cls, anchor_ini):
-        """Parses the INI to create an AnimAnchors object.
+        """Instantiate AnimAnchors using the anchor_ini config.
+
+        The anchor_ini derives from an INI like this:
+
+            [head_anchor]
+            0=0,2
+            1=1,3
+            2=2,2
+
+        [head_anchor] is the anchor label. The stuff below it is
+        head_anchor's position for frames 0, 1, and 2.
+
+        In the above example, head_anchor has a coordinate (anchor)
+        for three different frames: frame 0 at (0, 2), frame 1 at
+        (1, 3), and frame 2 at (2, 2).
 
         Note:
-            anchor_ini should be provided from a Resource().
+            anchor_ini should be provided from a Resource(). See
+            example below.
 
         Args:
             anchor_ini (configparser): configparser object.
