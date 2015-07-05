@@ -8,6 +8,9 @@ Hypatia API Documentation
 
 This is the official API documentation for Hypatia game engine.
 
+.. image:: https://img.shields.io/github/license/lillian-lemmer/hypatia.svg
+   :target: https://raw.githubusercontent.com/lillian-lemmer/hypatia/master/license.txt
+
 .. image:: https://api.travis-ci.org/lillian-lemmer/hypatia.png
    :target: https://travis-ci.org/lillian-lemmer/hypatia
 
