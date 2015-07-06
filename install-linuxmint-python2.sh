@@ -9,6 +9,4 @@
 #   3. Installs the Hypatia package as normal user.
 
 sudo apt-get install python-pygame
-pip install --user -r requirements/base.txt
-pip install --user -r requirements/python2.txt .
-
+./install-base-python2.sh

@@ -5,6 +5,5 @@
 
 
 sudo pkg install python27 py27-pip py27-game
-pip install --user -r requirements/base.txt
-pip install --user -r requirements/python2.txt .
+./install-base-python2.sh
 
