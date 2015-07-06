@@ -6,6 +6,8 @@ Uses http://keepachangelog.com/ as a guideline.
 
     * Fancier changelog
     * Actor module docstrings enhanced
+    * Fixed install scripts to use new requirements location
+    * Added media directory, and put some logos in it. New, updated logos. Put xfc and pngs.
 
 == [0.2.13] - 2015-07-05
 
