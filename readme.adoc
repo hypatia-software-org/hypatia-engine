@@ -16,6 +16,8 @@ Hypatia is a labor of love, link:license.txt[permissively (MIT) licensed], and c
 
 == Resources
 
+For info on installation, checkout the link:https://github.com/lillian-lemmer/hypatia/wiki/Installation-Instructions[installation instructions page].
+
   * link:https://github.com/lillian-lemmer/hypatia/wiki/[Hypatia Wiki] (great resource for nonprogrammers, too!)
   * link:https://lillian-lemmer.github.io/hypatia/api[Hypatia API Docs]
   * For people, checkout the link:https://github.com/lillian-lemmer/hypatia/wiki/Profiles[socialization and contact methods for the Hypatia project].
@@ -54,41 +56,6 @@ To get setup quickly and start tinkering around with the demo, simply issue the 
   - +pip install hypatia_engine+
   - +cd demo+
   - +python game.py+
-
-== Dependencies, Installation
-
-=== Windows
-
-If you're using Windows, and just wanna try the demo, don't worry about this section. You can run +game.exe+ from link:https://lillian-lemmer.github.io/hypatia/releases/hypatia-demo-windows-current.zip[hypatia-demo-windows-current.zip].
-
-=== Other
-
-Hypatia uses the following libraries:
-
-  * link:http://www.pygame.org/[Pygame]
-  * link:http://inventwithpython.com/pyganim/[PygAnim]
-  * link:https://python-pillow.github.io/[Pillow]
-
-You should be able to install everything you need using one of the included +install-*.sh+ shell scripts. It basically boils down to:
-
-  - Install Pygame (varies per platform)
-  - +pip install --user -r requirements/base.txt .+
-
-Also, if you're running Python 2, you'll need:
-
-  * +pip install --user -r requirements/python2.txt+
-
-For more info on installation, checkout the link:https://github.com/lillian-lemmer/hypatia/wiki/Installation-Instructions[installation instructions page].
-
-== Support this project
-
-  * link:https://www.patreon.com/lilylemmer[Support/fund through Patreon]
-  * link:https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YFHB5TMMXMNT6[Donate through PayPal]
-  * link:https://www.bountysource.com/teams/hypatia[Donate, or demand features in exchange for cash, through Bountysource]
-  * link:https://gratipay.com/~lillian-lemmer/[Donate through Gratipay]
-  * link:http://amzn.com/w/NKBZ0CX162S9[The creator's Amazon Wishlist]
-
-For more information, please read about link:https://github.com/lillian-lemmer/hypatia/wiki/Support-the-Project[the ways you can support Hypatia].
 
 == License
 
