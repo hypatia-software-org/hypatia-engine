@@ -23,7 +23,7 @@ For info on installation, checkout the link:https://github.com/lillian-lemmer/hy
   * For people, checkout the link:https://github.com/lillian-lemmer/hypatia/wiki/Profiles[socialization and contact methods for the Hypatia project].
   * http://lillian-lemmer.github.io/hypatia/[The official Hypatia website]
   * Official support chat: link:http://webchat.freenode.net/?channels=hypatia[#hypatia on Freenode (webui!)]
-  * You can contact the author via email: lillian.lynn.lemmer@gmail.com, link:https:/twitter.com/LilyLemmer[@LilyLemmer] on Twitter. link:https://github.com/lillian-lemmer/hypatia/wiki/Profiles[There are many ways to socialize with the developers and other enthusiasts].
+  * You can contact the author via email: lillian.lynn.lemmer@gmail.com, link:https:/twitter.com/LilyLemmer[@LilyLemmer] on Twitter.
 
 == Dive in without any programming
 
