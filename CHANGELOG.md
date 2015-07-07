@@ -11,7 +11,7 @@ Hey sweet stuff,
 I've been sitting on this update for a little bit. It's mostly documentation-oriented. Although, I did a fair amount of reworking of the requirements and install system.
 
 With Love,
-Lillian Lynn Lemer
+Lillian Lynn Lemmer
 
 ### Added
 
