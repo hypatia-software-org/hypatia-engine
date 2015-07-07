@@ -30,7 +30,7 @@ A labor of love, [permissively (MIT) licensed](license.txt), and crafted by [Lil
 
 # Dive in without any programming
 
-The included demo allows you to mess with all of its resources (see the `resources` directory!). With it you can:
+[The included demo](#quick-demo) allows you to mess with all of its resources (see the `resources` directory!). With it you can:
 
   * [Create tilesheets to make tilemaps](https://github.com/lillian-lemmer/hypatia/wiki/Tilesheets)
     * Configure tiles from the tilesheet
