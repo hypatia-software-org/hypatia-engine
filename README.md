@@ -16,6 +16,8 @@ There is an included demo game (`demo/game.py`). Here it is in action:
 
 Hypatia is a labor of love, [permissively (MIT) licensed](license.txt), and crafted by [Lillian Lemmer](http://github.com/lillian-lemmer/hypatia/wiki/About-the-Creator).
 
+[Please read about how you can help support Hypatia!](https://github.com/lillian-lemmer/hypatia/wiki/Support-the-Project)
+
 # Resources
 
 For info on installation, checkout the [installation instructions page](https://github.com/lillian-lemmer/hypatia/wiki/Installation-Instructions).
