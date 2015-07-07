@@ -32,12 +32,10 @@ For info on installation, checkout the [installation instructions page](https://
 The included demo allows you to mess with all of its resources (see the `resources` directory!). With it you can:
 
   * [Create tilesheets to make tilemaps](https://github.com/lillian-lemmer/hypatia/wiki/Tilesheets)
-
     * Configure tiles from the tilesheet
     * Chain tiles together to create animations
     * Apply the "cycle" effect, which takes a non-animated tile, and creates an animated tile by rotating the colors used in the tile
-    * Set tile flags, like the +impass_all+ flag which makes a flag impassable to the player
-
+    * Set tile flags, like the `impass_all` flag which makes a flag impassable to the player
   * [Create tilemaps with an arbitrary number of layers, using plaintext files](https://github.com/lillian-lemmer/hypatia/wiki/tilemap.txt)
   * [Create scenes, with configurable NPCs, configurable scene data (player start position)](https://github.com/lillian-lemmer/hypatia/wiki/Nonprogrammer-Guide#editing-scene-data)
   * [Create character sprites using animated or non-animated GIFs](https://github.com/lillian-lemmer/hypatia/wiki/Walkabout-Sprites)
