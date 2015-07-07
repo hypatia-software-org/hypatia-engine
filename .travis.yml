@@ -7,9 +7,6 @@ before_install:
  - "sudo apt-get install --fix-missing mercurial python3-dev python3-numpy libav-tools libsdl-image1.2-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev libsmpeg-dev libsdl1.2-dev libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev"
  - "pip install hg+http://bitbucket.org/pygame/pygame"
  - "pip install -r requirements/travis.txt"
- - "pip install pytest-cov"
- - "pip install pytest-pep8"
- - "pip install python-coveralls"
 # command to install dependencies
 install:
   - "pip install ."

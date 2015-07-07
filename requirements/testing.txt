@@ -1,0 +1,5 @@
+# this file ONLY installs depends for testing, it does not install
+# the base requirements. It is presumed Hypatia is already setup.
+pytest
+pytest-cov
+pytest-pep8

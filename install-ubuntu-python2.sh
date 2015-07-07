@@ -10,5 +10,5 @@
 
 sudo apt-get install python2.7 python2.7-dev python2.7-doc python2.7-dbg
 sudo apt-get install python-pygame python-pip
-pip install --user -r requirements.txt .
+./install-base-python2.sh
 
