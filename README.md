@@ -1,6 +1,6 @@
 # Hypatia 0.2.13 (alpha)
 
-![Hypatia 0.2](media/logos/logotype-graytext-pinkcol-transparentbg.png)
+![Hypatia 0.2](media/logos/logotype-blacktext-transparentbg.png)
 
 [![Travis](https://img.shields.io/travis/lillian-lemmer/hypatia.svg?style=flat-square)](https://travis-ci.org/lillian-lemmer/hypatia) [![GitHub license](https://img.shields.io/github/license/lillian-lemmer/hypatia.svg?style=flat-square)](https://raw.githubusercontent.com/lillian-lemmer/hypatia/master/license.txt) [![Coveralls](https://img.shields.io/coveralls/lillian-lemmer/hypatia.svg?style=flat-square)](https://coveralls.io/r/lillian-lemmer/hypatia) [![Code Climate](https://img.shields.io/codeclimate/github/kabisaict/flow.svg?style=flat-square)](https://codeclimate.com/github/lillian-lemmer/hypatia) [![PyPI](https://img.shields.io/pypi/v/nine.svg?style=flat-square)](https://pypi.python.org/pypi/hypatia_engine/) [![PyPI](https://img.shields.io/pypi/dm/hypatia.svg?style=flat-square)](https://pypi.python.org/pypi/hypatia_engine/) [![Gratipay](https://img.shields.io/gratipay/lillian-lemmer.svg?style=flat-square)](https://gratipay.com/~lillian-lemmer/) [![Bountysource](https://img.shields.io/bountysource/team/hypatia/activity.svg?style=flat-square)](https://www.bountysource.com/teams/hypatia) 
 
