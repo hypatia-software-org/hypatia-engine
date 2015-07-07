@@ -6,9 +6,9 @@
 
 Make 2D action adventure games. For programmers and nonprogrammers alike.
 
-With Hypatia you can create a games like [_Legend of Zelda: Oracle of Ages_ and _Oracle of Seasons_](http://en.wikipedia.org/wiki/The_Legend_of_Zelda:_Oracle_of_Seasons_and_Oracle_of_Ages).
+Create a games like [_Legend of Zelda: Oracle of Ages_ and _Oracle of Seasons_](http://en.wikipedia.org/wiki/The_Legend_of_Zelda:_Oracle_of_Seasons_and_Oracle_of_Ages).
 
-There is an included demo game (`demo/game.py`). Here it is in action:
+Here's the included demo game (`demo/game.py`) in action:
 
 ![The demo game in action.](http://lillian-lemmer.github.io/hypatia/media/recordings/2015-06-28-develop-640x480.gif)
 
@@ -58,28 +58,3 @@ To get setup quickly and start tinkering around with the demo, simply issue the 
   2. `cd demo`
   3. `python game.py`
 
-# License
-
-Hypatia is MIT licensed, which means you can use it for whatever purpose you'd like.
-
-    The MIT License (MIT)
-
-    Copyright (c) 2015 Lillian Lemmer
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
