@@ -8,20 +8,19 @@ Make 2D action adventure games. For programmers and nonprogrammers alike.
 
 Create a games like [_Legend of Zelda: Oracle of Ages_ and _Oracle of Seasons_](http://en.wikipedia.org/wiki/The_Legend_of_Zelda:_Oracle_of_Seasons_and_Oracle_of_Ages).
 
-Here's [the included demo game](#quick-demo) (`demo/game.py`) in action:
+[The included demo game](#quick-demo) (`demo/game.py`) in action:
 
 ![The demo game in action.](http://lillian-lemmer.github.io/hypatia/media/recordings/2015-06-28-develop-640x480.gif)
 
-[Hypatia is a cross-platform project (Windows, Mac, Linux, BSD), and it puts FreeBSD development first.](https://github.com/lillian-lemmer/hypatia/wiki/Platform-Support)
+[Cross-platform (Windows, Mac, Linux, BSD), putting FreeBSD development first.](https://github.com/lillian-lemmer/hypatia/wiki/Platform-Support)
 
-Hypatia is a labor of love, [permissively (MIT) licensed](license.txt), and crafted by [Lillian Lemmer](http://github.com/lillian-lemmer/hypatia/wiki/About-the-Creator).
+A labor of love, [permissively (MIT) licensed](license.txt), and crafted by [Lillian Lemmer](http://github.com/lillian-lemmer/hypatia/wiki/About-the-Creator).
 
 [Please read about how you can help support Hypatia!](https://github.com/lillian-lemmer/hypatia/wiki/Support-the-Project)
 
 # Resources
 
-For info on installation, checkout the [installation instructions page](https://github.com/lillian-lemmer/hypatia/wiki/Installation-Instructions).
-
+  * [Installation instructions](https://github.com/lillian-lemmer/hypatia/wiki/Installation-Instructions).
   * [Hypatia Wiki](https://github.com/lillian-lemmer/hypatia/wiki/) (great resource for nonprogrammers, too!)
   * [Hypatia API Docs](https://lillian-lemmer.github.io/hypatia/api)
   * For people, checkout the [socialization and contact methods for the Hypatia project](https://github.com/lillian-lemmer/hypatia/wiki/Profiles).
