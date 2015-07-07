@@ -20,23 +20,23 @@ Hypatia is a labor of love, [permissively (MIT) licensed](license.txt), and craf
 
 For info on installation, checkout the [installation instructions page](https://github.com/lillian-lemmer/hypatia/wiki/Installation-Instructions).
 
-    * [Hypatia Wiki](https://github.com/lillian-lemmer/hypatia/wiki/) (great resource for nonprogrammers, too!)
-    * [Hypatia API Docs](https://lillian-lemmer.github.io/hypatia/api)
-    * For people, checkout the [socialization and contact methods for the Hypatia project](https://github.com/lillian-lemmer/hypatia/wiki/Profiles).
-    * [The official Hypatia website](http://lillian-lemmer.github.io/hypatia/)
-    * Official support chat: [#hypatia on Freenode (webui!)](http://webchat.freenode.net/?channels=hypatia)
-    * You can contact the author via email: lillian.lynn.lemmer@gmail.com, [@LilyLemmer](https:/twitter.com/LilyLemmer) on Twitter.
+  * [Hypatia Wiki](https://github.com/lillian-lemmer/hypatia/wiki/) (great resource for nonprogrammers, too!)
+  * [Hypatia API Docs](https://lillian-lemmer.github.io/hypatia/api)
+  * For people, checkout the [socialization and contact methods for the Hypatia project](https://github.com/lillian-lemmer/hypatia/wiki/Profiles).
+  * [The official Hypatia website](http://lillian-lemmer.github.io/hypatia/)
+  * Official support chat: [#hypatia on Freenode (webui!)](http://webchat.freenode.net/?channels=hypatia)
+  * You can contact the author via email: lillian.lynn.lemmer@gmail.com, [@LilyLemmer](https:/twitter.com/LilyLemmer) on Twitter.
 
 # Dive in without any programming
 
 The included demo allows you to mess with all of its resources (see the `resources` directory!). With it you can:
 
-    * [Create tilesheets to make tilemaps](https://github.com/lillian-lemmer/hypatia/wiki/Tilesheets)
+  * [Create tilesheets to make tilemaps](https://github.com/lillian-lemmer/hypatia/wiki/Tilesheets)
 
-        * Configure tiles from the tilesheet
-        * Chain tiles together to create animations
-        * Apply the "cycle" effect, which takes a non-animated tile, and creates an animated tile by rotating the colors used in the tile
-        * Set tile flags, like the +impass_all+ flag which makes a flag impassable to the player
+    * Configure tiles from the tilesheet
+    * Chain tiles together to create animations
+    * Apply the "cycle" effect, which takes a non-animated tile, and creates an animated tile by rotating the colors used in the tile
+    * Set tile flags, like the +impass_all+ flag which makes a flag impassable to the player
 
   * [Create tilemaps with an arbitrary number of layers, using plaintext files](https://github.com/lillian-lemmer/hypatia/wiki/tilemap.txt)
   * [Create scenes, with configurable NPCs, configurable scene data (player start position)](https://github.com/lillian-lemmer/hypatia/wiki/Nonprogrammer-Guide#editing-scene-data)
@@ -54,35 +54,32 @@ Simply run `game.exe` after extracting [hypatia-demo-windows-current.zip](https:
 
 To get setup quickly and start tinkering around with the demo, simply issue the following commands:
 
-    1. +pip install hypatia_engine+
-    2. +cd demo+
-    3. +python game.py+
+  1. `pip install hypatia_engine`
+  2. `cd demo`
+  3. `python game.py`
 
 # License
 
 Hypatia is MIT licensed, which means you can use it for whatever purpose you'd like.
 
-----
-The MIT License (MIT)
+    The MIT License (MIT)
 
-Copyright (c) 2015 Lillian Lemmer
+    Copyright (c) 2015 Lillian Lemmer
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-----
-
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
