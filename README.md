@@ -8,7 +8,7 @@
 
 [![Donate with Patreon](https://img.shields.io/badge/patreon-donate%20monthly-ff69b4.svg?style=flat-square)](https://www.patreon.com/lilylemmer)
 
-[![My Amazon Wishlist](https://img.shields.io/badge/amazon--wishlist-buy%20me%20these-ff69b4.svg?style=flat-square)](|http://amzn.com/w/NKBZ0CX162S9])
+[![My Amazon Wishlist](https://img.shields.io/badge/amazon%20wishlist-buy%20me%20these-ff69b4.svg?style=flat-square)](http://amzn.com/w/NKBZ0CX162S9])
 
 Make 2D action adventure games. For programmers and nonprogrammers alike.
 
