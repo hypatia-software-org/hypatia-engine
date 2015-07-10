@@ -4,6 +4,14 @@ Uses http://keepachangelog.com/ as a guideline.
 
 ## [Unreleased] - Unreleased
 
+## 0.2.16 - 2015-07-09
+
+Whoops! How did I not notice the indentation problem in actors.py before?
+
+### Fixed
+
+  * Spacebar caused 0.2.15 to crash. This was because of an indentation error in actors.Actors.
+
 ## [0.2.15] - 2015-07-09
 
 ### Added

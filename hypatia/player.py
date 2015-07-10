@@ -12,7 +12,7 @@ from hypatia import actor
 class HumanPlayer(actor.Actor):
 
     def __init__(self, walkabout=None):
-        super(HumanPlayer, self).__init__(walkabout)
+        actor.Actor.__init__(self, walkabout)
 
     def talk(self, npcs, dialogbox):
         """Attempt to talk in current direction.
@@ -44,4 +44,4 @@ class HumanPlayer(actor.Actor):
 class Npc(actor.Actor):
 
     def __init__(self, *args, **kwargs):
-        super(Npc, self).__init__(*args, **kwargs)
+        actor.Actor.__init__(self, *args, **kwargs)

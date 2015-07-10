@@ -120,14 +120,14 @@ class Game(object):
 
         """
 
-        player = self.scene.human_player
-        player.walkabout.direction = direction
+        human_player = self.scene.human_player
+        human_player.walkabout.direction = direction
 
         # hack for incorporating new velocity system, will update later
         if direction in (constants.Direction.north, constants.Direction.south):
-            planned_movement_in_pixels = player.velocity.y
+            planned_movement_in_pixels = human_player.velocity.y
         else:
-            planned_movement_in_pixels = player.velocity.x
+            planned_movement_in_pixels = human_player.velocity.x
 
         adj_speed = self.screen.time_elapsed_milliseconds / 1000.0
         iter_pixels = max([1, int(planned_movement_in_pixels)])
@@ -135,7 +135,7 @@ class Game(object):
         # test a series of positions
         for pixels in range(iter_pixels, 0, -1):
             # create a rectangle at the new position
-            new_topleft_x, new_topleft_y = player.walkabout.topleft_float
+            new_topleft_x, new_topleft_y = human_player.walkabout.topleft_float
 
             # what's going on here
             if pixels == 2:
@@ -151,23 +151,23 @@ class Game(object):
                 new_topleft_x -= pixels * adj_speed
 
             destination_rect = pygame.Rect((new_topleft_x, new_topleft_y),
-                                           (self.scene.human_player
-                                            .walkabout.size))
-            collision_rect = player.walkabout.rect.union(destination_rect)
+                                           human_player.walkabout.size)
+            collision_rect = (human_player.
+                              walkabout.rect.union(destination_rect))
 
             if not self.collide_check(collision_rect):
                 # we're done, we can move!
                 new_topleft = (new_topleft_x, new_topleft_y)
-                player.walkabout.action = constants.Action.walk
-                animation = player.walkabout.current_animation()
-                player.walkabout.size = animation.getMaxSize()
-                player.walkabout.rect = destination_rect
-                player.walkabout.topleft_float = new_topleft
+                human_player.walkabout.action = constants.Action.walk
+                animation = human_player.walkabout.current_animation()
+                human_player.walkabout.size = animation.getMaxSize()
+                human_player.walkabout.rect = destination_rect
+                human_player.walkabout.topleft_float = new_topleft
 
                 return True
 
         # never found an applicable destination
-        player.walkabout.action = constants.Action.stand
+        human_player.walkabout.action = constants.Action.stand
 
         return False
 

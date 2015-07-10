@@ -59,45 +59,45 @@ class Actor(object):
         self.say_text = say_text or None
         self.velocity = physics.Velocity(x=20, y=20)
 
-        @property
-        def direction(self):
-            """An intsance of :class:`constants.Direction`
+    def say(self, at_direction, dialogbox):
+        facing = {
+                  constants.Direction.north: constants.Direction.south,
+                  constants.Direction.east: constants.Direction.west,
+                  constants.Direction.west: constants.Direction.east,
+                  constants.Direction.south: constants.Direction.north
+                 }[at_direction]
+        self.walkabout.direction = facing
 
-            This property indicates the direction the actor is facing.
-            Is it possible to set this property to a new value.
+        if self.say_text:
+            dialogbox.set_message(self.say_text)
 
-            Raises:
-                AttributeError: If the new value is not a valid object
-                    of the :class:`constants.Direction` class.
-                TypeError: If one tries to delete this property
+    @property
+    def direction(self):
+        """An intsance of :class:`constants.Direction`
 
-            """
-            return self.walkabout.direction
+        This property indicates the direction the actor is facing.
+        Is it possible to set this property to a new value.
 
-        @direction.setter
-        def direction(self, new_direction):
+        Raises:
+            AttributeError: If the new value is not a valid object
+                of the :class:`constants.Direction` class.
+            TypeError: If one tries to delete this property
 
-            if not isinstance(new_direction, constants.Direction):
+        """
+        return self.walkabout.direction
 
-                raise AttributeError(("Direction must be a valid "
-                                      "constants.Direction value"))
+    @direction.setter
+    def direction(self, new_direction):
 
-            else:
-                self.walkabout.direction = new_direction
+        if not isinstance(new_direction, constants.Direction):
 
-        @direction.deleter
-        def direction(self):
+            raise AttributeError(("Direction must be a valid "
+                                  "constants.Direction value"))
 
-            raise TypeError("Cannot delete the 'direction' of an Actor")
+        else:
+            self.walkabout.direction = new_direction
 
-        def say(self, at_direction, dialogbox):
-            facing = {
-                      constants.Direction.north: constants.Direction.south,
-                      constants.Direction.east: constants.Direction.west,
-                      constants.Direction.west: constants.Direction.east,
-                      constants.Direction.south: constants.Direction.north
-                     }[at_direction]
-            self.walkabout.direction = facing
+    @direction.deleter
+    def direction(self):
 
-            if self.say_text:
-                dialogbox.set_message(self.say_text)
+        raise TypeError("Cannot delete the 'direction' of an Actor")
