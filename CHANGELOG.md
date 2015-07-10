@@ -4,6 +4,39 @@ Uses http://keepachangelog.com/ as a guideline.
 
 ## [Unreleased] - Unreleased
 
+## [0.2.15] - 2015-07-09
+
+### Added
+
+  * Yet more badges to the readme
+  * Velocity
+  * Velocity to Actor class, defaulting to 20
+  * `__contains_` magic method to Resource
+  * logo notes
+
+### Changed
+
+  * Misc. corrections to documents, e.g., readme
+  * `test.sh` to launch the game demo after running tests
+  * completely changed the Direction Enum, renamed class atributes of Action to
+    lowercase
+  * demo game resource walkabouts repackaged to support new directions. changed
+    from up to north, etc.
+  * moved the say method from npc to the Actor class
+  * updated all docstrings to reflect changes, updated all code to support new
+    Direction and Velocity.
+
+### Removed
+
+  * speed from Walkabout class. added velocity to Actor class.
+
+### Fixed
+
+  * Resolved issue #50 where walkabout children would not render, because
+    anchors_ini never got loaded, due to incorrectly looking for the associated
+    ini file. Noteworthy: this issue had been present for several releases
+    without notice!
+
 ## [0.2.14] - 2015-07-07
 
 Hey sweet stuff,
