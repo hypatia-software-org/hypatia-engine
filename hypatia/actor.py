@@ -24,6 +24,7 @@ etalia, a common example being statistics like hit-points.
 
 from hypatia import animations
 from hypatia import constants
+from hypatia import physics
 
 
 class Actor(object):
@@ -39,23 +40,24 @@ class Actor(object):
     objects but the implementation does not prevent this.
 
     Attributes:
-
-        walkabout: An instance of :class:`animations.Walkabout`.
+        walkabout (:class:`animations.Walkabout`): instance.
 
     """
 
-    def __init__(self, walkabout=None):
+    def __init__(self, walkabout, say_text=None):
         """Constructs a new Actor.
 
-        Arguments:
-
-            walkabout: An instance of :class:`animations.Walkabout`,
-                which is then accessible via the ``walkabout`` property.
-                This argument is optional and defaults to new instance
+        Args:
+            walkabout (:class:`animations.Walkabout`): Walkabout which
+                is then accessible via the ``walkabout`` property. This
+                argument is optional and defaults to new instance
                 of :class:`animations.Walkabout`.
 
         """
+
         self.walkabout = walkabout or animations.Walkabout()
+        self.say_text = say_text or None
+        self.velocity = physics.Velocity(x=20, y=20)
 
         @property
         def direction(self):
@@ -67,7 +69,6 @@ class Actor(object):
             Raises:
                 AttributeError: If the new value is not a valid object
                     of the :class:`constants.Direction` class.
-
                 TypeError: If one tries to delete this property
 
             """
@@ -88,3 +89,15 @@ class Actor(object):
         def direction(self):
 
             raise TypeError("Cannot delete the 'direction' of an Actor")
+
+        def say(self, at_direction, dialogbox):
+            facing = {
+                      constants.Direction.Up: constants.Direction.Down,
+                      constants.Direction.Right: constants.Direction.Left,
+                      constants.Direction.Left: constants.Direction.Right,
+                      constants.Direction.Down: constants.Direction.Up
+                     }[at_direction]
+            self.walkabout.direction = facing
+
+            if self.say_text:
+                dialogbox.set_message(self.say_text)

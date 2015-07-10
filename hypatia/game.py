@@ -71,7 +71,7 @@ class Game(object):
 
             if event.type == KEYUP:
                 (self.scene.human_player
-                 .walkabout.action) = constants.Action.Stand
+                 .walkabout.action) = constants.Action.stand
 
             # need to trap player in a next loop, release when no next
             if event.type == KEYDOWN and event.key == K_SPACE:
@@ -94,38 +94,41 @@ class Game(object):
             return False
 
         if pressed_keys[K_UP]:
-            self.move_player(constants.Direction.Up)
+            self.move_player(constants.Direction.north)
 
         if pressed_keys[K_RIGHT]:
-            self.move_player(constants.Direction.Right)
+            self.move_player(constants.Direction.east)
 
         if pressed_keys[K_DOWN]:
-            self.move_player(constants.Direction.Down)
+            self.move_player(constants.Direction.south)
 
         if pressed_keys[K_LEFT]:
-            self.move_player(constants.Direction.Left)
+            self.move_player(constants.Direction.west)
 
         return True
 
+    # NOTE: outdated/needs to be updated for velocity
     def move_player(self, direction):
         """Modify human player's positional data legally (check
         for collisions).
-
         Note:
           Will round down to nearest probable step
           if full step is impassable.
-
           Needs to use velocity instead...
-
         Args:
-          direction (constants.Direction): may be one of: Up, Right, Down, Left
+          direction (constants.Direction):
 
         """
 
         player = self.scene.human_player
         player.walkabout.direction = direction
-        planned_movement_in_pixels = (player.walkabout.
-                                      speed_in_pixels_per_second)
+
+        # hack for incorporating new velocity system, will update later
+        if direction in (constants.Direction.north, constants.Direction.south):
+            planned_movement_in_pixels = player.velocity.y
+        else:
+            planned_movement_in_pixels = player.velocity.x
+
         adj_speed = self.screen.time_elapsed_milliseconds / 1000.0
         iter_pixels = max([1, int(planned_movement_in_pixels)])
 
@@ -138,13 +141,13 @@ class Game(object):
             if pixels == 2:
                 adj_speed = 1
 
-            if direction == constants.Direction.Up:
+            if direction == constants.Direction.north:
                 new_topleft_y -= pixels * adj_speed
-            elif direction == constants.Direction.Right:
+            elif direction == constants.Direction.east:
                 new_topleft_x += pixels * adj_speed
-            elif direction == constants.Direction.Down:
+            elif direction == constants.Direction.south:
                 new_topleft_y += pixels * adj_speed
-            elif direction == constants.Direction.Left:
+            elif direction == constants.Direction.west:
                 new_topleft_x -= pixels * adj_speed
 
             destination_rect = pygame.Rect((new_topleft_x, new_topleft_y),
@@ -155,7 +158,7 @@ class Game(object):
             if not self.collide_check(collision_rect):
                 # we're done, we can move!
                 new_topleft = (new_topleft_x, new_topleft_y)
-                player.walkabout.action = constants.Action.Walk
+                player.walkabout.action = constants.Action.walk
                 animation = player.walkabout.current_animation()
                 player.walkabout.size = animation.getMaxSize()
                 player.walkabout.rect = destination_rect
@@ -164,7 +167,7 @@ class Game(object):
                 return True
 
         # never found an applicable destination
-        player.walkabout.action = constants.Action.Stand
+        player.walkabout.action = constants.Action.stand
 
         return False
 
@@ -202,7 +205,7 @@ class Game(object):
         self.scene.human_player.walkabout.blit(
                                                self.viewport.surface,
                                                self.viewport.rect.topleft
-                                             )
+                                              )
 
         for i, layer in enumerate(self.scene.tilemap.layer_images[1:], 1):
             self.viewport.blit(layer)
@@ -269,7 +272,7 @@ class Scene(object):
         human_walkabout = animations.Walkabout('debug',
                                                position=start_position,
                                                children=[hat])
-        self.human_player = player.Player(walkabout=human_walkabout)
+        self.human_player = player.HumanPlayer(walkabout=human_walkabout)
 
         # npcs.ini
         npcs_ini_path = os.path.join(scene_directory, 'npcs.ini')
