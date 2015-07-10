@@ -23,13 +23,13 @@ class HumanPlayer(actor.Actor):
         # to talk to npc if collide
         facing = self.walkabout.direction
 
-        if facing is constants.Direction.Up:
+        if facing is constants.Direction.north:
             disposition = (0, -1)
-        elif facing is constants.Direction.Right:
+        elif facing is constants.Direction.east:
             disposition = (1, 0)
-        elif facing is constants.Direction.Down:
+        elif facing is constants.Direction.south:
             disposition = (0, 1)
-        elif facing is constants.Direction.Left:
+        elif facing is constants.Direction.west:
             disposition = (-1, 0)
 
         talk_rect = self.walkabout.rect.copy()
@@ -44,5 +44,4 @@ class HumanPlayer(actor.Actor):
 class Npc(actor.Actor):
 
     def __init__(self, *args, **kwargs):
-
         super(Npc, self).__init__(*args, **kwargs)

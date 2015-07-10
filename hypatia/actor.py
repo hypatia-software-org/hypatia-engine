@@ -92,10 +92,10 @@ class Actor(object):
 
         def say(self, at_direction, dialogbox):
             facing = {
-                      constants.Direction.Up: constants.Direction.Down,
-                      constants.Direction.Right: constants.Direction.Left,
-                      constants.Direction.Left: constants.Direction.Right,
-                      constants.Direction.Down: constants.Direction.Up
+                      constants.Direction.north: constants.Direction.south,
+                      constants.Direction.east: constants.Direction.west,
+                      constants.Direction.west: constants.Direction.east,
+                      constants.Direction.south: constants.Direction.north
                      }[at_direction]
             self.walkabout.direction = facing
 
