@@ -9,10 +9,10 @@ from hypatia import constants
 from hypatia import actor
 
 
-class Player(actor.Actor):
+class HumanPlayer(actor.Actor):
 
     def __init__(self, walkabout=None):
-        super(Player, self).__init__(walkabout)
+        super(HumanPlayer, self).__init__(walkabout)
 
     def talk(self, npcs, dialogbox):
         """Attempt to talk in current direction.
@@ -41,21 +41,8 @@ class Player(actor.Actor):
                 npc.say(facing, dialogbox)
 
 
-class Npc(Player):
+class Npc(actor.Actor):
 
     def __init__(self, *args, **kwargs):
-        self.say_text = kwargs.pop('say_text', None)
 
         super(Npc, self).__init__(*args, **kwargs)
-
-    def say(self, at_direction, dialogbox):
-        facing = {
-                  constants.Direction.Up: constants.Direction.Down,
-                  constants.Direction.Right: constants.Direction.Left,
-                  constants.Direction.Left: constants.Direction.Right,
-                  constants.Direction.Down: constants.Direction.Up
-                 }[at_direction]
-        self.walkabout.direction = facing
-
-        if self.say_text:
-            dialogbox.set_message(self.say_text)

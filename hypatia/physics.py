@@ -4,27 +4,53 @@
 
 import pygame
 
+from hypatia import constants
+
 
 class Velocity(object):
     """Eight-directional velocity."""
 
-    def __init__(self, speed,
-                 up=0, up_right=0, up_left=0,
-                 left=0, right=0,
-                 down=0, down_right=0, down_left=0):
+    def __init__(self, x=0, y=0):
+        """Speed in pixels per second per axis. Values may be negative.
 
-        self.speed = speed
+        Args:
+          x (int|None): --
+          y (int|None): --
 
-        self.up = up
-        self.up_right = up_right
-        self.up_left = up_left
+        """
 
-        self.left = left
-        self.right = right
+        self.x = x
+        self.y = y
 
-        self.down = down
-        self.down_right = down_right
-        self.down_left = down_left
+    def get_direction(self):
+        """Return a direction which corresponds to the current 2D
+        velocity.
+
+        See Also:
+            :class:`constants.Direction`
+
+        Returns:
+            :class:`constants.Direction`: --
+
+        """
+
+        directions = []
+
+        if x > 0:
+            directions.append(constants.Direction.east)
+        elif x == 0:
+            pass
+        else:
+            directions.append(constants.Direction.west)
+
+        if y > 0:
+            directions.append(constants.Direction.south)
+        elif y == 0:
+            pass
+        else:
+            directions.append(constants.Direction.north)
+
+        return sum(directions)
 
 
 class Position(object):

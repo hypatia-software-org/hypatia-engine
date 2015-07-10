@@ -90,7 +90,7 @@ class AnimAnchors(object):
 
     Example:
         >>> resource = util.Resource('walkabouts', 'debug')
-        >>> anchors = AnimAnchors.from_config(resource['walk_up.ini'])
+        >>> anchors = AnimAnchors.from_config(resource['walk_north.ini'])
         >>> anchors.anchor_points['head_anchor']
         [<hypatia.animations.AnchorPoint object at 0x...>, ...]
         >>> anchors.anchor_groups
@@ -142,7 +142,7 @@ class AnimAnchors(object):
 
         Example:
             >>> resource = util.Resource('walkabouts', 'debug')
-            >>> AnimAnchors.from_config(resource['walk_up.ini'])
+            >>> AnimAnchors.from_config(resource['walk_north.ini'])
             <hypatia.animations.AnimAnchors object at 0x...>
 
         Returns:
@@ -181,7 +181,7 @@ class AnimAnchors(object):
 
         Example:
             >>> resource = util.Resource('walkabouts', 'debug')
-            >>> config = resource['walk_up.ini']
+            >>> config = resource['walk_north.ini']
             >>> animation_anchors = AnimAnchors.from_config(config)
             >>> animation_anchors.get_anchor_point('head_anchor', 0)
             <hypatia.animations.AnchorPoint object at 0x...>
@@ -341,13 +341,13 @@ class Walkabout(object):
             file_name = os.path.split(file_name)[1]
 
             if file_name == 'only':
-                action = constants.Action.Stand
-                direction = constants.Direction.Down
+                action = constants.Action.stand
+                direction = constants.Direction.south
 
             else:
                 action, direction = file_name.split('_', 1)
-                direction = getattr(constants.Direction, direction.title())
-                action = getattr(constants.Action, action.title())
+                direction = getattr(constants.Direction, direction)
+                action = getattr(constants.Action, action)
 
             self.actions.append(action)
             self.directions.append(direction)
@@ -361,9 +361,13 @@ class Walkabout(object):
                 self.animations[action] = {direction: animation}
 
             # load anchor points
-            if file_name + '.ini' in sprite_files:
-                anchors_ini = resource[file_name + '.ini']
-                anim_anchors = AnimAnchors.from_config(file_name + ini)
+            # erro here not loading all the time
+            # maybe make the ini exlpicit? this caused porbs
+            associated_ini_name = file_name + '.ini'
+
+            if associated_ini_name in resource:
+                anchors_ini = resource[associated_ini_name]
+                anim_anchors = AnimAnchors.from_config(anchors_ini)
 
                 try:
                     self.animation_anchors[action][direction] = anim_anchors
@@ -378,9 +382,8 @@ class Walkabout(object):
         self.size = animation.getMaxSize()
         self.rect = pygame.Rect(position, self.size)
         self.topleft_float = topleft_float
-        self.action = constants.Action.Stand
-        self.direction = constants.Direction.Down
-        self.speed_in_pixels_per_second = 20.0
+        self.action = constants.Action.stand
+        self.direction = constants.Direction.south
         self.child_walkabouts = children or []
 
     def __getitem__(self, key):
@@ -395,7 +398,7 @@ class Walkabout(object):
 
         Examples:
             >>> walkabout = Walkabout('debug')
-            >>> walkabout[constants.Action.Walk][constants.Direction.Up]
+            >>> walkabout[constants.Action.walk][constants.Direction.south]
             <pyganim.PygAnimation object at 0x...>
 
         """
@@ -529,13 +532,13 @@ class Walkabout(object):
         """
 
         if len(self.animations) == 1:
-            actions = (constants.Action.Stand,)
-            directions = (constants.Direction.Down,)
+            actions = (constants.Action.stand,)
+            directions = (constants.Direction.south,)
 
         else:
-            actions = (constants.Action.Walk, constants.Action.Stand)
-            directions = (constants.Direction.Up, constants.Direction.Down,
-                          constants.Direction.Left, constants.Direction.Right)
+            actions = (constants.Action.walk, constants.Action.stand)
+            directions = (constants.Direction.north, constants.Direction.south,
+                          constants.Direction.east, constants.Direction.west)
 
         for action in actions:
 

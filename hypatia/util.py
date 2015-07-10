@@ -82,6 +82,10 @@ class Resource(object):
 
         return self.files[file_name]
 
+    def __contains__(self, item):
+
+        return item in self.files
+
     def get_type(self, file_extension):
         """Return a dictionary of files which have the file extension
         specified. Remember to include the dot, e.g., ".gif"!
@@ -124,7 +128,7 @@ def load_gif(path_or_bytesio):
 
     Example:
         >>> path = 'resources/walkabouts/debug.zip'
-        >>> file_name = 'debug/walk_up.gif'
+        >>> file_name = 'debug/walk_north.gif'
         >>> sample = zipfile.ZipFile(path).open(file_name).read()
         >>> load_gif(BytesIO(sample))
         <pyganim.PygAnimation object at 0x...>
@@ -168,7 +172,7 @@ def pil_to_pygame(pil_image, encoding):
     Example:
         >>> from PIL import Image
         >>> path = 'resources/walkabouts/debug.zip'
-        >>> file_name = 'debug/walk_up.gif'
+        >>> file_name = 'debug/walk_north.gif'
         >>> sample = zipfile.ZipFile(path).open(file_name).read()
         >>> gif = Image.open(BytesIO(sample))
         >>> pil_to_pygame(gif, "RGBA")
