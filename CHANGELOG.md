@@ -2,7 +2,15 @@
 
 Uses http://keepachangelog.com/ as a guideline.
 
-## [Unreleased] - Unreleased
+## [0.2.21] - 2015-07-12
+
+### Added
+
+  * `etc/` directory with pre-push test script, thanks @ejmr! See pull request #49.
+
+### Fixed
+
+  * doctest for python 3 in `util.Resource`
 
 ## [0.2.20] - 2015-07-12
 

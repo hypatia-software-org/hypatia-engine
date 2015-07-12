@@ -36,7 +36,7 @@ class Resource(object):
         >>> isinstance(resource['walk_north.gif'], pyganim.PygAnimation)
         True
         >>> resource = Resource('scenes', 'debug')
-        >>> isinstance(resource['tilemap.txt'], unicode)
+        >>> resource['tilemap.txt'].startswith('debug')
         True
 
     """
