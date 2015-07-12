@@ -51,6 +51,9 @@ class Direction(enum.Enum):
     south = 4
     west = 8
 
+    # so we preserve, specify a specific order
+    cardinal = [north, east, south, west]
+
     # Ordinal Directions
     north_east = 3
     north_west = 9
@@ -60,6 +63,10 @@ class Direction(enum.Enum):
     # just for fun
     north_south = 5
     east_west = 10
+
+    # Cardinal Directions by Axis
+    x = (east, west)
+    y = (north, south)
 
     def __add__(cls, other_direction):
         """Combine one cardinal direction with another to get
@@ -71,8 +78,10 @@ class Direction(enum.Enum):
         Returns:
             :class:`Direction`: an ordinal direction.
 
-        >>> Direction.east + Direction.north == Direction.north_east
-        True
+        Example:
+          >>> Direction.east + Direction.north == Direction.north_east
+          True
+
         """
 
         return Direction(cls.value + other_direction.value)
