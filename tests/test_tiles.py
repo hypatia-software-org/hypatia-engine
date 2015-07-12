@@ -23,6 +23,7 @@ from io import BytesIO
 import pygame
 import pytest
 
+from hypatia import util
 from hypatia import tiles
 
 try:
@@ -139,9 +140,8 @@ def test_tilemap():
 
     """
 
-    with open('resources/scenes/debug/tilemap.txt') as f:
-        map_string = f.read().strip()
-
+    resource = util.Resource('scenes', 'debug')
+    map_string = resource['tilemap.txt'].strip()
     tilemap = tiles.TileMap.from_string(map_string)
 
     # there are 208 impassable rects in the debug tilemap

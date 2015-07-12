@@ -4,6 +4,23 @@ Uses http://keepachangelog.com/ as a guideline.
 
 ## [Unreleased] - Unreleased
 
+## [0.2.18] - 2015-07-12
+
+Scenes now read through Resource class.
+
+### Changed
+
+  * debug scene now a zip as per Resource class
+  * game.Scene uses Resource class to load the debug zip from the scenes resources directory.
+  * Resources will hold non-configuration text files as strings, rather than StringIO
+  * test_tiles.py needed to be updated to use new Resource system so it could read a tilemap from a scene zip archive/resource.
+
+## [0.2.17] - 2015-07-10
+
+### Fixed
+
+  * Whoops! Merged #51: emums not unique! Thanks, @ejmr.
+
 ## 0.2.16 - 2015-07-09
 
 Whoops! How did I not notice the indentation problem in actors.py before?

@@ -34,6 +34,7 @@ except ImportError:
 import pygame
 from pygame.locals import *
 
+from hypatia import util
 from hypatia import tiles
 from hypatia import dialog
 from hypatia import render
@@ -224,6 +225,7 @@ class Game(object):
         sys.exit()
 
 
+# updating for resources
 class Scene(object):
     """A map with configuration data/meta, e.g., NPCs.
 
@@ -245,20 +247,10 @@ class Scene(object):
 
         """
 
-        scene_directory = os.path.join('resources', 'scenes', scene_name)
-
-        # scene.ini
-        scene_ini_path = os.path.join(scene_directory, 'scene.ini')
-        scene_ini = configparser.ConfigParser()
-        scene_ini.read(scene_ini_path)
-
-        # .. scene data
-        # .. should include tilesheet
-        tilemap_string_path = os.path.join(scene_directory, 'tilemap.txt')
-
-        with open(tilemap_string_path) as f:
-            tilemap_string = f.read()
-
+        # NEW IMPL
+        resource = util.Resource('scenes', scene_name)
+        scene_ini = resource['scene.ini']
+        tilemap_string = resource['tilemap.txt']
         self.tilemap = tiles.TileMap.from_string(tilemap_string)
 
         # .. player start position
@@ -275,9 +267,7 @@ class Scene(object):
         self.human_player = player.HumanPlayer(walkabout=human_walkabout)
 
         # npcs.ini
-        npcs_ini_path = os.path.join(scene_directory, 'npcs.ini')
-        npcs_ini = configparser.ConfigParser()
-        npcs_ini.read(npcs_ini_path)
+        npcs_ini = resource['npcs.ini']
 
         self.npcs = []
 

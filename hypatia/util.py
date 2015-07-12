@@ -23,7 +23,7 @@ class Resource(object):
     supplying a resource category and name.
 
     Attributes:
-      files (dict): Key is file name, value can be one of StringIO,
+      files (dict): Key is file name, value can be one of str,
         BytesIO, PygAnim, or ConfigParser objects.
 
     """
@@ -57,10 +57,11 @@ class Resource(object):
                     continue
 
                 try:
-                    file_data = StringIO(file_data.decode('utf-8'))
+                    file_data = file_data.decode('utf-8')
 
                     # returns (file path, file extension)
                     if os.path.splitext(file_name)[1] == '.ini':
+                        file_data = StringIO(file_data)
                         config = configparser.ConfigParser()
 
                         # NOTE: this still works in python 3, though it was
