@@ -61,7 +61,7 @@ class Resource(object):
 
                     # returns (file path, file extension)
                     if os.path.splitext(file_name)[1] == '.ini':
-                        file_data = StringIO(file_data.decode('utf-8'))
+                        file_data = StringIO(file_data)
                         config = configparser.ConfigParser()
 
                         # NOTE: this still works in python 3, though it was

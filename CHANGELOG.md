@@ -4,6 +4,14 @@ Uses http://keepachangelog.com/ as a guideline.
 
 ## [Unreleased] - Unreleased
 
+## [0.2.18] - 2015-07-11
+
+## [0.2.17] - 2015-07-10
+
+### Fixed
+
+  * Whoops! Merged #51: emums not unique! Thanks, @ejmr.
+
 ## 0.2.16 - 2015-07-09
 
 Whoops! How did I not notice the indentation problem in actors.py before?
