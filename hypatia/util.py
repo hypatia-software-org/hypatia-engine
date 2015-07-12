@@ -20,11 +20,24 @@ from PIL import Image
 
 class Resource(object):
     """A zip archive in the resources directory, located by
-    supplying a resource category and name.
+    supplying a resource category and name. Files are stored
+    as a str, BytesIO, PygAnimation, or ConfigParser, in a
+    dictionary. Files are referenced by filepath/filename.
 
     Attributes:
-      files (dict): Key is file name, value can be one of str,
-        BytesIO, PygAnim, or ConfigParser objects.
+        files (dict): Key is file name, value can be one of str,
+            BytesIO, PygAnim, or ConfigParser objects.
+
+    Example:
+        >>> import pyganim
+        >>> resource = Resource('walkabouts', 'debug')
+        >>> 'walk_north.gif' in resource
+        True
+        >>> isinstance(resource['walk_north.gif'], pyganim.PygAnimation)
+        True
+        >>> resource = Resource('scenes', 'debug')
+        >>> isinstance(resource['tilemap.txt'], unicode)
+        True
 
     """
 
@@ -32,12 +45,11 @@ class Resource(object):
         """Load a resource ZIP using a category and zip name.
 
         Args:
-          resource_category (str): E.g., tilesheets, walkabouts.
-          resource_name (str): E.g., debug.
+            resource_category (str): E.g., tilesheets, walkabouts.
+            resource_name (str): E.g., debug.
 
         """
 
-        # new
         zip_path = os.path.join(
                                 'resources',
                                 resource_category,
@@ -54,10 +66,9 @@ class Resource(object):
 
             for file_name in zip_file.namelist():
                 file_data = zip_file.open(file_name).read()
-                file_name = os.path.basename(file_name)
 
                 # because namelist will also generate
-                # the current directory
+                # the directories
                 if not file_name:
 
                     continue
