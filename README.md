@@ -1,4 +1,4 @@
-# Hypatia 0.2.18 (alpha)
+# Hypatia 0.2.19 (alpha)
 
 ![Hypatia 0.2](media/logos/logotype-blacktext-transparentbg.png)
 

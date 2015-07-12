@@ -37,11 +37,17 @@ class Resource(object):
 
         """
 
+        # new
         zip_path = os.path.join(
                                 'resources',
                                 resource_category,
                                 resource_name + '.zip'
                                )
+        file_handlers = {
+                         '.ini': configparser_fromfp,
+                         '.gif': load_gif
+                        }
+
         files = {}
 
         with zipfile.ZipFile(zip_path) as zip_file:
@@ -58,22 +64,14 @@ class Resource(object):
 
                 try:
                     file_data = file_data.decode('utf-8')
-
-                    # returns (file path, file extension)
-                    if os.path.splitext(file_name)[1] == '.ini':
-                        file_data = StringIO(file_data)
-                        config = configparser.ConfigParser()
-
-                        # NOTE: this still works in python 3, though it was
-                        # replaced by config.read_file()
-                        config.readfp(file_data)
-                        file_data = config
-
                 except ValueError:
                     file_data = BytesIO(file_data)
 
-                    if os.path.splitext(file_name)[1] == '.gif':
-                        file_data = load_gif(file_data)
+                # then we do the file handler call ehre
+                file_extension = os.path.splitext(file_name)[1]
+
+                if file_extension in file_handlers:
+                    file_data = file_handlers[file_extension](file_data)
 
                 files[file_name] = file_data
 
@@ -129,7 +127,7 @@ def load_gif(path_or_bytesio):
 
     Example:
         >>> path = 'resources/walkabouts/debug.zip'
-        >>> file_name = 'debug/walk_north.gif'
+        >>> file_name = 'walk_north.gif'
         >>> sample = zipfile.ZipFile(path).open(file_name).read()
         >>> load_gif(BytesIO(sample))
         <pyganim.PygAnimation object at 0x...>
@@ -173,7 +171,7 @@ def pil_to_pygame(pil_image, encoding):
     Example:
         >>> from PIL import Image
         >>> path = 'resources/walkabouts/debug.zip'
-        >>> file_name = 'debug/walk_north.gif'
+        >>> file_name = 'walk_north.gif'
         >>> sample = zipfile.ZipFile(path).open(file_name).read()
         >>> gif = Image.open(BytesIO(sample))
         >>> pil_to_pygame(gif, "RGBA")
@@ -188,3 +186,14 @@ def pil_to_pygame(pil_image, encoding):
                                    pil_image.size,
                                    'RGBA'
                                   )
+
+
+def configparser_fromfp(file_data):
+    file_data = StringIO(file_data)
+    config = configparser.ConfigParser()
+
+    # NOTE: this still works in python 3, though it was
+    # replaced by config.read_file()
+    config.readfp(file_data)
+
+    return config

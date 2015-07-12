@@ -4,6 +4,24 @@ Uses http://keepachangelog.com/ as a guideline.
 
 ## [Unreleased] - Unreleased
 
+## [0.2.19] - 2015-07-12
+
+Cleaning up!
+
+### Chanegd
+
+  * `Velocity.get_diretion` simplified, made modular
+  * `util.Resource.__init__` has a new way of loading files, each file extension is associated with a callback function for providing a desired object based on file string or bytes.
+
+### Added
+
+  * properties added to Direction class: x, y, cardinal
+  * `util.configparser_fromfp()`
+
+### Fixed
+
+  * `Direction.__add__`, `load_gif()`, `pil_to_pygame()` docstrings
+
 ## [0.2.18] - 2015-07-12
 
 Scenes now read through Resource class.
