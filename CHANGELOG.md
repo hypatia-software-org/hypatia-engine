@@ -4,6 +4,19 @@ Uses http://keepachangelog.com/ as a guideline.
 
 ## [Unreleased] - Unreleased
 
+## [0.2.20] - 2015-07-12
+
+More cleanup/fixes.
+
+### Changed
+
+  * Docstrings for `util.Resource`, they're a lot better now
+  * Cleanup
+
+### Fixed
+
+  * Was using basename to set filename for files in Resource
+
 ## [0.2.19] - 2015-07-12
 
 Cleaning up!
