@@ -23,7 +23,7 @@ class Resource(object):
     supplying a resource category and name.
 
     Attributes:
-      files (dict): Key is file name, value can be one of StringIO,
+      files (dict): Key is file name, value can be one of str,
         BytesIO, PygAnim, or ConfigParser objects.
 
     """
