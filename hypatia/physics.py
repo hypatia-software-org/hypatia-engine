@@ -34,23 +34,25 @@ class Velocity(object):
 
         """
 
-        directions = []
+        x_directions = ('x', constants.Direction.east,
+                        constants.Direction.west)
+        y_directions = ('y', constants.Direction.south,
+                        constants.Direction.north)
 
-        if x > 0:
-            directions.append(constants.Direction.east)
-        elif x == 0:
-            pass
-        else:
-            directions.append(constants.Direction.west)
+        collected_directions = []
 
-        if y > 0:
-            directions.append(constants.Direction.south)
-        elif y == 0:
-            pass
-        else:
-            directions.append(constants.Direction.north)
+        for direction_info in [x_directions, y_directions]:
+            axis, plus_direction, nevative_direction = direction_info
+            axis_value = getattr(self, axis)
 
-        return sum(directions)
+            if axis_value > 0:
+                collected_directions.append(plus_direction)
+            elif axis_value == 0:
+                pass
+            else:
+                collected_directions.append(negative_direction)
+
+        return sum(collected_directinos)
 
 
 class Position(object):
