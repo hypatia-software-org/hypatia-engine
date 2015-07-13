@@ -61,7 +61,7 @@ class HumanPlayer(actor.Actor):
             destination_rect = pygame.Rect((new_topleft_x, new_topleft_y),
                                            self.walkabout.size)
             collision_rect = self.walkabout.rect.union(destination_rect)
-                              
+
             if not game.scene.collide_check(collision_rect):
                 # we're done, we can move!
                 new_topleft = (new_topleft_x, new_topleft_y)
