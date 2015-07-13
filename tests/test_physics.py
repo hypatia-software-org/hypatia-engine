@@ -30,6 +30,9 @@ def test_velocity():
     velocity = physics.Velocity(1, 2)
     assert velocity.x == 1 and velocity.y == 2
 
+    velocity = physics.Velocity()
+    assert velocity.x == 0 and velocity.y == 0
+
     velocity = physics.Velocity(x=1, y=2)
     assert velocity.x == 1 and velocity.y == 2
 
