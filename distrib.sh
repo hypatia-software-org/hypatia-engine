@@ -9,4 +9,4 @@ pandoc README.md -t rst -o PKG-INFO
 python setup.py sdist bdist_wheel
 twine upload dist/*
 rm -rf build dist PKG-INFO
-rm hypatia_engine.egg-info
+rm -rf hypatia_engine.egg-info
