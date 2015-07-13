@@ -2,6 +2,19 @@
 
 Uses http://keepachangelog.com/ as a guideline.
 
+## [0.2.22] - 2015-07-12
+
+### Added
+
+  * `distrib.sh`: for PyPI distribution automation
+  * `setup.py` long description, which works in combination of above
+
+### Changed
+
+  * `AUTHORS.md`: brief description of user contributions and James Leung
+  * sphinx setup; using a more standard "docs" and "docs/build" approach
+  * `make-sphinx.sh` for the above reason
+
 ## [0.2.21] - 2015-07-12
 
 ### Added
