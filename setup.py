@@ -14,11 +14,16 @@ to clear your dist when finished.
 from setuptools import setup
 
 
+try:
+    long_description = open('PKG-INFO').read()
+except IOError:
+    long_description = None
+
 exec(open('hypatia/__init__.py').read())
 setup(name='hypatia_engine',
       version=__version__,
       description='2D action adventure game engine',
-      long_description=open('PKG-INFO').read(),
+      long_description=long_description,
       author='Lillian Lemmer',
       author_email='lillian.lynn.lemmer@gmail.com',
       url='http://lillian-lemmer.github.io/hypatia',

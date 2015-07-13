@@ -2,6 +2,16 @@
 
 Uses http://keepachangelog.com/ as a guideline.
 
+## [0.2.24] - 2015-07-13
+
+### Added
+
+  * `readme` Python module for testing PyPI rst readme/PKG-INFO
+
+### Fixed
+
+  * `readme` for PyPI, according to `readme` module
+
 ## [0.2.23] - 2015-07-12
 
 ### Changed
