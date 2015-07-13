@@ -4,6 +4,14 @@ Uses http://keepachangelog.com/ as a guideline.
 
 ## [0.2.23] - 2015-07-12
 
+### Changed
+
+  * `README.md` can now be auto-converted to rst for upload to PyPi. PyPi doesn't allow internal or relative links.
+
+### Fixed
+
+  * `test.sh` will generate `PKG-INFO` for `setup.py`
+
 ## [0.2.22] - 2015-07-12
 
 ### Added
