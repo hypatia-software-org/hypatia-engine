@@ -140,5 +140,5 @@ class Action(enum.Enum):
 
     """
 
-    walk = 1
-    stand = 2
+    stand = 1
+    walk = 2
