@@ -6,7 +6,8 @@ Lillian Lynn Lemmer is the mommy of Hypatia.
 
 People who have submitted patches, reported bugs, helped answer questions, and general made Hypatia that much better:
 
-    * Eric James Michael Ritz (ejmr@plutono.com)
+    * Eric James Michael Ritz (ejmr@plutono.com): scripts, programming, documentation, and more!
+    * James Leung: wiki, documentation
 
 ## A big THANK YOU goes to...
 

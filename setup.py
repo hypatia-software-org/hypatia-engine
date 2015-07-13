@@ -18,6 +18,7 @@ exec(open('hypatia/__init__.py').read())
 setup(name='hypatia_engine',
       version=__version__,
       description='2D action adventure game engine',
+      long_description=open('PKG-INFO').read(),
       author='Lillian Lemmer',
       author_email='lillian.lynn.lemmer@gmail.com',
       url='http://lillian-lemmer.github.io/hypatia',
