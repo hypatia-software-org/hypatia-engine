@@ -2,7 +2,7 @@
 
 Uses http://keepachangelog.com/ as a guideline.
 
-## [0.2.24] - 2015-07-12
+## [0.2.24] - 2015-07-13
 
 ### Added
 
