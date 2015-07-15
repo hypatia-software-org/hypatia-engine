@@ -9,6 +9,7 @@ People who have submitted patches, reported bugs, helped answer questions, and g
   * Eric James Michael Ritz (ejmr@plutono.com): scripts, programming, documentation, and more!
   * James Leung: wiki, documentation
   * Jane Dora Coder: community manager
+  * Graham Bignell: community manager
 
 ## Financial Contributors
 
