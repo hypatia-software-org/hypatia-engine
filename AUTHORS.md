@@ -2,13 +2,28 @@
 
 Lillian Lynn Lemmer is the mommy of Hypatia.
 
-## Much-appreciated contributors
+## Non-financial Contributors
 
 People who have submitted patches, reported bugs, helped answer questions, and general made Hypatia that much better:
 
-    * Eric James Michael Ritz (ejmr@plutono.com): scripts, programming, documentation, and more!
-    * James Leung: wiki, documentation
+  * Eric James Michael Ritz (ejmr@plutono.com): scripts, programming, documentation, and more!
+  * James Leung: wiki, documentation
+
+## Financial Contributors
+
+Funders/donators from: Patreon, Paypal, GratiPay, BountySource.
+
+  * Jerich McAfee
+  * Harry (AKA Hartosi)
+  * Jobias
+  * Don Bright
+
+For more info, see:
+
+  * My Patreon profile: https://www.patreon.com/lilylemmer
+  * My GratiPay profile: https://gratipay.com/~lillian-lemmer/
+  * Hypatia team on BountySource: https://www.bountysource.com/teams/hypatia
 
 ## A big THANK YOU goes to...
 
-... Our funders, our donators from Patreon, Paypal, GratiPay, BountySource. Our friends and lovers.
+Our friends and lovers.

@@ -51,9 +51,6 @@ class Direction(enum.Enum):
     south = 4
     west = 8
 
-    # so we preserve, specify a specific order
-    cardinal = [north, east, south, west]
-
     # Ordinal Directions
     north_east = 3
     north_west = 9
@@ -64,9 +61,59 @@ class Direction(enum.Enum):
     north_south = 5
     east_west = 10
 
-    # Cardinal Directions by Axis
-    x = (east, west)
-    y = (north, south)
+    @classmethod
+    def cardinal(cls):
+
+        return (cls.north, cls.east, cls.south, cls.west)
+
+    @classmethod
+    def x_plus(cls):
+
+        return cls.east
+
+    @classmethod
+    def x_minus(cls):
+
+        return cls.west
+
+    @classmethod
+    def y_plus(cls):
+
+        return cls.south
+
+    @classmethod
+    def y_minus(cls):
+
+        return cls.north
+
+    @classmethod
+    def from_velocity(cls, velocity):
+        """Return a direction which corresponds to the current 2D
+        velocity.
+
+        See Also:
+            :class:`constants.Direction`
+
+        Returns:
+            :class:`constants.Direction`: --
+
+        """
+
+        collected_directions = []
+
+        for axis in ['x', 'y']:
+            plus_direction = getattr(Direction, axis + '_plus')()
+            minus_direction = getattr(Direction, axis + '_minus')()
+            axis_value = getattr(velocity, axis)
+
+            if axis_value > 0:
+                collected_directions.append(plus_direction)
+            elif axis_value == 0:
+                pass
+            else:
+                collected_directions.append(minus_direction)
+
+        return collected_directions[0] + collected_directions[1]
 
     def __add__(cls, other_direction):
         """Combine one cardinal direction with another to get
@@ -93,11 +140,5 @@ class Action(enum.Enum):
 
     """
 
-    walk = 1
-    stand = 2
-
-
-# let's run doctests first
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
+    stand = 1
+    walk = 2

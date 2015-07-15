@@ -44,7 +44,7 @@ class Actor(object):
 
     """
 
-    def __init__(self, walkabout, say_text=None):
+    def __init__(self, walkabout, say_text=None, velocity=None):
         """Constructs a new Actor.
 
         Args:
@@ -55,21 +55,9 @@ class Actor(object):
 
         """
 
-        self.walkabout = walkabout or animations.Walkabout()
+        self.walkabout = walkabout
         self.say_text = say_text or None
-        self.velocity = physics.Velocity(x=20, y=20)
-
-    def say(self, at_direction, dialogbox):
-        facing = {
-                  constants.Direction.north: constants.Direction.south,
-                  constants.Direction.east: constants.Direction.west,
-                  constants.Direction.west: constants.Direction.east,
-                  constants.Direction.south: constants.Direction.north
-                 }[at_direction]
-        self.walkabout.direction = facing
-
-        if self.say_text:
-            dialogbox.set_message(self.say_text)
+        self.velocity = velocity or physics.Velocity()
 
     @property
     def direction(self):
@@ -101,3 +89,41 @@ class Actor(object):
     def direction(self):
 
         raise TypeError("Cannot delete the 'direction' of an Actor")
+
+    def say(self, at_direction, dialogbox):
+        facing = {
+                  constants.Direction.north: constants.Direction.south,
+                  constants.Direction.east: constants.Direction.west,
+                  constants.Direction.west: constants.Direction.east,
+                  constants.Direction.south: constants.Direction.north
+                 }[at_direction]
+        self.walkabout.direction = facing
+
+        if self.say_text:
+            dialogbox.set_message(self.say_text)
+
+    def talk(self, npcs, dialogbox):
+        """Attempt to talk in current direction.
+
+        """
+
+        # get the current direction, check a bit in front with a rect
+        # to talk to npc if collide
+        facing = self.walkabout.direction
+
+        if facing is constants.Direction.north:
+            disposition = (0, -1)
+        elif facing is constants.Direction.east:
+            disposition = (1, 0)
+        elif facing is constants.Direction.south:
+            disposition = (0, 1)
+        elif facing is constants.Direction.west:
+            disposition = (-1, 0)
+
+        talk_rect = self.walkabout.rect.copy()
+        talk_rect.move_ip(disposition)
+
+        for npc in npcs:
+
+            if npc.walkabout.rect.colliderect(talk_rect):
+                npc.say(facing, dialogbox)
