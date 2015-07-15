@@ -28,6 +28,14 @@ hypatia.constants module
     :undoc-members:
     :show-inheritance:
 
+hypatia.controllers module
+--------------------------
+
+.. automodule:: hypatia.controllers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 hypatia.dialog module
 ---------------------
 
