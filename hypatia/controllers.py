@@ -1,7 +1,11 @@
 # This module is part of Hypatia and is released under the
 # MIT License: http://opensource.org/licenses/MIT
 
-"""Anything to do with game controls.
+"""Anything to do with game controls. Controller objects, which
+handles the association of input with changing the state of a provided
+object. For example, the WorldController needs a Game instance
+(currently) in order to make input reflect and retrieve changes in the
+Game instance and scene.
 
 """
 
@@ -15,17 +19,33 @@ class GameController(object):
     """Base input controller, "game pad," which is inherited
     by all input classes/controllers.
 
+    This is handy for having controller methods which are
+    universal.
+
     """
 
     def __init__(self, game):
         self.game = game
 
 
+class MenuController(GameController):
+    """For menu screens.
+
+    """
+
+    pass
+
+
 class WorldController(GameController):
-    """For the overworld."""
+    """For the overworld. The controller for manipulating the state
+    of the general world, when the player is walking about.
+
+    """
 
     def handle_input(self):
         """for overworld
+
+        This is in its infancy.
 
         Returns
           bool: returns True if escape was never pressed; returns
@@ -59,20 +79,17 @@ class WorldController(GameController):
 
             return False
 
-        if pressed_keys[K_UP]:
-            self.game.scene.human_player.move(self.game,
-                                              constants.Direction.north)
+        # movement (if key is pressed)
+        movement = {
+                    K_UP: constants.Direction.north,
+                    K_RIGHT: constants.Direction.east,
+                    K_DOWN: constants.Direction.south,
+                    K_LEFT: constants.Direction.west,
+                   }
 
-        if pressed_keys[K_RIGHT]:
-            self.game.scene.human_player.move(self.game,
-                                              constants.Direction.east)
+        for key, direction in movement.items():
 
-        if pressed_keys[K_DOWN]:
-            self.game.scene.human_player.move(self.game,
-                                              constants.Direction.south)
-
-        if pressed_keys[K_LEFT]:
-            self.game.scene.human_player.move(self.game,
-                                              constants.Direction.west)
+            if pressed_keys[key]:
+                self.game.scene.human_player.move(self.game, direction)
 
         return True
