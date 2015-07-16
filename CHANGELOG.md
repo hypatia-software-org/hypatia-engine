@@ -2,6 +2,22 @@
 
 Uses http://keepachangelog.com/ as a guideline.
 
+## [0.2.26] - 2015-07-16
+
+### Added
+
+  * `controllers.py` module-level docstring which elaborates on the module. General docstring updates in this module.
+  * `controllers.MenuController` scaffolding
+
+### Fixed
+
+  * decreased cyclomatic complexity in `controllers.WorldController.handle_input()`.
+
+### Changed
+
+  * `AUTHORS.md` file updated to include more info, including emails, and includes our new community managers!
+  * Icon xfc and png files in `media/icons`
+
 ## [0.2.25] - 2015-07-14
 
 ### Added
