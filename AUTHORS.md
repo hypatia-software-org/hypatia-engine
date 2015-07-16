@@ -1,6 +1,6 @@
 # The authors of Hypatia
 
-Lillian Lynn Lemmer is the mommy of Hypatia.
+Lillian Lynn Lemmer (lillian.lynn.lemmer@gmail.com) is the mommy of Hypatia.
 
 ## Non-financial Contributors
 
@@ -8,7 +8,7 @@ People who have submitted patches, reported bugs, helped answer questions, and g
 
   * Eric James Michael Ritz (ejmr@plutono.com): scripts, programming, documentation, and more!
   * James Leung: wiki, documentation
-  * Jane Dora Coder: community manager
+  * Jane Dora Coder (jane@jdcoder.net): community manager
   * Graham Bignell: community manager
 
 ## Financial Contributors
