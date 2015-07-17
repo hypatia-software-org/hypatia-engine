@@ -254,6 +254,24 @@ class TileMap(object):
         return self.tilesheet.name + '\n' + output_string
 
     @classmethod
+    def from_tmx(cls, tile_map_xml):
+        """Create a TileMap from Tiled's "Tile Map XML" map
+        format. For more information please see the official
+        TMX documentation:
+
+          * http://doc.mapeditor.org/reference/tmx-map-format/
+
+        Args:
+            tile_map_xml (str): TMX representation of a TileMap.
+
+        Returns:
+            TileMap
+
+        """
+
+        pass
+
+    @classmethod
     def from_string(cls, map_string, separator=' '):
         """This is a debug feature. Create a 3D list of tile names using
         ASCII symbols. Supports layers.
