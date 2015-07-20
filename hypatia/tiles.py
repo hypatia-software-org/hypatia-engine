@@ -18,6 +18,7 @@ import glob
 import zlib
 import string
 import itertools
+import xml.etree.ElementTree as ET
 
 import pygame
 import pyganim
@@ -222,6 +223,10 @@ class TileMap(object):
 
         return None
 
+    def to_tmx(self):
+        "Scaffolding"""
+        pass
+
     def to_string(self, separator=' '):
         """Create the user-unfriendly string for the tilemap.
 
@@ -254,22 +259,34 @@ class TileMap(object):
         return self.tilesheet.name + '\n' + output_string
 
     @classmethod
-    def from_tmx(cls, tile_map_xml):
+    def from_tmx(cls, tmx_file_like_object):
         """Create a TileMap from Tiled's "Tile Map XML" map
         format. For more information please see the official
         TMX documentation:
 
           * http://doc.mapeditor.org/reference/tmx-map-format/
 
+        The TMX must use CSV for layers. You also have to make
+        sure that the filename used in tile source is exactly
+        the same as the TileSheet you wanna use.
+
+        HOW DO YOU DEFINE NPCS AND PLAYER START???
+
         Args:
-            tile_map_xml (str): TMX representation of a TileMap.
+            tmx_file_like_object: --
 
         Returns:
             TileMap
 
+        Note:
+            Yes, I created this because I thought pytmx and
+            tmxlib didn't suit my purposes.
+
         """
 
-        pass
+        tree = ET.parse(tmx_file_like_object)
+
+        return TileMap(tilesheet_name, layers)
 
     @classmethod
     def from_string(cls, map_string, separator=' '):
