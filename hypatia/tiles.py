@@ -286,6 +286,12 @@ class TileMap(object):
 
         tree = ET.parse(tmx_file_like_object)
 
+        # get the tilesheet name
+
+        # get the 3D constructor/blueprint of TileMap,
+        # which simply references, by integer, the
+        # tile from tilesheet.
+
         return TileMap(tilesheet_name, layers)
 
     @classmethod
