@@ -339,9 +339,15 @@ class TileMap(object):
 
           * http://doc.mapeditor.org/reference/tmx-map-format/
 
-        The TMX must use CSV for layers. You also have to make
-        sure that the filename used in tile source is exactly
-        the same as the TileSheet you wanna use.
+        TMX file must have the following settings:
+
+          * orientation: orthogonal
+          * tile layer format: csv
+          * tile render order: right down
+
+        You must also specify the tilesheet name you want to use
+        in Hypatia, as your tileset image name. You may only use
+        one image.
 
         HOW DO YOU DEFINE NPCS AND PLAYER START???
 
@@ -351,9 +357,8 @@ class TileMap(object):
         Returns:
             TileMap
 
-        Note:
-            Yes, I created this because I thought pytmx and
-            tmxlib didn't suit my purposes.
+        See Also:
+            :class:`Tilesheet`
 
         """
 
