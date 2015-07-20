@@ -72,6 +72,52 @@ class TooManyTilesheets(Exception):
         self.bad_tile_id = bad_tile_id
 
 
+class TMXVersionUnsupported(object):
+    """Attempted to create a TileMap from a TMX map, but
+    the TMX map version is unsupported.
+
+    Attribs:
+        map_version (str): the version which was attempted
+
+    """
+
+    def __init__(self, map_version):
+        """
+
+        Args:
+            map_version (str): the map version which is
+                unsupported. This becomes the map_version
+                attribute.
+
+        """
+
+        message = 'version %s unsupported' % map_version
+        super(TMXVersionUnsupported, self).__init__(message)
+        self.map_version = map_version
+
+
+class TMXLayersNotCSV(object):
+    """The data encoding used for layers during Tilemap.from_tmx()
+    is not supported. Only CSV is supported.
+
+    Attribs:
+        data_encoding (str): the failed data encoding.
+
+    """
+
+    def __init__(self, data_encoding):
+        """
+
+        Args:
+            data_encoding (str): the failed data encoding
+
+        """
+
+        message = 'tmx layer data encoding %s unsupported' % data_encoding
+        super(TMXLayersNotCSV, self).__init__(message)
+        self.data_encodign = data_encoding
+
+
 class TileMap(object):
     """Layers created from graphical tiles specified in a tilesheet.
 
@@ -313,14 +359,22 @@ class TileMap(object):
 
         tree = ET.parse(tmx_file_like_object)
         root = tree.getroot()
-        tileset_images = root.findall("./tileset/image")
+
+        # check the version first, make sure it's supported
+        map_version = root.find('./map').attrib['version']
+
+        if map_version != "1.0":
+
+            raise TMXVersionUnsupported(ap_version)
+
+        # Get the Tilesheet (tileset) name from the tileset
+        # image source.
+        tileset_images = root.findall('./map/tileset/image')
 
         if len(tileset_images) > 1:
 
             raise TooManyTilesheets()
 
-        # Get the Tilesheet (tileset) name from the tileset
-        # image source.
         file_path = tileset_images[0].attrib['source']
         file_name = os.path.basename(file_path)
         tilesheet_name = os.path.splitext(file_name)[0]
@@ -329,6 +383,23 @@ class TileMap(object):
         # which simply references, by integer, the
         # tile from tilesheet.
         layers = []
+
+        for layer_data in root.findall("./map/layer/data"):
+            data_encoding = layer_data.attrib['encoding']
+
+            if data_encoding != 'csv':
+
+                raise TMXLayersNotCSV(data_encoding)
+                
+            layer_csv = layer_data.text
+            rows = layer_csv.split('\n')
+            parsed_rows = []
+
+            for row in rows:
+                parsed_row = [int(tile_id) for tile_id in row.split(',')]
+                parsed_rows.append(parsed_row)
+
+            layers.append(parsed_rows)
 
         return TileMap(tilesheet_name, layers)
 
