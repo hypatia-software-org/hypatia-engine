@@ -368,16 +368,14 @@ class TileMap(object):
             raise TMXVersionUnsupported(ap_version)
 
         # Get the Tilesheet (tileset) name from the tileset
-        # image source.
+        # image source name.
         tileset_images = root.findall('./map/tileset/image')
 
         if len(tileset_images) > 1:
 
             raise TooManyTilesheets()
 
-        file_path = tileset_images[0].attrib['source']
-        file_name = os.path.basename(file_path)
-        tilesheet_name = os.path.splitext(file_name)[0]
+        tilesheet_name = tileset_images[0].attrib['name']
 
         # get the 3D constructor/blueprint of TileMap,
         # which simply references, by integer, the
