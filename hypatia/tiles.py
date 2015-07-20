@@ -8,7 +8,8 @@ which consists of graphical tiles aligned to a grid. Provides tools for
 loading specific tile resources into an object. Contains information
 about tiles (tile properties).
 
-For more information see: http://en.wikipedia.org/wiki/Tile_engine
+See Also:
+    http://en.wikipedia.org/wiki/Tile_engine
 
 """
 
@@ -28,20 +29,46 @@ from hypatia import animations
 
 
 class BadTileID(Exception):
-    """Tilesheet: tile was referenced by an ID which does not exist.
+    """Tilesheet: tile was referenced by an
+    ID which does not exist.
 
     Args:
-      bad_tile_id (int): the tile id referenced which does not actually
-        exist in a Tilesheet.
+        bad_tile_id (int): the tile id referenced which
+            does not actually exist in a Tilesheet.
 
     Attributes:
-      bad_tile_id (int): the tile ID referenced which does not exist.
+        bad_tile_id (int): the tile ID referenced
+            which does not exist.
 
     """
 
     def __init__(self, bad_tile_id):
         message = ('no tile by id #%d' % bad_tile_id)
         super(BadTileID, self).__init__(message)
+        self.bad_tile_id = bad_tile_id
+
+
+class TooManyTilesheets(Exception):
+    """A TMX file was attempted to be imported through
+    `TileMap.from_tmx()`, but the TMX defined more than
+    one tilesheet. This is a feature Hypatia does not
+    support.
+
+    See Also:
+        `TileMap.from_tmx()`:
+
+    """
+
+    def __init__(self):
+        """The exception message is this class' docstring.
+
+        Note:
+            Mostly scaffolding, plus won't be here for long.
+
+        """
+
+        message = TooManyTilesheets.__docstring__
+        super(TooManyTilesheets, self).__init__(message)
         self.bad_tile_id = bad_tile_id
 
 
@@ -285,12 +312,23 @@ class TileMap(object):
         """
 
         tree = ET.parse(tmx_file_like_object)
+        root = tree.getroot()
+        tileset_images = root.findall("./tileset/image")
 
-        # get the tilesheet name
+        if len(tileset_images) > 1:
+
+            raise TooManyTilesheets()
+
+        # Get the Tilesheet (tileset) name from the tileset
+        # image source.
+        file_path = tileset_images[0].attrib['source']
+        file_name = os.path.basename(file_path)
+        tilesheet_name = os.path.splitext(file_name)[0]
 
         # get the 3D constructor/blueprint of TileMap,
         # which simply references, by integer, the
         # tile from tilesheet.
+        layers = []
 
         return TileMap(tilesheet_name, layers)
 
