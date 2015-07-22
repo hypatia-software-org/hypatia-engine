@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objecttypes>
+ <objecttype name="player_start_position" color="#ff0000"/>
+ <objecttype name="npc" color="#ffff00"/>
+</objecttypes>

@@ -194,3 +194,78 @@ class Scene(object):
 
         for object_to_setup in objects_to_setup + npcs_to_setup:
             object_to_setup.runtime_setup()
+
+    @classmethod
+    def from_tmx(cls, tmx_file_like_object):
+        """Create a TileMap from Tiled's "Tile Map XML" map
+        format. For more information please see the official
+        TMX documentation:
+
+          * http://doc.mapeditor.org/reference/tmx-map-format/
+
+        TMX file must have the following settings:
+
+          * orientation: orthogonal
+          * tile layer format: csv
+          * tile render order: right down
+
+        You must also specify the tilesheet name you want to use
+        in Hypatia, as your tileset image name. You may only use
+        one image.
+
+        HOW DO YOU DEFINE NPCS AND PLAYER START???
+
+        Args:
+            tmx_file_like_object: --
+
+        Returns:
+            TileMap
+
+        See Also:
+            :class:`Tilesheet`
+
+        """
+
+        tree = ET.parse(tmx_file_like_object)
+        root = tree.getroot()
+
+        # check the version first, make sure it's supported
+        map_version = root.find('./map').attrib['version']
+
+        if map_version != "1.0":
+
+            raise TMXVersionUnsupported(ap_version)
+
+        # Get the Tilesheet (tileset) name from the tileset
+        # image source name.
+        tileset_images = root.findall('./map/tileset/image')
+
+        if len(tileset_images) > 1:
+
+            raise TooManyTilesheets()
+
+        tilesheet_name = tileset_images[0].attrib['name']
+
+        # get the 3D constructor/blueprint of TileMap,
+        # which simply references, by integer, the
+        # tile from tilesheet.
+        layers = []
+
+        for layer_data in root.findall("./map/layer/data"):
+            data_encoding = layer_data.attrib['encoding']
+
+            if data_encoding != 'csv':
+
+                raise TMXLayersNotCSV(data_encoding)
+                
+            layer_csv = layer_data.text
+            rows = layer_csv.split('\n')
+            parsed_rows = []
+
+            for row in rows:
+                parsed_row = [int(tile_id) for tile_id in row.split(',')]
+                parsed_rows.append(parsed_row)
+
+            layers.append(parsed_rows)
+
+        return TileMap(tilesheet_name, layers)
