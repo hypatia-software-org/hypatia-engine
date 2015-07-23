@@ -322,8 +322,11 @@ class Scene(object):
 
 
 class TMX(object):
-    """TMX files are capable of providing the information required
-    to instantiate TileMap and Scene.
+    """`TMX` object to represent and "translate"
+    supported Scene data from a TMX file.
+
+    TMX files are capable of providing the information
+    required to instantiate TileMap and Scene.
 
     TMX file must have the following settings:
 

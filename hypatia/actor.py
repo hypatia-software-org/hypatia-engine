@@ -172,13 +172,17 @@ class Actor(object):
         they are immediately *in front* of this actor.
 
         See Also:
-
             * :attribute:`animations.Walkabout.direction`
             * :attribute:`Actor.direction`
+            * :meth:`actor.Actor.say()`
 
         Args:
-            npcs (List[player.Npc]): --
-            dialogbox (dialog.DialogBox): --
+            npcs (List[player.Npc]): NPCs to check for
+                collisions immediately in front of this
+                actor.
+            dialogbox (dialog.DialogBox): The dialogbox which
+                another actor will print to if they have
+                something to say.
 
         """
 

@@ -8,9 +8,10 @@ which represent objects, e.g., :class:`Walkabout` represents an
 
 Examples of "tools":
 
-* functions for creating an animation from a single suface
-* loading animations from disk
-* adding frame-dependent positional data
+  * functions for creating an animation from a single suface
+  * loading animations from disk
+  * adding frame-dependent positional data
+  * contextually-aware sprites
 
 References:
     .. [1] PygAnim:
@@ -25,8 +26,9 @@ Note:
 
 See Also:
 
-    * :mod:`render`
+    * :mod:`util`
     * :mod:`actor`
+    * :class:`Walkabout`
 
 """
 
@@ -274,6 +276,8 @@ class AnchorPoint(object):
 
 class Walkabout(object):
     """Sprite animations for a character which walks around.
+
+    Contextually-aware graphical representation.
 
     The walkabout sprites specified to be therein
     walkabout_directory, are files with an action__direction.gif

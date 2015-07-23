@@ -2,6 +2,28 @@
 
 Uses http://keepachangelog.com/ as a guideline.
 
+## [0.2.27] - 2015-07-23
+
+You can now use tiled editor to edit/create scenes. Things are still kinda a mess from just implementing this feature. There may be some bugs I'm not aware of. I rushed this out-the-door. The next update will probably be a cleanup.
+
+### Added
+
+  * Support for assembling a `Scene` from a Tiled map editor TMX file. See: `Scene.from_tmx_resource()`.
+  * `objectproperties.xml` for tiled map editor
+  * A new contributor: William D. Jones
+  * Exceptions related to TMX data
+  * `Scene.create_human_player()` static method
+  * `Scene.from_resource()` clsas method
+  * `TMX` object to represent supported data from a TMX file.
+  * `install-netbsd-python2.sh` for installing on NetBSD. Thanks William D. Jones!
+
+### Changed
+
+  * Demo loads scene from TMX, a newly constructed scene
+  * Game constructor takes a scene object, not a scene name.
+  * Docstrings to be better
+  * Actor.say() will return True if it has something to say, False if not.
+
 ## [0.2.26] - 2015-07-16
 
 ### Added
