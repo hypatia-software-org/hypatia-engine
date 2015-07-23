@@ -28,7 +28,7 @@ A labor of love, [permissively (MIT) licensed](https://raw.githubusercontent.com
   * Official support chat: [#hypatia on Freenode (webui!)](http://webchat.freenode.net/?channels=hypatia)
   * You can contact the author via email: lillian.lynn.lemmer@gmail.com, [@LilyLemmer](https:/twitter.com/LilyLemmer) on Twitter.
 
-To know your way around the project, I strongly recommend reading the [`CONTRIBUTING.md`](CONTRIBUTING.md) file. It covers everything you need to know about contributing to Hypatia, as well as navigating the project.
+To know your way around the project, I strongly recommend reading the [`CONTRIBUTING.md`](https://github.com/lillian-lemmer/hypatia/blob/master/CONTRIBUTING.md) file. It covers everything you need to know about contributing to Hypatia, as well as navigating the project.
 
 # Dive in without any programming
 
