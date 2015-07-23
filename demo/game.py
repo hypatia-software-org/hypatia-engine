@@ -32,7 +32,8 @@ VIEWPORT_X, VIEWPORT_Y = 256, 240
 
 # init
 viewport_size = (VIEWPORT_X, VIEWPORT_Y)
-game = game.Game(scene_name='debug', viewport_size=viewport_size)
+scene = game.Scene.from_tmx_resource('debug')
+game = game.Game(scene=scene, viewport_size=viewport_size)
 game.start_loop()
 
 ##### new
