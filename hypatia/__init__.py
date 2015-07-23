@@ -16,8 +16,9 @@ __status__ = "Development"
 # specifically code contributors
 __contributors__ = [
                     "Lillian Lemmer",
+                    "Eric James Michael Ritz",
                     "Brian Houston Morrow",
-                    "Eric James Michael Ritz"
+                    "William D. Jones",
                    ]
 
 __version__ = '0.2.26'
