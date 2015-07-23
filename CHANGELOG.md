@@ -2,6 +2,12 @@
 
 Uses http://keepachangelog.com/ as a guideline.
 
+## [0.2.28] - 2015-07-23
+
+### Changed
+
+  * I put the directory and file notes from `README.md` to `CONTRIBUTING.md`. I did this because the directory and file notes don't pertain to the PyPi page.
+
 ## [0.2.27] - 2015-07-23
 
 You can now use tiled editor to edit/create scenes. Things are still kinda a mess from just implementing this feature. There may be some bugs I'm not aware of. I rushed this out-the-door. The next update will probably be a cleanup.

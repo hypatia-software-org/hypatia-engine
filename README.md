@@ -1,4 +1,4 @@
-# Hypatia 0.2.27 (alpha)
+# Hypatia 0.2.28 (alpha)
 
 ![Hypatia 0.2](https://lillian-lemmer.github.io/hypatia/media/logos/logotype-blacktext-transparentbg.png)
 
