@@ -39,6 +39,7 @@ The included demo allows you to mess with all of its resources (see the `resourc
     * Set tile flags, like the `impass_all` flag which makes a flag impassable to the player
   * [Create tilemaps with an arbitrary number of layers, using plaintext files](https://github.com/lillian-lemmer/hypatia/wiki/tilemap.txt)
   * [Create scenes, with configurable NPCs, configurable scene data (player start position)](https://github.com/lillian-lemmer/hypatia/wiki/Nonprogrammer-Guide#editing-scene-data)
+    * You can create scenes from a Tiled editor TMX file.
   * [Create character sprites using animated or non-animated GIFs](https://github.com/lillian-lemmer/hypatia/wiki/Walkabout-Sprites)
 
 For more information, please read the [official wiki guide for non-programmers](https://github.com/lillian-lemmer/hypatia/wiki/Nonprogrammer-Guide).
