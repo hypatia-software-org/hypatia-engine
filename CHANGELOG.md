@@ -2,6 +2,45 @@
 
 Uses http://keepachangelog.com/ as a guideline.
 
+## [0.2.27] - 2015-07-23
+
+You can now use tiled editor to edit/create scenes. Things are still kinda a mess from just implementing this feature. There may be some bugs I'm not aware of. I rushed this out-the-door. The next update will probably be a cleanup.
+
+### Added
+
+  * Support for assembling a `Scene` from a Tiled map editor TMX file. See: `Scene.from_tmx_resource()`.
+  * `objectproperties.xml` for tiled map editor
+  * a lot more comments for clarity!
+  * A new contributor: William D. Jones
+  * Exceptions related to TMX data
+  * Example TMX/Tiled editor map for showing off the new TMX support
+  * `Scene.create_human_player()` static method
+  * "AbsolutePosition" scaffolding in physics
+  * More scaffolding to sound
+  * various script notes
+  * `Scene.from_resource()` class method
+  * `Scene.from_tmx_resource()` class method
+  * `TMX` object to represent supported data from a TMX file.
+  * `install-netbsd-python2.sh` for installing on NetBSD. Thanks William D. Jones!
+  * Instructions for the files and directories of the Hypatia project in `README.md`
+  * `README.md` for scene resource directory
+  * Example debugging tileset `tilesheet-for-tmx-example.png` especially for editing the TMX/Tiled map (Tiled will crash without it)
+  * Static method for scenes to create a human player.
+
+### Changed
+
+  * Walkabouts should hopefully be optional for npcs, actors now
+  * Code cleanup
+  * `AUTHORS.md`, just changing the "a big thanks" section and my bit, plus
+    adding William D. Jones as a contributor.
+  * `CONTRIBUTING.md` is more thorough
+  * Demo loads scene from TMX, a newly constructed scene
+  * Default scene constructor only takes its attributes as arguments.
+  * Game constructor takes a scene object, not a scene name.
+  * `demo/game.py` reflects new construction argument for scene
+  * Docstrings are be better
+  * Actor.say() will return True if it has something to say, False if not.
+
 ## [0.2.26] - 2015-07-16
 
 ### Added

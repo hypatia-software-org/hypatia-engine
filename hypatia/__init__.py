@@ -13,10 +13,12 @@ __site__ = "http://lillian-lemmer.github.io/hypatia/"
 __email__ = "lillian.lynn.lemmer@gmail.com"
 __status__ = "Development"
 
+# specifically code contributors
 __contributors__ = [
                     "Lillian Lemmer",
+                    "Eric James Michael Ritz",
                     "Brian Houston Morrow",
-                    "Eric James Michael Ritz"
+                    "William D. Jones",
                    ]
 
-__version__ = '0.2.26'
+__version__ = '0.2.27'

@@ -1,5 +1,12 @@
 """Physical attributes of things.
 
+Right now, not much differs it from the constants
+module, but there will surely be much more to do
+with physics as time progresses.
+
+See Also:
+    :mod:`constants`
+
 """
 
 import pygame
@@ -23,8 +30,13 @@ class Velocity(object):
         self.y = y
 
 
+# this really isn't used, yet
 class Position(object):
-    """The absolute position of an object."""
+    """The position of an object.
+
+    Scaffolding.
+
+    """
 
     def __init__(self, x, y, size):
         """Extrapolate position info from supplied info.
@@ -40,3 +52,13 @@ class Position(object):
         self.rect = pygame.Rect((x, y), size)
         self.float = (float(x), float(y))
         self.int = (x, y)
+
+
+class AbsolutePosition(Position):
+    """The absolute pixel coordinate in regard to the scene.
+
+    Scaffolding.
+
+    """
+
+    pass

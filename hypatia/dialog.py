@@ -1,6 +1,14 @@
 """Dialog, text tools.
 
-All very experimental. Highly subject to change.
+Excuse the lack of documentation. This is all very
+experimental and it's going to be rewritten.
+
+This module is really bad and uses a horrible, hacked-together
+method for text rendering which isn't flexible in the least.
+
+I will be redoing this so it has the same abilities as the
+Golden Sun text boxes. The sound module will provide meep
+speak.
 
 """
 
