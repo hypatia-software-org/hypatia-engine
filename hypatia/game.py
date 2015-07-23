@@ -79,7 +79,7 @@ class TMXTooManyTilesheets(Exception):
         super(TMXTooManyTilesheets, self).__init__(message)
 
 
-class TMXVersionUnsupported(object):
+class TMXVersionUnsupported(Exception):
     """Attempted to create a TileMap from a TMX map, but
     the TMX map version is unsupported.
 
@@ -103,7 +103,7 @@ class TMXVersionUnsupported(object):
         self.map_version = map_version
 
 
-class TMXLayersNotCSV(object):
+class TMXLayersNotCSV(Exception):
     """The data encoding used for layers during Tilemap.from_tmx()
     is not supported. Only CSV is supported.
 
