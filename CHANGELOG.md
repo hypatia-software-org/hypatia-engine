@@ -19,6 +19,7 @@ You can now use tiled editor to edit/create scenes. Things are still kinda a mes
 
 ### Changed
 
+  * `AUTHORS.md`, just changing the "a big thanks" section and my bit
   * Demo loads scene from TMX, a newly constructed scene
   * Game constructor takes a scene object, not a scene name.
   * Docstrings to be better

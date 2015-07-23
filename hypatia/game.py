@@ -206,6 +206,15 @@ class Scene(object):
 
     def __init__(self, tilemap, player_start_position,
                  human_player, npcs=None):
+        """
+        Args:
+            tilemap (tiles.TileMap): --
+            player_start_position (tuple): x, y pixel coordinates
+                for the human player's starting position.
+            human_player (players.HumanPlayer): --
+            npcs (List[players.Npc]): --
+
+        """
 
         self.tilemap = tilemap
         self.player_start_position = player_start_position
@@ -216,6 +225,13 @@ class Scene(object):
     def create_human_player(start_position):
         """Currently mostly scaffolding for creating/loading the
         human character into the scene.
+
+        Args:
+            start_position (tuple): x, y pixel coordinates
+                for the human player's starting position.
+
+        Returns:
+            player.HumanPlayer: --
 
         """
 
@@ -231,10 +247,23 @@ class Scene(object):
         return human_player
 
     def to_tmx_resource(self, tmx_name):
+        """Scaffolding.
+
+        """
+
         pass
 
     @classmethod
     def from_tmx_resource(cls, tmx_name):
+        """Create a scene from a Tiled editor TMX file in
+        the scenes resource directory.
+
+        Returns:
+            Scene: A scene created using all compatible
+                data from designated TMX file.
+
+        """
+
         file_path = os.path.join('resources', 'scenes', tmx_name + '.tmx')
         tmx = TMX(file_path)
         human_player = cls.create_human_player(tmx.player_start_position)
@@ -248,7 +277,12 @@ class Scene(object):
 
     @classmethod
     def from_resource(self, scene_name):
-        """
+        """The native format, and hopefully most reliable,
+        stable, and generally best way of saving, loading,
+        or creating Hypatia scenes.
+
+        This defines the standard by which all
+        other Scene constructors must follow.
 
         Args:
           scene_name (str): the name of the directory which corresponds
@@ -256,34 +290,59 @@ class Scene(object):
 
         """
 
+        # load the scene zip from the scene resource and read
+        # the general scene configuration, first.
         resource = util.Resource('scenes', scene_name)
         scene_ini = resource['scene.ini']
+
+        # Construct a TileMap from the tilemap.txt
+        # contents from the scene resource.
         tilemap_string = resource['tilemap.txt']
         tilemap = tiles.TileMap.from_string(tilemap_string)
 
-        # .. player start position
+        # Get the player's starting position from the
+        # general scene configuration.
         player_start_x = scene_ini.getint('general', 'player_start_x')
         player_start_y = scene_ini.getint('general', 'player_start_y')
         player_start_position = (player_start_x, player_start_y)
 
-        # .. create player with player scene data
+        # Create a player using the player
+        # start position found.
         human_player = self.create_human_player(player_start_position)
 
         # npcs.ini
+        #
+        # Create a list of NPCs using a configuration file
+        # from the scene resource.
         npcs_ini = resource['npcs.ini']
 
         npcs = []
 
+        # each section title is the npc's name,
+        # each sections key/value pairs are
+        # the NPC's attributes.
         for npc_name in npcs_ini.sections():
-            walkabout_name = npcs_ini.get(npc_name, 'walkabout')
+
+            if npcs_ini.has_option(npc_name, 'walkabout'):
+                # The NPC's walkabout resource name
+                walkabout_name = npcs_ini.get(npc_name, 'walkabout')
+
+            # the required (x, y) pixel coordinates referring
+            # to the position of this NPC
             position_x = npcs_ini.getint(npc_name, 'position_x')
             position_y = npcs_ini.getint(npc_name, 'position_y')
             position = (position_x, position_y)
 
+            # create the NPC's walkabout using the
+            # designated walkabout name and position
+            # from the NPC's config.
             npc_walkabout = animations.Walkabout(walkabout_name,
                                                  position=position)
 
             if npcs_ini.has_option(npc_name, 'say'):
+                # Load some say text for the NPC, so when
+                # an actor uses talk() on them, they say
+                # this message--the say_text!
                 say_text = npcs_ini.get(npc_name, 'say')
             else:
                 say_text = None
@@ -301,6 +360,11 @@ class Scene(object):
     def collide_check(self, rect):
         """Returns True if there are collisions with rect.
 
+        Args:
+            rect (pygame.Rect): The area/rectangle which
+                to test for collisions against NPCs and
+                the tilemap's wallmap.
+
         """
 
         possible_collisions = self.tilemap.impassable_rects
@@ -311,7 +375,10 @@ class Scene(object):
         return rect.collidelist(possible_collisions) != -1
 
     def runtime_setup(self):
-        """Initialize al the NPCs, tilemap, etc.
+        """Initialize all the NPCs, tilemap, etc.
+
+        Is this a horrible way of doing this? I dunno,
+        not the fondest...
 
         """
 
@@ -347,15 +414,10 @@ class TMX(object):
         root (ElementTree): the XML ElementTree root of the TMX file.
         player_start_position (tuple): (x, y) coordinate in which
             the player begins this scene at.
-        layers (list): a 3D list of each "layer." A layer is
-            extrapolated from a CSV-format list of tile IDs. Notably,
-            TMX defaults to starting tile ID at 1, whereas Hypatia
-            starts a Tilesheet at 0.
-        npcs (list): a list of dictionaries which follow the
-            npc.ini format, so a dictionary may look like:
-
-                {'walkabout': 'debug', 'position_x': 180,
-                 'position_y': 180, say='Hello!'}
+        layers (list): a 3D list of tile IDs referring to a tile
+            by id in a Tilesheet. This data is extrapolated from
+            a CSV-format list of tile IDs.
+        npcs (List[players.Npc]): --
 
     See Also:
         http://doc.mapeditor.org/reference/tmx-map-format/
@@ -370,7 +432,11 @@ class TMX(object):
         attributes.
 
         Args:
-            path_or_readable (str|file-like-object): --
+            path_or_readable (str|file-like-object): This is
+                plopped right into ElementTree.parse().
+
+        Note:
+            This method is under-documented!
 
         """
 
@@ -381,7 +447,7 @@ class TMX(object):
         # check the version first, make sure it's supported
         map_version = self.root.attrib['version']
 
-        if map_version != "1.0":
+        if map_version != self.SUPPORTED:
 
             raise TMXVersionUnsupported(map_version)
 

@@ -1,6 +1,6 @@
 # The authors of Hypatia
 
-Lillian Lynn Lemmer (lillian.lynn.lemmer@gmail.com) is the mommy of Hypatia.
+Lillian Lynn Lemmer (lillian.lynn.lemmer@gmail.com): Hypatia's eternal mother overlord.
 
 ## Non-financial Contributors
 
@@ -28,4 +28,4 @@ For more info, see:
 
 ## A big THANK YOU goes to...
 
-Our friends and lovers.
+... My fiance; I love you, dear; without you none of this would have been possible.

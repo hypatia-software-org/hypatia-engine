@@ -1,12 +1,13 @@
-# engine/render.py
-# Lillian Lemmer <lillian.lynn.lemmer@gmail.com>
-#
 # This module is part of Hypatia and is released under the
 # MIT License: http://opensource.org/licenses/MIT
 
-"""How stuff is drawn; spite and surface manipulation.
+"""How stuff is drawn. Very specific rendering stuff. Includes
+screen and viewport.
 
-Includes screen, viewport, and surface/animation manipulation.
+Mostly a lot of scaffolding.
+
+See Also:
+    :mod:`animations`
 
 """
 
