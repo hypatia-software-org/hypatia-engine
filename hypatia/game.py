@@ -228,6 +228,9 @@ class Scene(object):
 
         return human_player
 
+    def to_tmx_resource(self, tmx_name):
+        pass
+
     @classmethod
     def from_tmx_resource(cls, tmx_name):
         file_path = os.path.join('resources', 'scenes', tmx_name + '.tmx')

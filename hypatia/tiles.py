@@ -225,12 +225,10 @@ class TileMap(object):
 
         return None
 
-    def to_tmx(self):
-        "Scaffolding"""
-        pass
-
     def to_string(self, separator=' '):
         """Create the user-unfriendly string for the tilemap.
+
+        Used for creating tilemap.txt.
 
         Args:
           separator (str): can be ''
@@ -264,6 +262,8 @@ class TileMap(object):
     def from_string(cls, map_string, separator=' '):
         """This is a debug feature. Create a 3D list of tile names using
         ASCII symbols. Supports layers.
+
+        Used for reading tilemap.txt.
 
         """
 
