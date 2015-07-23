@@ -204,7 +204,9 @@ class Scene(object):
 
     """
 
-    def __init__(self, tilemap, player_start_position, human_player, npcs=None):
+    def __init__(self, tilemap, player_start_position,
+                 human_player, npcs=None):
+
         self.tilemap = tilemap
         self.player_start_position = player_start_position
         self.human_player = human_player
@@ -450,4 +452,3 @@ class TMX(object):
         if self.player_start_position is None:
 
             raise TMXMissingPlayerStartPosition()
-
