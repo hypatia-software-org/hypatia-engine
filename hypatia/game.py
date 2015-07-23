@@ -238,7 +238,7 @@ class Scene(object):
         file_path = os.path.join('resources', 'scenes', tmx_name + '.tmx')
         tmx = TMX(file_path)
         human_player = cls.create_human_player(tmx.player_start_position)
-        
+
         return Scene(
                      tilemap=tmx.tilemap,
                      player_start_position=tmx.player_start_position,
@@ -407,7 +407,7 @@ class TMX(object):
             if data_encoding != 'csv':
 
                 raise TMXLayersNotCSV(data_encoding)
-                
+
             layer_csv = layer_data.text.strip()
             rows = layer_csv.split('\n')
             parsed_rows = []
