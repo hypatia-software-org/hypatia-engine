@@ -8,7 +8,8 @@ which consists of graphical tiles aligned to a grid. Provides tools for
 loading specific tile resources into an object. Contains information
 about tiles (tile properties).
 
-For more information see: http://en.wikipedia.org/wiki/Tile_engine
+See Also:
+    http://en.wikipedia.org/wiki/Tile_engine
 
 """
 
@@ -27,14 +28,16 @@ from hypatia import animations
 
 
 class BadTileID(Exception):
-    """Tilesheet: tile was referenced by an ID which does not exist.
+    """Tilesheet: tile was referenced by an
+    ID which does not exist.
 
     Args:
-      bad_tile_id (int): the tile id referenced which does not actually
-        exist in a Tilesheet.
+        bad_tile_id (int): the tile id referenced which
+            does not actually exist in a Tilesheet.
 
     Attributes:
-      bad_tile_id (int): the tile ID referenced which does not exist.
+        bad_tile_id (int): the tile ID referenced
+            which does not exist.
 
     """
 
@@ -225,6 +228,8 @@ class TileMap(object):
     def to_string(self, separator=' '):
         """Create the user-unfriendly string for the tilemap.
 
+        Used for creating tilemap.txt.
+
         Args:
           separator (str): can be ''
 
@@ -257,6 +262,8 @@ class TileMap(object):
     def from_string(cls, map_string, separator=' '):
         """This is a debug feature. Create a 3D list of tile names using
         ASCII symbols. Supports layers.
+
+        Used for reading tilemap.txt.
 
         """
 

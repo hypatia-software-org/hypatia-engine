@@ -21,6 +21,7 @@ Note:
 
 import os
 import sys
+import xml.etree.ElementTree as ET
 
 try:
     import ConfigParser as configparser
@@ -41,6 +42,90 @@ from hypatia import animations
 from hypatia import controllers
 
 
+class TMXMissingPlayerStartPosition(Exception):
+    """TMX file parsed does not have a player start
+    position, which is required to create scenes.
+
+    See Also:
+        :class:`TMX`
+
+    """
+
+    def __init__(self):
+        message = "TMX file missing player_start_position"
+        super(TMXMissingPlayerStartPosition, self).__init__(message)
+
+
+class TMXTooManyTilesheets(Exception):
+    """A TMX file was attempted to be imported through
+    `TileMap.from_tmx()`, but the TMX defined more than
+    one tilesheet. This is a feature Hypatia does not
+    support.
+
+    See Also:
+        :meth:`TileMap.from_tmx()` and :class:`TMX`.
+
+    """
+
+    def __init__(self):
+        """The exception message is this class' docstring.
+
+        Note:
+            Mostly scaffolding, plus won't be here for long.
+
+        """
+
+        message = TMXTooManyTilesheets.__docstring__
+        super(TMXTooManyTilesheets, self).__init__(message)
+
+
+class TMXVersionUnsupported(object):
+    """Attempted to create a TileMap from a TMX map, but
+    the TMX map version is unsupported.
+
+    Attribs:
+        map_version (str): the version which was attempted
+
+    """
+
+    def __init__(self, map_version):
+        """
+
+        Args:
+            map_version (str): the map version which is
+                unsupported. This becomes the map_version
+                attribute.
+
+        """
+
+        message = 'version %s unsupported' % map_version
+        super(TMXVersionUnsupported, self).__init__(message)
+        self.map_version = map_version
+
+
+class TMXLayersNotCSV(object):
+    """The data encoding used for layers during Tilemap.from_tmx()
+    is not supported. Only CSV is supported.
+
+    Attribs:
+        data_encoding (str): the failed data encoding.
+
+    """
+
+    def __init__(self, data_encoding):
+        """
+
+        Args:
+            data_encoding (str): the failed data encoding
+
+        """
+
+        message = 'tmx layer data encoding %s unsupported' % data_encoding
+        super(TMXLayersNotCSV, self).__init__(message)
+        self.data_encodign = data_encoding
+
+
+# not in use
 class Hypatia(object):
 
     def __init__(self, **kwargs):
@@ -52,7 +137,7 @@ class Hypatia(object):
 class Game(object):
     """Simulates the interaction between game components."""
 
-    def __init__(self, screen=None, scene_name=None,
+    def __init__(self, screen=None, scene=None,
                  viewport_size=None, dialogbox=None):
 
         self.screen = screen or render.Screen()
@@ -61,7 +146,7 @@ class Game(object):
 
         # everything has been added, run runtime_setup() on each
         # relevant item
-        self.scene = Scene(scene_name)
+        self.scene = scene
         self.scene.runtime_setup()
         self.start_loop()
 
@@ -119,7 +204,48 @@ class Scene(object):
 
     """
 
-    def __init__(self, scene_name):
+    def __init__(self, tilemap, player_start_position, human_player, npcs=None):
+        self.tilemap = tilemap
+        self.player_start_position = player_start_position
+        self.human_player = human_player
+        self.npcs = npcs or []
+
+    @staticmethod
+    def create_human_player(start_position):
+        """Currently mostly scaffolding for creating/loading the
+        human character into the scene.
+
+        """
+
+        # .. create player with player scene data
+        hat = animations.Walkabout('hat')
+        human_walkabout = animations.Walkabout('debug',
+                                               position=start_position,
+                                               children=[hat])
+        velocity = physics.Velocity(20, 20)
+        human_player = player.HumanPlayer(walkabout=human_walkabout,
+                                          velocity=velocity)
+
+        return human_player
+
+    def to_tmx_resource(self, tmx_name):
+        pass
+
+    @classmethod
+    def from_tmx_resource(cls, tmx_name):
+        file_path = os.path.join('resources', 'scenes', tmx_name + '.tmx')
+        tmx = TMX(file_path)
+        human_player = cls.create_human_player(tmx.player_start_position)
+        
+        return Scene(
+                     tilemap=tmx.tilemap,
+                     player_start_position=tmx.player_start_position,
+                     human_player=human_player,
+                     npcs=tmx.npcs
+                    )
+
+    @classmethod
+    def from_resource(self, scene_name):
         """
 
         Args:
@@ -128,31 +254,23 @@ class Scene(object):
 
         """
 
-        # NEW IMPL
         resource = util.Resource('scenes', scene_name)
         scene_ini = resource['scene.ini']
         tilemap_string = resource['tilemap.txt']
-        self.tilemap = tiles.TileMap.from_string(tilemap_string)
+        tilemap = tiles.TileMap.from_string(tilemap_string)
 
         # .. player start position
         player_start_x = scene_ini.getint('general', 'player_start_x')
         player_start_y = scene_ini.getint('general', 'player_start_y')
-        self.player_start_position = (player_start_x, player_start_y)
+        player_start_position = (player_start_x, player_start_y)
 
         # .. create player with player scene data
-        hat = animations.Walkabout('hat')
-        start_position = self.player_start_position
-        human_walkabout = animations.Walkabout('debug',
-                                               position=start_position,
-                                               children=[hat])
-        velocity = physics.Velocity(20, 20)
-        self.human_player = player.HumanPlayer(walkabout=human_walkabout,
-                                               velocity=velocity)
+        human_player = self.create_human_player(player_start_position)
 
         # npcs.ini
         npcs_ini = resource['npcs.ini']
 
-        self.npcs = []
+        npcs = []
 
         for npc_name in npcs_ini.sections():
             walkabout_name = npcs_ini.get(npc_name, 'walkabout')
@@ -169,7 +287,14 @@ class Scene(object):
                 say_text = None
 
             npc = player.Npc(walkabout=npc_walkabout, say_text=say_text)
-            self.npcs.append(npc)
+            npcs.append(npc)
+
+        return Scene(
+                     tilemap=tilemap,
+                     player_start_position=player_start_position,
+                     human_player=human_player,
+                     npcs=npcs
+                    )
 
     def collide_check(self, rect):
         """Returns True if there are collisions with rect.
@@ -194,3 +319,132 @@ class Scene(object):
 
         for object_to_setup in objects_to_setup + npcs_to_setup:
             object_to_setup.runtime_setup()
+
+
+class TMX(object):
+    """TMX files are capable of providing the information required
+    to instantiate TileMap and Scene.
+
+    TMX file must have the following settings:
+
+      * orientation: orthogonal
+      * tile layer format: csv
+      * tile render order: right down
+
+    You must also specify the tilesheet name you want to use
+    in Hypatia, as your tileset image name. You may only use
+    one image.
+
+    Constants:
+        SUPPORTED (str): the TMX file format which is supported.
+
+    Attributes:
+        root (ElementTree): the XML ElementTree root of the TMX file.
+        player_start_position (tuple): (x, y) coordinate in which
+            the player begins this scene at.
+        layers (list): a 3D list of each "layer." A layer is
+            extrapolated from a CSV-format list of tile IDs. Notably,
+            TMX defaults to starting tile ID at 1, whereas Hypatia
+            starts a Tilesheet at 0.
+        npcs (list): a list of dictionaries which follow the
+            npc.ini format, so a dictionary may look like:
+
+                {'walkabout': 'debug', 'position_x': 180,
+                 'position_y': 180, say='Hello!'}
+
+    See Also:
+        http://doc.mapeditor.org/reference/tmx-map-format/
+
+    """
+
+    SUPPORTED = '1.0'
+
+    def __init__(self, path_or_readable):
+        """Read XML from path_or_readable, validate the TMX as being
+        supported by Hypatia, and set all supported information as
+        attributes.
+
+        Args:
+            path_or_readable (str|file-like-object): --
+
+        """
+
+        # parse TMXML for TileMap-specific/supported data
+        tree = ET.parse(path_or_readable)
+        self.root = tree.getroot()  # <map ...>
+
+        # check the version first, make sure it's supported
+        map_version = self.root.attrib['version']
+
+        if map_version != "1.0":
+
+            raise TMXVersionUnsupported(map_version)
+
+        # Get the Tilesheet (tileset) name from the tileset
+        tileset_images = self.root.findall('.//tileset/image')
+
+        if len(tileset_images) > 1:
+
+            # too many tilesets!
+            raise TMXTooManyTilesheets()
+
+        tileset = self.root.find('.//tileset')
+        tilesheet_name = tileset.attrib['name']
+
+        # get the 3D constructor/blueprint of TileMap,
+        # which simply references, by integer, the
+        # tile from tilesheet.
+        layers = []
+
+        for layer_data in self.root.findall(".//layer/data"):
+            data_encoding = layer_data.attrib['encoding']
+
+            if data_encoding != 'csv':
+
+                raise TMXLayersNotCSV(data_encoding)
+                
+            layer_csv = layer_data.text.strip()
+            rows = layer_csv.split('\n')
+            parsed_rows = []
+
+            for row in rows:
+                # TMX tilesets start their ids at 1, Hypatia Tilesheets
+                # starts ids at 0.
+                cells = row.split(',')[:-1]  # trailing comma
+                parsed_row = [int(tile_id) - 1 for tile_id in cells]
+                parsed_rows.append(parsed_row)
+
+            layers.append(parsed_rows)
+
+        self.tilemap = tiles.TileMap(tilesheet_name, layers)
+
+        # loop through objects in the object layer to find the player's
+        # start position and NPC information.
+        self.npcs = []
+        self.player_start_position = None
+
+        for tmx_object in self.root.findall(".//objectgroup/object"):
+            object_type = tmx_object.attrib['type']
+            x = int(tmx_object.attrib['x'])
+            y = int(tmx_object.attrib['y'])
+
+            if object_type == 'player_start_position':
+                self.player_start_position = (x, y)
+            elif object_type == 'npc':
+                properties = tmx_object.find('properties')
+                xpath = ".//property[@name='%s']"
+
+                position = (x, y)
+                walkabout_name = (properties.find(xpath % 'walkabout').
+                                  attrib['value'])
+                walkabout = animations.Walkabout(walkabout_name, position)
+                say_text = properties.find(xpath % 'say').attrib['value']
+
+                npc = player.Npc(walkabout=walkabout, say_text=say_text)
+                self.npcs.append(npc)
+
+        # should use xpath before loading all npcs...
+        if self.player_start_position is None:
+
+            raise TMXMissingPlayerStartPosition()
+
