@@ -2,6 +2,12 @@
 
 Uses http://keepachangelog.com/ as a guideline.
 
+## [0.2.29] - 2015-07-23
+
+### Changed
+
+  * README.md syntax error for PyPI
+
 ## [0.2.28] - 2015-07-23
 
 ### Changed
