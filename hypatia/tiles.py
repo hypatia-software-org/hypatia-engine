@@ -149,6 +149,10 @@ class TileMap(object):
         self.impassable_rects = impassable_rects
         self.animated_tile_stack = animated_tile_stack
         self.dimensions_in_tiles = dimensions_in_tiles
+
+        # the 3D list of Tilesheet tile IDs
+        # which constructed this TileMap. It
+        # is not updated when self.tiles is.
         self._tile_ids = tile_ids
 
     def __getitem__(self, coord):
@@ -201,6 +205,15 @@ class TileMap(object):
         return self[(tile_x, tile_y)]
 
     def blit_layer_animated_tiles(self, viewport, layer):
+        """Blit all of the animated tiles from a
+        designated layer to the supplied viewport.
+
+        Args:
+            viewport (render.Viewport): --
+            layer (int): The nth layer of animated tiles
+                which to blit to viewport.
+
+        """
 
         for tile_pyganim, position in self.animated_tile_stack[layer]:
             tile_pyganim.blit(viewport.surface,
@@ -233,6 +246,9 @@ class TileMap(object):
         Args:
           separator (str): can be ''
 
+        Returns:
+            str: --
+
         """
 
         output_string = ''
@@ -264,6 +280,9 @@ class TileMap(object):
         ASCII symbols. Supports layers.
 
         Used for reading tilemap.txt.
+
+        Returns:
+            TileMap: --
 
         """
 

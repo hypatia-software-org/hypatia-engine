@@ -1,6 +1,13 @@
 # This module is part of Hypatia and is released under the
 # MIT license: http://opensource.org/licenses/MIT
 
+"""These are utilities which are commonly utilized
+by all modules in Hypatia. It serves for the ugly,
+underlying components of miscellaneous actions which
+assist other modules, and does not do much on its own.
+
+"""
+
 import os
 import zipfile
 from io import BytesIO
