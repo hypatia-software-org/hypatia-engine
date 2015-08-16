@@ -57,11 +57,12 @@ class Resource(object):
 
         """
 
-        zip_path = os.path.join(
-                                'resources',
-                                resource_category,
-                                resource_name + '.zip'
-                               )
+        path = os.path.join(
+                            'resources',
+                            resource_category,
+                            resource_name
+                           )
+
         file_handlers = {
                          '.ini': configparser_fromfp,
                          '.gif': load_gif
@@ -69,29 +70,43 @@ class Resource(object):
 
         files = {}
 
-        with zipfile.ZipFile(zip_path) as zip_file:
+        # choose between loading as an unpacked directory, or a zip file.
+        # unpacked takes priority.
 
-            for file_name in zip_file.namelist():
-                file_data = zip_file.open(file_name).read()
+        if os.path.isdir(path):
 
-                # because namelist will also generate
-                # the directories
-                if not file_name:
-
-                    continue
-
-                try:
-                    file_data = file_data.decode('utf-8')
-                except ValueError:
-                    file_data = BytesIO(file_data)
-
-                # then we do the file handler call ehre
-                file_extension = os.path.splitext(file_name)[1]
-
-                if file_extension in file_handlers:
-                    file_data = file_handlers[file_extension](file_data)
-
+            for file_name in os.listdir(path):
+                file_data = open(os.path.join(path, file_name)).read()
                 files[file_name] = file_data
+        else:
+            with zipfile.ZipFile(path + ".zip") as zip_file:
+
+                for file_name in zip_file.namelist():
+                    # because namelist will also generate
+                    # the directories
+                    if not file_name:
+
+                        continue
+
+                    file_data = zip_file.open(file_name).read()
+                    files[file_name] = file_data
+
+        # now do post-processing
+        for file_name in files.keys():
+            file_data = files[file_name]
+
+            try:
+                file_data = file_data.decode('utf-8')
+            except ValueError:
+                file_data = BytesIO(file_data)
+
+            # then we do the file handler call ehre
+            file_extension = os.path.splitext(file_name)[1]
+
+            if file_extension in file_handlers:
+                file_data = file_handlers[file_extension](file_data)
+
+            files[file_name] = file_data
 
         self.files = files
 
