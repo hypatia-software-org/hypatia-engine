@@ -6,16 +6,42 @@ from __future__ import print_function
 import subprocess
 import os
 import sys
+import readline
 
 packages = {
-    # 'package-manager': 'install-params',
+    # 'package-manager': { 
+    #     2: 'install-params-for-python-2',
+    #     3: 'install-params-for-python-3',
+    #  },
 
-    'apt-get': '-yy install python-pygame python-pip',
-    'pacman': '-S --needed --noconfirm python2-pygame python2-pillow python2-pip',
-    'pkg': 'install py27-pip py27-game',
-    'pkg_add': 'py27-pip py27-game',
+    'apt-get': {
+        2: '-yy install python-pygame python-pip',
+    },
+    'pacman': {
+        2: '-S --needed --noconfirm python2-pygame python2-pillow python2-pip',
+    },
+    'pkg': {
+        2: 'install py27-pip py27-game',
+    },
+    'pkg_add': {
+        2: 'py27-pip py27-game',
+    },
 }
 
+
+def get_available_pythons():
+    found = []
+    
+    for i in ['2.7', '3']:
+        try:
+            out = subprocess.check_output(['which', 'python%s' % i])
+            found.append(i)
+
+        except:
+
+            continue
+
+    return found
 
 def guess_package_manager():
     found = None
@@ -48,15 +74,53 @@ def install():
     # get canonical path for repository
     path = os.path.abspath("..")
 
+    # get python versions
+    vers = get_available_pythons()
+    if len(vers) > 1:
+        print("-> More than one Python version was found.")
+        print("-> Available versions are:")
+        for i in vers:
+            print("  -> python%s" % i)
+        print("-> Which version would you like to use?")
+        
+        def completer(text, state):
+            starts = []
+            for i in vers:
+                if i.startswith(text):
+                    starts.append(i)
+
+            return starts[state]
+    
+        readline.set_completer(completer)
+        
+        pyver = None
+        while True:
+            pyver = raw_input("=> ")
+            if pyver.startswith("python"):
+                pyver = pyver.split("python")[-1]
+            if pyver not in vers:
+                print("-> Not a valid version number.")
+                continue
+
+            break
+    
+    pybasever = pyver.split('.')[0]
+
     # get package manager to use
     pman = guess_package_manager()
     if pman == None:
         raise RuntimeError("No suitable package manager found.")
     
+    # check that the given package manager has packages for the selected python version
+    if not int(pybasever) in packages[pman].keys():
+        print("-> Your distribution does not support Hypatia with the selected Python version.")
+        print("-> Please try again and select another Python version.")
+        exit(1)
+
     # attempt to install packages
     try:
         print("-> Installing Hypatia dependencies using %s" % pman)
-        assert sudo("%s %s" % (pman, packages[pman])) == 0
+        assert sudo("%s %s" % (pman, packages[pman][pybasever])) == 0
     except Exception as e:
         print(e)
         raise RuntimeError("Error installing dependencies (using %s)" % pman)
