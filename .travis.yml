@@ -2,17 +2,13 @@ language: python
 python:
   - "2.7"
   - "3.4"
-before_install:
- - "sudo apt-get update -qq"
- - "sudo apt-get install --fix-missing mercurial python3-dev python3-numpy libav-tools libsdl-image1.2-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev libsmpeg-dev libsdl1.2-dev libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev"
- - "pip install hg+http://bitbucket.org/pygame/pygame"
- - "pip install -r requirements/travis.txt"
-# command to install dependencies
+
 install:
-  - "pip install ."
+  - "./script/bootstrap --ver=$TRAVIS_PYTHON_VERSION"
+
 # command to run tests
 script:
-#  - py.test tests --doctest-modules --pep8 -v --cov-report term-missing --cov=/home/travis/virtualenv/python$(python -c 'import sys; print(".".join(str(x) for x in sys.version_info[0:3]))')/lib/python$(python -c 'import sys; print(".".join(str(x) for x in sys.version_info[0:2]))')/site-packages/hypatia
   - py.test tests --doctest-modules --pep8 hypatia -v --cov-report term-missing --cov=hypatia
+
 after_success:
   - coveralls
