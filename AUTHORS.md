@@ -10,6 +10,7 @@ People who have submitted patches, reported bugs, helped answer questions, and g
   * James Leung: wiki, documentation
   * Jane Dora Coder (jane@jdcoder.net): community manager
   * Graham Bignell: community manager
+  * Alice Jenkinson: website manager, programming, scripts
 
 ## Financial Contributors
 
