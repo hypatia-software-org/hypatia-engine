@@ -70,13 +70,18 @@ def sudo(command):
 
     return subprocess.call(sudo_command.format(command).split(), stdout=sys.stdout, stderr=sys.stderr)
 
-def install():
+def install(ver=None):
     # get canonical path for repository
     path = os.path.abspath("..")
 
     # get python versions
     vers = get_available_pythons()
-    if len(vers) > 1:
+
+    pyver = None
+    if ver != None and ver in vers:
+        pyver = ver
+    
+    if pyver == None and len(vers) > 1:
         print("-> More than one Python version was found.")
         print("-> Available versions are:")
         for i in vers:
@@ -144,8 +149,19 @@ def install():
     return True
 
 if __name__ == "__main__":
+    pyver = None
+    for i in sys.argv:
+        if i.startswith("--help") or i.startswith("-h"):
+            print("Usage: bootstrap [options]")
+            print("Options:")
+            print("--help, -h    r         Display this help")
+            print("--ver=python_ver        Use Python version python_ver to install Hypatia")
+            exit(0)
+        if i.startswith('--ver='):
+            pyver = i.split("=")[-1]
+     
     try:
-        assert install() == True
+        assert install(ver=pyver) == True
     except Exception as e:
         print("An error occurred:\n%s" % str(e))
         exit(1)
