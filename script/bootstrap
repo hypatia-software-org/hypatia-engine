@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # Bootstrap script. Installs all required dependences as well as Hypatia in
 # development mode.
 
