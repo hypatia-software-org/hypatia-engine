@@ -1,0 +1,88 @@
+#!/usr/bin/env python2
+# Bootstrap script. Installs all required dependences as well as Hypatia in
+# development mode.
+
+from __future__ import print_function
+import subprocess
+import os
+import sys
+
+packages = {
+    # 'package-manager': 'install-params',
+
+    'apt-get': '-yy install python-pygame python-pip',
+    'pacman': '-S --needed --noconfirm python2-pygame python2-pillow python2-pip',
+    'pkg': 'install py27-pip py27-game',
+    'pkg_add': 'py27-pip py27-game',
+}
+
+
+def guess_package_manager():
+    found = None
+    for i in packages.keys():
+        try:
+            out = subprocess.check_output(['which', i], stderr=subprocess.PIPE)
+            return i
+
+        except:
+            # assume `which` returned an error code (meaning it wasn't found)
+
+            continue    
+
+def sudo(command):
+    sudo_command = 'sudo -- {}'
+    try:
+        out = subprocess.check_output(['which', 'sudo'])
+    except:
+        sudo_command = "su -c '{}'"
+
+    try:
+        if subprocess.check_output("whoami").strip() == "root":
+            sudo_command = '{}'
+    except:
+        pass
+
+    return subprocess.call(sudo_command.format(command).split(), stdout=sys.stdout, stderr=sys.stderr)
+
+def install():
+    # get canonical path for repository
+    path = os.path.abspath("..")
+
+    # get package manager to use
+    pman = guess_package_manager()
+    if pman == None:
+        raise RuntimeError("No suitable package manager found.")
+    
+    # attempt to install packages
+    try:
+        print("-> Installing Hypatia dependencies using %s" % pman)
+        assert sudo("%s %s" % (pman, packages[pman])) == 0
+    except Exception as e:
+        print(e)
+        raise RuntimeError("Error installing dependencies (using %s)" % pman)
+
+    # attempt to install remaining python deps
+    try:
+        print("-> Installing Hypatia python dependencies")
+        assert subprocess.call(['python2', '-m', 'pip', 'install', '--user', '-r', os.path.join(path, 'requirements', 'python2.txt')], stdout=sys.stdout, stderr=sys.stderr) == 0
+    except Exception as e:
+        print(e)
+        raise RuntimeError("Error installing Python dependencies")
+
+    # attempt to install hypatia
+    try:
+        print("-> Installing Hypatia")
+        assert subprocess.call(['python2', '-m', 'pip', 'install', '--user', path], stdout=sys.stdout, stderr=sys.stderr) == 0
+    except:
+        raise RuntimeError("Error installing Hypatia via pip")
+
+    print("-> Done!")
+    return True
+
+if __name__ == "__main__":
+    try:
+        assert install() == True
+    except Exception as e:
+        print("An error occurred:\n%s" % str(e))
+        exit(1)
+
