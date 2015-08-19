@@ -52,7 +52,7 @@ special_cases = {
         ],
     },
     "linuxmint_py3": {
-        "test": (lambda b: b["pyver"]["base"] == "3" and b["pman"] == "apt-get" and False), # TODO: implement Linux Mint checks (ideally /etc/os-release)
+        "test": (lambda b: b["pyver"]["base"] == "3" and b["pman"] == "apt-get" and "LinuxMint" in b["os"]), 
 	"commands_root": [
             "apt-get install python3-pip python3-dev libsdl1.2-dev libsdl-image1.2-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev libsdl-gfx1.2-dev libsdl-net1.2-dev libsdl-image1.2-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev libsmpeg-dev libsdl1.2-dev libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev libsdl-sge-dev libsdl-sound1.2-dev libportmidi-dev libsmpeg-dev",
         ],
@@ -168,7 +168,13 @@ def install(ver=None):
         exit(1)
 
     # check special cases
-    build_info = {'pyver': {'base': pybasever, 'ver': pyver}, 'pman': pman}
+    os_info = None
+    if os.path.isfile("/etc/lsb-release"):
+        fh = open("/etc/lsb-release")
+        os_info = fh.read()
+        fh.close()
+
+    build_info = {'pyver': {'base': pybasever, 'ver': pyver}, 'pman': pman, 'os': os_info}
     for casename in special_cases.keys():
         case = special_cases[casename]
         if case['test'](build_info) == True:
