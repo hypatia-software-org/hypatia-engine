@@ -67,7 +67,7 @@ def get_available_pythons():
     
     for i in ['2.7', '3.3', '3.4']:
         try:
-            out = subprocess.check_output(['which', 'python%s' % i], stderr=subprocess.STDOUT)
+            subprocess.check_output(['which', 'python%s' % i], stderr=subprocess.STDOUT)
             found.append(i)
 
         except:
