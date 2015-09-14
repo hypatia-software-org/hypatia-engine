@@ -1,6 +1,6 @@
 # Hypatia 0.2.29 (alpha)
 
-![Hypatia 0.2](https://lillian-lemmer.github.io/hypatia/media/logos/logotype-blacktext-transparentbg.png)
+![Hypatia 0.2](http://hypatia-engine.github.io/assets/logotype-dark.png)
 
 [![GitHub license](https://img.shields.io/github/license/lillian-lemmer/hypatia.svg?style=flat-square)](https://raw.githubusercontent.com/lillian-lemmer/hypatia/master/LICENSE) [![PyPI Version](https://img.shields.io/pypi/v/hypatia_engine.svg?style=flat-square)](https://pypi.python.org/pypi/hypatia_engine/) [![Travis](https://img.shields.io/travis/lillian-lemmer/hypatia.svg?style=flat-square)](https://travis-ci.org/lillian-lemmer/hypatia) [![Coveralls](https://img.shields.io/coveralls/lillian-lemmer/hypatia.svg?style=flat-square)](https://coveralls.io/r/lillian-lemmer/hypatia) [![Code Climate](https://img.shields.io/codeclimate/github/lillian-lemmer/hypatia.svg?style=flat-square)](https://codeclimate.com/github/lillian-lemmer/hypatia) [![PyPI Popularity](https://img.shields.io/pypi/dm/hypatia_engine.svg?style=flat-square)](https://pypi.python.org/pypi/hypatia_engine/) [![Gratipay](https://img.shields.io/gratipay/lillian-lemmer.svg?style=flat-square)](https://gratipay.com/~lillian-lemmer/) [![Bountysource](https://img.shields.io/bountysource/team/hypatia/activity.svg?style=flat-square)](https://www.bountysource.com/teams/hypatia) [![Donate with Paypal](https://img.shields.io/badge/paypal-donate-ff69b4.svg?style=flat-square)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YFHB5TMMXMNT6) [![Donate with Patreon](https://img.shields.io/badge/patreon-donate%20monthly-ff69b4.svg?style=flat-square)](https://www.patreon.com/lilylemmer) [![My Amazon Wishlist](https://img.shields.io/badge/amazon%20wishlist-buy%20me%20things-ff69b4.svg?style=flat-square)](http://amzn.com/w/NKBZ0CX162S9)
 
@@ -10,7 +10,7 @@ Create games like [_Legend of Zelda: Oracle of Ages_ and _Oracle of Seasons_](ht
 
 The included demo game (`demo/game.py`) in action:
 
-![The demo game in action.](http://lillian-lemmer.github.io/hypatia/media/recordings/2015-06-28-develop-640x480.gif)
+![The demo game in action.](http://hypatia-engine.github.io/assets/demo.gif)
 
 [Cross-platform (Windows, Mac, Linux, BSD), putting FreeBSD development first.](https://github.com/lillian-lemmer/hypatia/wiki/Platform-Support)
 
