@@ -274,6 +274,10 @@ class AnchorPoint(object):
                 self.y - other_anchor_point.y)
 
 
+# NOTE: this will eventually be replaced with a much more
+# sophisicated version, as seen in the EVERYTHING-CHANGES
+# branch. Right now I am trying to implement AnimatedSprite
+# with as little changes as possible.
 class Walkabout(object):
     """Sprite animations for a character which walks around.
 
@@ -364,6 +368,10 @@ class Walkabout(object):
             except KeyError:
                 self.animations[action] = {direction: animation}
 
+            # NOTE: commented out, because now when GIFs are
+            # loaded into AnimatedSprite objects, they have
+            # their anchor points defined in frame objects.
+            """
             # load anchor points
             # erro here not loading all the time
             # maybe make the ini exlpicit? this caused porbs
@@ -380,10 +388,35 @@ class Walkabout(object):
 
             else:
                 self.animation_anchors = None
+            """
+            # ... thus we have to hackily set the
+            # self.animation_anchors object using the anchor data from
+            # the frames consisting the AnimatedSprite object.
+            #
+            # if first frame has anchor, presume rest do and set
+            # self.animation_anchors based on this, else set to None.
+            if animation.frames[0].anchors:
+                animation_anchors = {}
+
+                for frame in animation.frames:
+
+                    try:
+                        animation_anchors[action][direction] = frame.anchors
+                    except KeyError:
+                        animation_anchors[action] = {direction: frame.anchors}
+
+                self.animation_anchors = animation_anchors
+
+            else:
+                self.animation_anchors = None
 
         # ... set the rest of the attribs
         self.resource = resource
-        self.size = animation.getMaxSize()
+
+        # NOTE: this is lazy and results in smaller frames
+        # having a bunch of "padding"
+        self.size = animation.largest_frame_size()
+
         self.rect = pygame.Rect(position, self.size)
         self.topleft_float = topleft_float
         self.action = constants.Action.stand
@@ -473,7 +506,7 @@ class Walkabout(object):
 
                 return coord
 
-    def blit(self, screen, offset):
+    def blit(self, clock, screen, offset):
         """Draw the appropriate/active animation to screen.
 
         Note:
@@ -492,6 +525,10 @@ class Walkabout(object):
         y -= offset[1]
         position_on_screen = (x, y)
 
+        # not pyganim anymore, but whatever...
+        # all of this is made redundant by the new
+        # AnimatedSprite system...
+        """
         pyganim_gif = self.current_animation()
         pyganim_gif.blit(screen, position_on_screen)
 
@@ -503,16 +540,33 @@ class Walkabout(object):
         pyganim_frame_index = pyganim.findStartTime(pyganim_gif._startTimes,
                                                     pyganim_gif.elapsed)
         current_frame_surface = pyganim_gif.getFrame(pyganim_frame_index)
-
+        """
+        active_animation = self.current_animation()
+        active_animation.update(clock,
+                                self.topleft_float,
+                                screen)
+        current_frame = active_animation.active_frame()
+        #active_animation.image.blit(screen, position_on_screen)
+        screen.blit(active_animation.image, position_on_screen)
+        animation_anchors = current_frame.anchors
+        # we do this because currently the only
+        # applicable anchor is head
+        frame_anchor = animation_anchors['head_anchor']
+        # NOTE: wtf is up with this comment... I'll clear this up later.
         # anchors are all completely wrong
+        """
         animation_anchors = self.animation_anchors[self.action][self.direction]
         frame_anchor = animation_anchors.get_anchor_point('head_anchor',
                                                           pyganim_frame_index)
+        """
+        # outdated method, but using for now...
         parent_anchor = AnchorPoint(position_on_screen[0] + frame_anchor.x,
                                     position_on_screen[1] + frame_anchor.y)
 
         for child_walkabout in self.child_walkabouts:
+            # NOTE: outdated method
             # draw at position + difference in child anchor
+            """
             child_anim_anchor = (child_walkabout
                                  .animation_anchors[self.action]
                                  [self.direction])
@@ -522,6 +576,16 @@ class Walkabout(object):
             child_position = parent_anchor - child_frame_anchor
             child_anim = child_walkabout.current_animation()
             child_anim.blit(screen, child_position)
+            """
+            child_active_anim = child_walkabout.current_animation()
+            child_active_anim.update(clock,
+                                     self.topleft_float,
+                                     screen)
+            child_active_frame = child_active_anim.active_frame()
+            child_frame_anchor = child_active_frame.anchors['head_anchor']
+            child_position = parent_anchor - child_frame_anchor
+            #child_active_anim.image.blit(screen, child_position)
+            screen.blit(child_active_anim.image, child_position)
 
     def runtime_setup(self):
         """Perform actions to setup the walkabout. Actions performed
@@ -549,7 +613,8 @@ class Walkabout(object):
             for direction in directions:
                 animated_sprite = self.animations[action][direction]
                 animated_sprite.convert_alpha()
-                animated_sprite.play()
+                # NOTE: obs. pyganim thing
+                #animated_sprite.play()
 
         for walkabout_child in self.child_walkabouts:
             walkabout_child.runtime_setup()

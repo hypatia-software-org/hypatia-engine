@@ -21,8 +21,7 @@ except ImportError:
     from io import StringIO
 
 import pygame
-import pyganim
-from PIL import Image
+from animatedsprite import AnimatedSprite
 
 
 class Resource(object):
@@ -65,23 +64,30 @@ class Resource(object):
 
         file_handlers = {
                          '.ini': configparser_fromfp,
-                         '.gif': load_gif
+                         '.gif': load_gif,
+                         '.png': load_png,
                         }
 
         files = {}
 
         # choose between loading as an unpacked directory, or a zip file.
         # unpacked takes priority.
-
         if os.path.isdir(path):
 
+            # go through each file in the supplied path, making an
+            # entry in the files dictionary, whose value is the
+            # file data (bytesio) and key is file name.
             for file_name in os.listdir(path):
                 file_data = open(os.path.join(path, file_name)).read()
                 files[file_name] = file_data
+
+        # we're dealing with a zip file for our resources
         else:
+
             with zipfile.ZipFile(path + ".zip") as zip_file:
 
                 for file_name in zip_file.namelist():
+
                     # because namelist will also generate
                     # the directories
                     if not file_name:
@@ -91,20 +97,27 @@ class Resource(object):
                     file_data = zip_file.open(file_name).read()
                     files[file_name] = file_data
 
-        # now do post-processing
+        # Pass the file name and the files dictionary to
+        # a function which corresponds to the file name's
+        # extension.
         for file_name in files.keys():
             file_data = files[file_name]
 
+            # NOTE: should i leave this up to the parsers?
+            """
             try:
                 file_data = file_data.decode('utf-8')
             except ValueError:
                 file_data = BytesIO(file_data)
+            """
 
-            # then we do the file handler call ehre
             file_extension = os.path.splitext(file_name)[1]
 
+            # if there is a known "handler" for this extension,
+            # we want the file data for this file to be the output
+            # of said handler
             if file_extension in file_handlers:
-                file_data = file_handlers[file_extension](file_data)
+                file_data = file_handlers[file_extension](files, file_name)
 
             files[file_name] = file_data
 
@@ -146,82 +159,98 @@ class Resource(object):
         return matching_files or None
 
 
-def load_gif(path_or_bytesio):
-    """Create a PygAnim object by reading a GIF from path or
-    a BytesIO object.
+def load_png(files, file_name):
+    """Return an BytesIO object based on supplied file. This is
+    a file handler for Resource.
 
     Args:
-        path_or_bytesio (str|BytesIO): create animation using either
-            a string file path to a GIF, or provide a BytesIO of a GIF.
+        files (dict): Resources files, whereas key is the file name,
+            and the value is the untouched file contents itself.
+        file_name (str): File from "files" to use for making an
+            AnimatedSprite object.
 
     Returns:
-        PygAnim: the PygAnim animation which accurately depicts the GIF
-            referenced in gif_path.
+        AnimatedSprite: --
 
-    Example:
-        >>> path = 'resources/walkabouts/debug.zip'
-        >>> file_name = 'walk_north.gif'
-        >>> sample = zipfile.ZipFile(path).open(file_name).read()
-        >>> load_gif(BytesIO(sample))
-        <pyganim.PygAnimation object at 0x...>
+    See Also:
+        * Resources.__init__()
+        * animations.AnimatedSprite
 
     """
 
-    pil_gif = Image.open(path_or_bytesio)
+    return BytesIO(files[file_name])
 
-    frame_index = 0
-    frames = []
+
+def load_gif(files, file_name):
+    """Return an AnimatedSprite object based on a bytesio
+    object. This is a file handler.
+
+    Args:
+        files (dict): Resources files, whereas key is the file name,
+            and the value is the untouched file contents itself.
+        file_name (str): File from "files" to use for making an
+            AnimatedSprite object.
+
+    Returns:
+        AnimatedSprite: --
+
+    See Also:
+        * Resources.__init__()
+        * animations.AnimatedSprite
+
+    """
+
+    file_data = files[file_name]
+
+    # NOTE: i used to handle this just in
+    # Resources.__init__()
+    gif_bytesio = BytesIO(file_data)
+
+    # get the corersponding INI which configures our anchor points
+    # for this gif, from the files
+    gif_name_no_ext = os.path.splitext(file_name)[0]
 
     try:
+        anchor_ini_name = gif_name_no_ext + '.ini'
+        anchor_config_ini = files[anchor_ini_name]
 
-        while 1:
-            duration = pil_gif.info['duration'] / 1000.0
-            frame_as_pygame_image = pil_to_pygame(pil_gif, "RGBA")
-            frames.append((frame_as_pygame_image, duration))
-            frame_index += 1
-            pil_gif.seek(pil_gif.tell() + 1)
+        # if the INI file has not already been parsed into
+        # ConfigParser object, we'll do that now, so we
+        # can accurately construct our AnimatedSprite.
+        try:
+            anchor_config_ini.sections()
+        except AttributeError:
+            anchor_config_ini = configparser_fromfp(files, anchor_ini_name)
 
-    except EOFError:
+    except KeyError:
+        anchor_config_ini = None
 
-        pass  # end of sequence
-
-    gif = pyganim.PygAnimation(frames)
-    gif.anchor(pyganim.CENTER)
-
-    return gif
+    return AnimatedSprite.from_file(gif_bytesio, anchor_config_ini)
 
 
-def pil_to_pygame(pil_image, encoding):
-    """Convert PIL Image() to pygame Surface.
+def configparser_fromfp(files, file_name):
+    """Return a ConfigParser object based on a bytesio
+    object. This is a file handler.
 
     Args:
-        pil_image (Image): image to convert to pygame.Surface().
-        encoding (str): image encoding, e.g., RGBA
+        files (dict): Resources files, whereas key is the file name,
+            and the value is a BytesIO object of said file.
+        file_name (str): File from "files" to use for making a
+            ConfigParser object.
 
     Returns:
-        pygame.Surface: the converted image
+        ConfigParser: --
 
-    Example:
-        >>> from PIL import Image
-        >>> path = 'resources/walkabouts/debug.zip'
-        >>> file_name = 'walk_north.gif'
-        >>> sample = zipfile.ZipFile(path).open(file_name).read()
-        >>> gif = Image.open(BytesIO(sample))
-        >>> pil_to_pygame(gif, "RGBA")
-        <Surface(6x8x32 SW)>
+    See Also:
+        Resources.__init__()
 
     """
 
-    image_as_string = pil_image.convert('RGBA').tostring()
+    file_data = files[file_name]
 
-    return pygame.image.fromstring(
-                                   image_as_string,
-                                   pil_image.size,
-                                   'RGBA'
-                                  )
+    # i used to do this in Resources.__init__()
+    file_data = file_data.decode('utf-8')
 
-
-def configparser_fromfp(file_data):
     file_data = StringIO(file_data)
     config = configparser.ConfigParser()
 

@@ -164,12 +164,14 @@ class Game(object):
         # render each npc walkabout
         for npc in self.scene.npcs:
             npc.walkabout.blit(
+                               self.screen.clock,
                                self.viewport.surface,
                                self.viewport.rect.topleft
                               )
 
         # finally human and rest map layers last
         self.scene.human_player.walkabout.blit(
+                                               self.screen.clock,
                                                self.viewport.surface,
                                                self.viewport.rect.topleft
                                               )
