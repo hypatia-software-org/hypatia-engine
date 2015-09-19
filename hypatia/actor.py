@@ -36,71 +36,49 @@ from hypatia import constants
 from hypatia import physics
 
 
-class BadReasonFailure(Exception):
-    """Supplied reason for RespondFailure is erroneous;
-    it is not an enum belonging to RespondFailiure,
-    e.g., no_say_text.
+class NoResponseReason(enum.Enum):
+    """Enumeration of reasons Actor.get_response()
+    could fail and raise NoResponse.
 
     """
 
-    def __init__(self, reason_given):
-        """
-
-        Args:
-            reason_given: What was given to ReasonFailure,
-                which is not a valid failure enum.
-
-        """
-
-        super(BadReasonFailure, self).__init__(reason_given)
-        self.reason_given = reason_given
+    no_say_text = "Actor cannot respond."
 
 
-class RespondFailure(Exception):
+class NoResponse(Exception):
     """When an Actor fails to respond (say).
 
-    See Also:
-        Actor.respond()
-
     Attribs:
-        reason (RespondFailure.Reason): RespondFailure.Reason
-            enumeration, e.g., RespondFailure.Reason.no_say_text.
+        reason (NoResponseReason): The reason the
+            get_response attempt failed.
+
+    See Also:
+        * Actor.respond()
+        * NoResponseReason
 
     """
-
-    class Reason(enum.Enum):
-        """Reason enumerations; why a
-        resonse may have failed.
-
-        """
-
-        no_say_text = "Actor cannot respond."
 
     def __init__(self, reason_enum):
         """
 
         Args:
-            reason_enum (RespondFailure.Reason): A
-                RespondFailure.Reason enumeration which
-                denotes why an actor cannot respond.
+            reason_enum (NoResponseReason): Why there's
+                no response.
 
         Raises:
-            BadReasonFailure: reason_enum is not
-                a RespondFailure.Reason enumeration.
+            TypeError: reason_enum is not a valid
+                NoResponseReason enumeration.
 
         """
 
-        super(RespondFailure, self).__init__(reason_enum)
+        super(NoResponse, self).__init__(reason_enum)
 
-        # If the reason given is an invalid RespondFailure
-        # enum/reason/error, then Raise BadReasonFailure,
-        # otherwise just set the reason attribute to the
-        # supplied enum.
-        if isinstance(reason_enum, RespondFailure.Reason):
+        # Check for a valid reason or fail.
+        if isinstance(reason_enum, NoResponseReason):
             self.reason = reason_enum
         else:
 
-            raise BadReasonFailure(reason_enum)
+            raise TypeError(reason_enum)
 
 
 class Actor(object):
@@ -194,7 +172,7 @@ class Actor(object):
 
         raise TypeError("Cannot delete the 'direction' of an Actor")
 
-    def respond(self, at_direction, dialogbox):
+    def get_response(self, at_direction, dialogbox):
         """Respond to an NPC in the direction of at_direction. Change
         this actor's direction. Display this actor's say_text attribute
         on the provided dialogbox.
@@ -207,8 +185,8 @@ class Actor(object):
                 attribute will be printed to this.
 
         Raises:
-            RespondFailure: Includes "reason" attribute;
-                gives RespondFailure.Reason enumeration.
+            NoResponse: This NPC has no response for the
+                included reason.
 
         Notes:
             Even if this actor doesn't say anything, it will
@@ -226,7 +204,7 @@ class Actor(object):
             dialogbox.set_message(self.say_text)
         else:
 
-            raise RespondFailure(RespondFailure.Reason.no_say_text)
+            raise NoResponse(NoResponseReason.no_say_text)
 
     def talk(self, npcs, dialogbox):
         """Trigger another actor's :meth:`actor.Actor.say()` if
@@ -268,15 +246,15 @@ class Actor(object):
             if npc.walkabout.rect.colliderect(talk_rect):
 
                 try:
-                    npc.respond(facing, dialogbox)
+                    npc.get_response(facing, dialogbox)
 
                 # NOTE: I'm just being explicit and showing off
                 # the good feature of having a reason for an
                 # NPC not being able to respond. This currently
                 # does nothing...
-                except ResponseFailure as response_failure:
+                except NoResponse as no_response:
 
-                    if response_failure is ResponseFailure.no_say_text:
+                    if response_failure is NoResponse.no_say_text:
                         # The NPC we're seeking a response from lacks
                         # a value for say text.
                         pass
