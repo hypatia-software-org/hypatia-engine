@@ -229,14 +229,10 @@ class Actor(object):
         # to talk to npc if collide
         facing = self.walkabout.direction
 
-        if facing is constants.Direction.north:
-            disposition = (0, -1)
-        elif facing is constants.Direction.east:
-            disposition = (1, 0)
-        elif facing is constants.Direction.south:
-            disposition = (0, 1)
-        elif facing is constants.Direction.west:
-            disposition = (-1, 0)
+        # The pixel offset which acts as the collision boundary
+        # for checking if there is an actor to get a response from
+        # in front of this actor.
+        disposition = constants.Direction.disposition(facing)
 
         talk_rect = self.walkabout.rect.copy()
         talk_rect.move_ip(disposition)

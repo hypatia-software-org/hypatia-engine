@@ -46,6 +46,39 @@ class TestDirection(object):
         assert (constants.Direction.south + constants.Direction.east ==
                 constants.Direction.south_east)
 
+    def test_disposition(self):
+        """Assure the ability to get a pixel (x, y) offset
+        from a direction using Direction.disposition() works.
+
+        """
+
+        direction = constants.Direction
+
+        # north disposition of 1 is (0, -1)
+        # The default offset/padding is 1.
+        assert direction.disposition(direction.north) == (0, -1)
+
+        # north east disposition of 98 is (98, -98)
+        assert direction.disposition(direction.north_east, 98,) == (98, -98)
+
+        # east disposition of 9 is (9, 0):
+        assert direction.disposition(direction.east, 9) == (9, 0)
+
+        # South East disposition of 30 is (30, 30)
+        assert direction.disposition(direction.south_east, 30) == (30, 30)
+
+        # South disposition of 4 is (0, 4)
+        assert direction.disposition(direction.south, 4) == (0, 4)
+
+        # South West disposition of 8 is (-8, 8)
+        assert direction.disposition(direction.south_west, 8) == (-8, 8)
+
+        # A west disposition of 1 is (-1, 0)
+        assert direction.disposition(direction.west, margin=1) == (-1, 0)
+
+        # north west disposition of 55 is (-55, -55)
+        assert direction.disposition(direction.north_west, 55) == (-55, -55)
+
     def test_from_velocity(self):
         """Check that we are reliably producing
         a direction from a given velocity.

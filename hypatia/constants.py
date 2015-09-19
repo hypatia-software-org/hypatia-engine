@@ -73,6 +73,37 @@ class Direction(enum.Enum):
     east_west = 10
 
     @classmethod
+    def disposition(cls, direction, margin=1):
+        """Position offset of "margin" pixels in
+        the supplied direction.
+
+        Args:
+            direction (Direction): The direction to
+                get the pixel offset of.
+            margin (Optional[int]): Number of pixels to offset by.
+
+        Returns:
+            tuple: The (x, y) offset of adding "margin" pixels
+                in the supplied direction.
+
+        """
+
+        dispositions = {
+                        # Cardinal directions' dispositions
+                        Direction.north: (0, -margin),
+                        Direction.east: (margin, 0),
+                        Direction.south: (0, margin),
+                        Direction.west: (-margin, 0),
+                        # Ordinal directions' dispositions
+                        Direction.north_east: (margin, -margin),
+                        Direction.south_east: (margin, margin),
+                        Direction.south_west: (-margin, margin),
+                        Direction.north_west: (-margin, -margin),
+                       }
+
+        return dispositions[direction]
+
+    @classmethod
     def opposite(cls, direction):
         """Return the direction which is opposite of the
         provided direction.
