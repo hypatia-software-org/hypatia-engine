@@ -17,9 +17,9 @@ except ImportError:
 
 import pygame
 import pytest
-import pyganim
 
 from hypatia import util
+from hypatia import animatedsprite
 
 try:
     os.chdir('demo')
@@ -34,6 +34,14 @@ def test_resource():
 
     resource = util.Resource('walkabouts', 'debug')
 
+    # Assure that the "walk_north.gif" (which is default in the
+    # debug resources) exists in resource, and that the magic
+    # method for membership testing (__contains__) works.
     assert 'walk_north.gif' in resource
-    assert isinstance(resource['walk_north.gif'], pyganim.PygAnimation)
+
+    # Assure GIF files are loading AnimatedSprite objects
+    assert (isinstance(resource['walk_north.gif'],
+            animatedsprite.AnimatedSprite))
+
+    # Assure INI files are loading as ConfigParser objects
     assert isinstance(resource['walk_north.ini'], configparser.ConfigParser)

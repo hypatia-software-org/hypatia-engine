@@ -35,11 +35,11 @@ class Resource(object):
             BytesIO, PygAnim, or ConfigParser objects.
 
     Example:
-        >>> import pyganim
+        >>> from hypatia import animatedsprite as anim
         >>> resource = Resource('walkabouts', 'debug')
         >>> 'walk_north.gif' in resource
         True
-        >>> isinstance(resource['walk_north.gif'], pyganim.PygAnimation)
+        >>> isinstance(resource['walk_north.gif'], anim.AnimatedSprite)
         True
         >>> resource = Resource('scenes', 'debug')
         >>> resource['tilemap.txt'].startswith('debug')

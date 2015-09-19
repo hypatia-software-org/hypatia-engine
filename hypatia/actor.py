@@ -30,9 +30,77 @@ etalia, a common example being statistics like hit-points.
 
 """
 
-from hypatia import animations
+import enum
+
 from hypatia import constants
 from hypatia import physics
+
+
+class BadReasonFailure(Exception):
+    """Supplied reason for RespondFailure is erroneous;
+    it is not an enum belonging to RespondFailiure,
+    e.g., no_say_text.
+
+    """
+
+    def __init__(self, reason_given):
+        """
+
+        Args:
+            reason_given: What was given to ReasonFailure,
+                which is not a valid failure enum.
+
+        """
+
+        super(BadReasonFailure, self).__init__(reason_given)
+        self.reason_given = reason_given
+
+
+class RespondFailure(Exception):
+    """When an Actor fails to respond (say).
+
+    See Also:
+        Actor.respond()
+
+    Attribs:
+        reason (RespondFailure.Reason): RespondFailure.Reason
+            enumeration, e.g., RespondFailure.Reason.no_say_text.
+
+    """
+
+    class Reason(enum.Enum):
+        """Reason enumerations; why a
+        resonse may have failed.
+
+        """
+
+        no_say_text = "Actor cannot respond."
+
+    def __init__(self, reason_enum):
+        """
+
+        Args:
+            reason_enum (RespondFailure.Reason): A
+                RespondFailure.Reason enumeration which
+                denotes why an actor cannot respond.
+
+        Raises:
+            BadReasonFailure: reason_enum is not
+                a RespondFailure.Reason enumeration.
+
+        """
+
+        super(RespondFailure, self).__init__(reason_enum)
+
+        # If the reason given is an invalid RespondFailure
+        # enum/reason/error, then Raise BadReasonFailure,
+        # otherwise just set the reason attribute to the
+        # supplied enum.
+        if isinstance(reason_enum, RespondFailure.Reason):
+            self.reason = reason_enum
+        else:
+
+            raise BadReasonFailure(reason_enum)
 
 
 class Actor(object):
@@ -126,46 +194,39 @@ class Actor(object):
 
         raise TypeError("Cannot delete the 'direction' of an Actor")
 
-    def say(self, at_direction, dialogbox):
-        """Change this actor's direction, and say this actor's
-        say_text in the global dialog box.
+    def respond(self, at_direction, dialogbox):
+        """Respond to an NPC in the direction of at_direction. Change
+        this actor's direction. Display this actor's say_text attribute
+        on the provided dialogbox.
 
-        This method is typically called by another
-        actor's :meth:`actor.Actor.talk()`.
 
         Args:
             at_direction (constants.Direction): The new direction
                 for this actor to face.
-            dialogbox (dialog.DialogBox): the DialogBox to print
-                this actor's say_text to.
+            dialogbox (dialog.DialogBox): This actor's say_text
+                attribute will be printed to this.
 
-        Returns:
-            bool: True if this actor can and did say something, False
-                if this actor cannot say something. This quality is
-                determined by the presence of say_text.
+        Raises:
+            RespondFailure: Includes "reason" attribute;
+                gives RespondFailure.Reason enumeration.
 
-        Note:
+        Notes:
             Even if this actor doesn't say anything, it will
             change the direction it's facing.
 
+            This method is typically called by another
+            actor's :meth:`actor.Actor.talk()`.
+
         """
 
-        facing = {
-                  constants.Direction.north: constants.Direction.south,
-                  constants.Direction.east: constants.Direction.west,
-                  constants.Direction.west: constants.Direction.east,
-                  constants.Direction.south: constants.Direction.north
-                 }[at_direction]
-        self.walkabout.direction = facing
+        self.walkabout.direction = (constants.Direction.
+                                    opposite(at_direction))
 
         if self.say_text:
             dialogbox.set_message(self.say_text)
-
-            return True
-
         else:
 
-            return False
+            raise RespondFailure(RespondFailure.Reason.no_say_text)
 
     def talk(self, npcs, dialogbox):
         """Trigger another actor's :meth:`actor.Actor.say()` if
@@ -205,4 +266,17 @@ class Actor(object):
         for npc in npcs:
 
             if npc.walkabout.rect.colliderect(talk_rect):
-                npc.say(facing, dialogbox)
+
+                try:
+                    npc.respond(facing, dialogbox)
+
+                # NOTE: I'm just being explicit and showing off
+                # the good feature of having a reason for an
+                # NPC not being able to respond. This currently
+                # does nothing...
+                except ResponseFailure as response_failure:
+
+                    if response_failure is ResponseFailure.no_say_text:
+                        # The NPC we're seeking a response from lacks
+                        # a value for say text.
+                        pass

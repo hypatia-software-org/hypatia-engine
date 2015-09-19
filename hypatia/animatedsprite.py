@@ -31,6 +31,10 @@ class Anchor(object):
         self.x = x
         self.y = y
 
+    def __repr__(self):
+
+        return "<Anchor at (%d, %d)>" % (self.x, self.y)
+
     def __add__(self, other_anchor):
         """Adds the x, y values of this and another anchor.
 
@@ -45,7 +49,7 @@ class Anchor(object):
             >>> anchor_a = Anchor(4, 1)
             >>> anchor_b = Anchor(2, 0)
             >>> anchor_a + anchor_b
-            Anchor(6, 1)
+            <Anchor at (6, 1)>
 
         """
 
@@ -68,7 +72,7 @@ class Anchor(object):
             >>> anchor_a = Anchor(4, 1)
             >>> anchor_b = Anchor(2, 0)
             >>> anchor_a - anchor_b
-            Anchor(2, 1)
+            <Anchor at (2, 1)>
 
         """
 
@@ -106,7 +110,7 @@ class LabeledSurfaceAnchors(object):
 
     def __getitem__(self, label):
         """Return the anchor corresponding to label.
-        
+
         Raises:
             KeyError: label does not correspond to anything.
 
@@ -133,7 +137,6 @@ class AnimatedSpriteFrame(object):
         :method:`AnimatedSprite.frames_from_gif()`
 
     """
-
 
     def __init__(self, surface, start_time=0, duration=0, anchors=None):
         """
@@ -291,7 +294,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
         # NOTE: temporarily disabling this until i fully implement
         # absolute_position... in our current setup we never
         # touch the rect of frame surfaces, only the walkabout
-        #relative_position = absolute_position.relative(viewport)
+        # relative_position = absolute_position.relative(viewport)
         relative_position = (0, 0)
 
         self.rect = pygame.rect.Rect(relative_position, image_size)
@@ -376,12 +379,14 @@ class AnimatedSprite(pygame.sprite.Sprite):
             pygame.Surface: the converted image
 
         Example:
+            >>> import zipfile
+            >>> from io import BytesIO
             >>> from PIL import Image
             >>> path = 'resources/walkabouts/debug.zip'
             >>> file_name = 'walk_north.gif'
             >>> sample = zipfile.ZipFile(path).open(file_name).read()
             >>> gif = Image.open(BytesIO(sample))
-            >>> pil_to_pygame(gif, "RGBA")
+            >>> AnimatedSprite.pil_image_to_pygame_surface(gif, "RGBA")
             <Surface(6x8x32 SW)>
 
         """

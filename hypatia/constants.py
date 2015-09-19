@@ -15,10 +15,10 @@ direction and action. The benefit of this model is:
     velocity to direction
 
 Example:
-  >>> from hypatia import animations
-  >>> sprite = animations.Walkabout('debug')
-  >>> sprite.animations[Action.walk][Direction.east]
-  <pyganim.PygAnimation object at 0x...>
+    >>> from hypatia import animations
+    >>> sprite = animations.Walkabout('debug')
+    >>> sprite.animations[Action.walk][Direction.east]
+    <AnimatedSprite sprite(in ... groups)>
 
 See Also:
    *  :attribute:`actor.Actor.direction`
@@ -71,6 +71,59 @@ class Direction(enum.Enum):
     # just for fun
     north_south = 5
     east_west = 10
+
+    @classmethod
+    def opposite(cls, direction):
+        """Return the direction which is opposite of the
+        provided direction.
+
+        Args:
+            direction (Direction): Direction enumeration to get the
+                opposite Direction enumeration of.
+
+        Returns:
+            Direction: Direction opposite of provided direction.
+
+        Raises:
+            KeyError: If you supplied a direction which isn't a
+                valid Direction enumeration. See the "opposites"
+                dictionary in this method.
+
+        Examples:
+            >>> Direction.opposite(Direction.north)
+            <Direction.south: 4>
+            >>> Direction.opposite(Direction.north_west)
+            <Direction.south_east: 6>
+
+        """
+
+        opposites = {
+                     # Cardinal opposite pairs (4):
+                     #   * North > South
+                     #   * South > North
+                     #   * East > West
+                     #   * West > East
+                     cls.north: cls.south,
+                     cls.south: cls.north,
+                     cls.east: cls.west,
+                     cls.west: cls.east,
+
+                     # Ordinal opposite pairs (4):
+                     #   * North East > South West
+                     #   * South West > North East
+                     #   * North West > South East
+                     #   * South East > North West
+                     cls.north_east: cls.south_west,
+                     cls.south_west: cls.north_east,
+                     cls.north_west: cls.south_east,
+                     cls.south_east: cls.north_west,
+
+                     # "Just for Fun" opposite pairs (2):
+                     cls.north_south: cls.east_west,
+                     cls.east_west: cls.north_south,
+                    }
+
+        return opposites[direction]
 
     @classmethod
     def cardinal(cls):
@@ -141,7 +194,8 @@ class Direction(enum.Enum):
             :class:`constants.Direction`
 
         Returns:
-            :class:`constants.Direction`: --
+            :class:`constants.Direction`|None: Returns None if
+                there is no velocity (both axis have zero)
 
         """
 
@@ -180,7 +234,22 @@ class Direction(enum.Enum):
 
         # Cool trick, huh? North + East = North East, so forth.
         # Be sure to check out Direction.__add__.
-        return collected_directions[0] + collected_directions[1]
+        number_of_directions_collected = len(collected_directions)
+
+        # ordinal
+        if number_of_directions_collected > 1:
+
+            return collected_directions[0] + collected_directions[1]
+
+        # cardinal
+        elif number_of_directions_collected == 1:
+
+            return collected_directions[0]
+
+        # no direction
+        elif number_of_directions_collected == 0:
+
+            return None
 
     def __add__(cls, other_direction):
         """Combine one cardinal direction with
