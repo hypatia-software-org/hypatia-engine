@@ -2,7 +2,7 @@
 # MIT license: http://opensource.org/licenses/MIT
 
 """Tools for animation. Animation sources are GIFs from disk, which
-have been made into a PygAnimation [1]_ object. Stateful animations
+have been made into an AnimatedSprite object. Stateful animations
 which represent objects, e.g., :class:`Walkabout` represents an
 :class:`actor.Actor`.
 
@@ -10,12 +10,8 @@ Examples of "tools":
 
   * functions for creating an animation from a single suface
   * loading animations from disk
-  * adding frame-dependent positional data
+  * adding frame-specific positional data
   * contextually-aware sprites
-
-References:
-    .. [1] PygAnim:
-       http://inventwithpython.com/pyganim/
 
 Warning:
     Sometimes an "animation" can consist of one frame.
@@ -34,7 +30,6 @@ See Also:
 
 import os
 import copy
-import glob
 import itertools
 import collections
 
@@ -48,30 +43,40 @@ import pyganim
 from PIL import Image
 
 from hypatia import util
-from hypatia import render
 from hypatia import constants
 
 
 class BadWalkabout(Exception):
-    """The supplied directory has no files which match ``*.gif.`` The
-    walkabout resource specified does not contain any GIFs.
+    """Walkabout Resource specified does not contain any
+    GIF files (AnimatedSprite) for creating a Walkabout sprite.
+
+    Used in Walkabout when no files match "*.gif"
+    in the provided Resource.
+
+    Attributes:
+        failed_name (str): The supplied archive was appended to the
+            resources' walkabout direction. This is the value of
+            the attempted which resulted in KeyError.
 
     See Also:
-        :meth:`Walkabout.__init__`
+        * Walkabout.__init__()
+        * util.Resource
 
     """
 
-    def __init__(self, supplied_archive):
-        """
+    def __init__(self, failed_name):
+        """Set the exception message and "failed_name" attribute
+        to the provided failed_name argument.
 
         Args:
-            supplied_archive (str): :class:`Walkabout` resource archive
+            failed_name (str): :class:`Walkabout` resource archive
                 which *should* have contained files of pattern
                 ``*.gif,`` but didn't.
 
         """
 
-        super(BadWalkabout, self).__init__(supplied_archive)
+        super(BadWalkabout, self).__init__(failed_name)
+        self.failed_name = failed_name
 
 
 class AnimAnchors(object):
@@ -278,7 +283,7 @@ class AnchorPoint(object):
 # sophisicated version, as seen in the EVERYTHING-CHANGES
 # branch. Right now I am trying to implement AnimatedSprite
 # with as little changes as possible.
-class Walkabout(object):
+class Walkabout(pygame.sprite.Sprite):
     """Sprite animations for a character which walks around.
 
     Contextually-aware graphical representation.
@@ -318,9 +323,11 @@ class Walkabout(object):
         Example:
             >>> hat = Walkabout('hat')
             >>> Walkabout('debug', position=(44, 55), children=[hat])
-            <hypatia.animations.Walkabout object at 0x...>
+            <Walkabout sprite(in ... groups)>
 
         """
+
+        super(Walkabout, self).__init__()
 
         # the attributes we're generating
         self.animations = {}
@@ -423,6 +430,8 @@ class Walkabout(object):
         self.direction = constants.Direction.south
         self.child_walkabouts = children or []
 
+        self.image = self.animations[self.action][self.direction]
+
     def __getitem__(self, key):
         """Fetch sprites associated with action (key).
 
@@ -506,11 +515,15 @@ class Walkabout(object):
 
                 return coord
 
+    def update(self, clock, screen, offset):
+        active_animation = self.current_animation()
+        active_animation.update(clock,
+                                self.topleft_float,
+                                screen)
+        self.image = active_animation
+
     def blit(self, clock, screen, offset):
         """Draw the appropriate/active animation to screen.
-
-        Note:
-            Should go to render module?
 
         Args:
           screen (pygame.Surface): the primary display/screen.
@@ -525,12 +538,9 @@ class Walkabout(object):
         y -= offset[1]
         position_on_screen = (x, y)
 
-        active_animation = self.current_animation()
-        active_animation.update(clock,
-                                self.topleft_float,
-                                screen)
-        current_frame = active_animation.active_frame()
-        screen.blit(active_animation.image, position_on_screen)
+        self.update(clock, screen, offset)
+        current_frame = self.current_animation().active_frame()
+        screen.blit(current_frame.surface, position_on_screen)
         animation_anchors = current_frame.anchors
         # we do this because currently the only
         # applicable anchor is head
