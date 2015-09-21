@@ -104,12 +104,10 @@ class Resource(object):
             file_data = files[file_name]
 
             # NOTE: should i leave this up to the parsers?
-            """
             try:
                 file_data = file_data.decode('utf-8')
             except ValueError:
                 file_data = BytesIO(file_data)
-            """
 
             file_extension = os.path.splitext(file_name)[1]
 
