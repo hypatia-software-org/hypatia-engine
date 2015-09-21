@@ -77,6 +77,7 @@ class Resource(object):
                          '.ini': configparser_fromfp,
                          '.gif': load_gif,
                          '.png': load_png,
+                         '.txt': load_txt,
                         }
 
         # 1. Create a dictionary, where the key is the file name
@@ -185,6 +186,29 @@ def load_png(files, file_name):
     """
 
     return BytesIO(files[file_name])
+
+
+def load_txt(files, file_name):
+    """Return a decoded string based on supplied file. This is
+    a file handler for Resource.
+
+    Args:
+        files (dict): Resource files, whereas key is the file
+            name and the value is the untouched file contents
+            itself.
+        file_name (StR): File from "files" to use for making
+            an animatedSprite object.
+
+    Returns:
+        AnimatedSprite: --
+
+    See Also:
+        * Resources.__init__()
+        * animations.AnimatedSprite
+
+    """
+
+    return files[file_name].decode('utf-8')
 
 
 def load_gif(files, file_name):
