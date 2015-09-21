@@ -79,6 +79,18 @@ class Anchor(object):
         return Anchor(self.x - other_anchor.x,
                       self.y - other_anchor.y)
 
+    def as_tuple(self):
+        """Represent this anchors's (x, y)
+        coordinates as a Python tuple.
+
+        Returns:
+            tuple(int, int): (x, y) coordinate tuple
+                of this Anchor.
+
+        """
+
+        return (self.x, self.y)
+
 
 class LabeledSurfaceAnchors(object):
     """Labeled anchors for a surface.
