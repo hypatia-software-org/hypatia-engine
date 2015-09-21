@@ -9,7 +9,7 @@ actions, examples include:
   * human player
   * an enemy NPC
   * a friendly NPC
-  * an invisible NPC which simply displays
+  * Invisible NPC placed above a sign tile, which displays
     a message when "talked" to.
 
 This module implements a basic :class:`Actor` class to serve as
@@ -27,6 +27,9 @@ useful way to test for objects which support a bare-minimum of core,
 shared actions. The class is also useful in role-playing games for
 storing data that tends to be common between the Player, NPCs, enemies,
 etalia, a common example being statistics like hit-points.
+
+See Also:
+    * animations.Walkabout
 
 """
 
