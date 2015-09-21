@@ -150,7 +150,8 @@ class Game(object):
         self.scene.runtime_setup()
         self.start_loop()
 
-    def render(self):
+    # will be removed
+    def old_render(self):
         """Drawing behavior for game objects.
 
         Parts of this should go to their respective classes, .e.g,
@@ -185,6 +186,19 @@ class Game(object):
             self.viewport.blit(layer)
             self.scene.tilemap.blit_layer_animated_tiles(self.viewport, i)
 
+        self.dialogbox.blit(self.viewport.surface)
+
+    def render(self):
+        """Drawing behavior for game objects.
+
+        Parts of this should go to their respective classes, .e.g,
+        scene.
+
+        Needs to be updated to use sprite groups.
+
+        """
+
+        self.scene.render(self.viewport, self.screen.clock)
         self.dialogbox.blit(self.viewport.surface)
 
     def start_loop(self):
@@ -408,20 +422,45 @@ class Scene(object):
         for object_to_setup in objects_to_setup + npcs_to_setup:
             object_to_setup.runtime_setup()
 
-    def render(self):
-        """Drawing behavior for game objects.
+    def render(self, viewport, clock):
+        """Render this Scene onto viewport.
 
-        Parts of this should go to their respective classes, .e.g,
-        scene.
-
-        Needs to be updated to use sprite groups.
+        Args:
+            viewport (render.Viewport): The global/master viewport,
+                where stuff will be blitted to. Also used for some
+                calculations.
+            clock (pygame.time.Clock): Global/master/the game
+                clock used for timing in this game.
 
         """
 
-        self.viewport.center_on(self.scene.human_player.walkabout,
-                                first_tilemap_layer.get_rect())
-        self.scene.render(self.screen.clock, self.viewport)
-        self.dialogbox.blit(self.viewport.surface)
+        (self.tilemap.tilesheet.animated_tiles_group.
+         update(clock, viewport.surface, viewport.rect.topleft))
+        first_tilemap_layer = self.tilemap.layer_images[0]
+        viewport.center_on(self.human_player.walkabout,
+                           first_tilemap_layer.get_rect())
+        viewport.blit(first_tilemap_layer)
+        self.tilemap.blit_layer_animated_tiles(viewport, 0)
+
+        # render each npc walkabout
+        # should use group draw
+        for npc in self.npcs:
+            npc.walkabout.blit(
+                               clock,
+                               viewport.surface,
+                               viewport.rect.topleft
+                              )
+
+        # finally human and rest map layers last
+        self.human_player.walkabout.blit(
+                                         clock,
+                                         viewport.surface,
+                                         viewport.rect.topleft
+                                        )
+
+        for i, layer in enumerate(self.tilemap.layer_images[1:], 1):
+            viewport.blit(layer)
+            self.tilemap.blit_layer_animated_tiles(viewport, i)
 
 
 class TMX(object):
@@ -552,39 +591,3 @@ class TMX(object):
         if self.player_start_position is None:
 
             raise TMXMissingPlayerStartPosition()
-
-    def render(self, viewport, clock):
-        """Render this Scene onto viewport.
-
-        Args:
-            viewport (render.Viewport): The global/master viewport,
-                where stuff will be blitted to. Also used for some
-                calculations.
-            clock (pygame.time.Clock): Global/master/the game
-                clock used for timing in this game.
-
-        """
-
-        first_tilemap_layer = self.tilemap.layer_images[0]
-        viewport.blit(first_tilemap_layer)
-        self.tilemap.blit_layer_animated_tiles(self.viewport, 0)
-
-        # render each npc walkabout
-        # should use group draw
-        for npc in self.npcs:
-            npc.walkabout.blit(
-                               self.screen.clock,
-                               viewport.surface,
-                               viewport.rect.topleft
-                              )
-
-        # finally human and rest map layers last
-        self.human_player.walkabout.blit(
-                                         clock,
-                                         viewport.surface,
-                                         viewport.rect.topleft
-                                        )
-
-        for i, layer in enumerate(self.tilemap.layer_images[1:], 1):
-            viewport.blit(layer)
-            self.tilemap.blit_layer_animated_tiles(viewport, i)

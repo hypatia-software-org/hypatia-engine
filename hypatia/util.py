@@ -21,7 +21,7 @@ except ImportError:
     from io import StringIO
 
 import pygame
-from animatedsprite import AnimatedSprite
+from hypatia.animatedsprite import AnimatedSprite
 
 
 class Resource(object):

@@ -39,11 +39,11 @@ except ImportError:
     import configparser
 
 import pygame
-import pyganim
 from PIL import Image
 
 from hypatia import util
 from hypatia import constants
+from hypatia import animatedsprite
 
 
 class BadWalkabout(Exception):
@@ -79,6 +79,8 @@ class BadWalkabout(Exception):
         self.failed_name = failed_name
 
 
+# NOTE: will be getting removed and replaced with the anchor system
+# in animatedsprite.py
 class AnimAnchors(object):
     """The anchors per frame of a :class:`pyganim.PygAnimation`. Anchors
     are coordinates belonging to a :class:`pygame.Surface`, which can be
@@ -204,6 +206,8 @@ class AnimAnchors(object):
             return self.anchor_points[anchor_point_group][-1]
 
 
+# NOTE: will be getting removed and replaced with the anchor system
+# in animatedsprite.py
 class AnchorPoint(object):
     """A coordinate on a surface which is used for pinning to another
     surface AnchorPoint. Used when attempting to afix one surface to
@@ -637,7 +641,7 @@ def palette_cycle(surface):
             new_surface.set_at(coordinate, new_color)
 
         frame = new_surface.copy()
-        frames.append((frame, 0.2))
+        frames.append((frame, 250))
         old_color_list = copy.copy(new_color_list)
 
-    return pyganim.PygAnimation(frames)
+    return animatedsprite.AnimatedSprite.from_surface_duration_list(frames)

@@ -138,7 +138,7 @@ class AnimatedSpriteFrame(object):
 
     """
 
-    def __init__(self, surface, start_time=0, duration=0, anchors=None):
+    def __init__(self, surface, start_time, duration, anchors=None):
         """
 
         Args:
@@ -154,6 +154,11 @@ class AnimatedSpriteFrame(object):
         self.start_time = start_time
         self.end_time = start_time + duration
         self.anchors = anchors or None
+
+    def __repr__(self):
+        s = "<AnimatedSpriteFrame duration(%s) start_time(%s) end_time(%s)>"
+
+        return s % (self.duration, self.start_time, self.end_time)
 
 
 class AnimatedSprite(pygame.sprite.Sprite):
@@ -244,7 +249,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
     def from_surface_duration_list(surface_duration_list):
         """Support PygAnimation-style frames.
 
-        A list like [(surface, duration in ms)]
+        A list like [(surface, int duration in ms)]
 
         """
 
@@ -254,6 +259,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
         for surface, duration in surface_duration_list:
             frame = AnimatedSpriteFrame(surface, running_time, duration)
             frames.append(frame)
+            running_time += duration
 
         return AnimatedSprite(frames)
 
