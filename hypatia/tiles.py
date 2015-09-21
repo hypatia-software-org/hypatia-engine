@@ -21,10 +21,10 @@ import string
 import itertools
 
 import pygame
-import pyganim
 
 from hypatia import util
 from hypatia import animations
+from hypatia import animatedsprite
 
 
 class BadTileID(Exception):
@@ -215,9 +215,10 @@ class TileMap(object):
 
         """
 
-        for tile_pyganim, position in self.animated_tile_stack[layer]:
-            tile_pyganim.blit(viewport.surface,
-                              viewport.relative_position(position))
+        # i have to start using sprite groups for this
+        for tile_anim, position in self.animated_tile_stack[layer]:
+            viewport.surface.blit(tile_anim.image,
+                                  viewport.relative_position(position))
 
     def runtime_setup(self):
         """This is for game.py. These need to be launched after pygame
@@ -231,10 +232,8 @@ class TileMap(object):
             image.convert()
             image.convert_alpha()
 
-        for i, tile_pyganim in self.tilesheet.animated_tiles.items():
-            tile_pyganim.convert()
-            tile_pyganim.convert_alpha()
-            tile_pyganim.play()
+        for i, tile_animation in self.tilesheet.animated_tiles.items():
+            tile_animation.convert_alpha()
 
         return None
 
@@ -309,12 +308,13 @@ class Tilesheet(object):
     """An image consisting of uniformly sized squares called "tiles."
 
     Attributes:
-      name (str): --
-      surface (pygame.Surface): --
-      tiles (iter): --
-      tile_size (tuple): (x, y) pixel dimensions of the tiles which
-        comprise the Tilesheet surface.
-      animated_tiles (dict): tile_id -> pyganimation
+        name (str): --
+        surface (pygame.Surface): --
+        tiles (iter): --
+        tile_size (tuple): (x, y) pixel dimensions of the tiles which
+            comprise the Tilesheet surface.
+        animated_tiles (dict): tile_id -> pyganimation
+        animated_tiles_group (pygame.sprite.Group): --
 
     """
 
@@ -327,7 +327,8 @@ class Tilesheet(object):
           tiles (iter): --
           tile_size (tuple): (x, y) pixel dimensions of the tiles which
             comprise the Tilesheet surface.
-          animated_tiles (dict): tile_id -> pyganimation
+          animated_tiles (dict): tile_id -> AnimatedSprite:
+            {0: AnimatedSprite(...), 1: AnimatedSprite(...), ...}.
 
         """
 
@@ -336,6 +337,8 @@ class Tilesheet(object):
         self.tiles = tiles
         self.tile_size = tile_size
         self.animated_tiles = animated_tiles
+        self.animated_tiles_group = (pygame.sprite.
+                                     Group(*animated_tiles.values()))
 
     def __getitem__(self, tile_id):
 
@@ -405,14 +408,17 @@ class Tilesheet(object):
             for tile_id, animation_string in config.items('animations'):
                 tile_id = int(tile_id)
                 frame_duration, next_tile_id = animation_string.split(',')
-                frame_duration = float(frame_duration)
+                frame_duration = int(frame_duration)  # frame dur is in MS
                 next_tile_id = int(next_tile_id)
                 frame_buffer.append((tiles[tile_id].subsurface,
                                      frame_duration))
 
+                # NOTE: outdated needs to use new anim sys
                 if next_tile_id in seen_tile_ids:
-                    tile_pyganim = pyganim.PygAnimation(frame_buffer)
-                    animated_tiles[next_tile_id] = tile_pyganim
+                    tile_anim = (animatedsprite.
+                                 AnimatedSprite.
+                                 from_surface_duration_list(frame_buffer))
+                    animated_tiles[next_tile_id] = tile_anim
                     frame_buffer = []
                     seen_tile_ids = set()
 
@@ -511,8 +517,3 @@ def index_to_coord(width, i):
     else:
 
         return ((i % width), (i // width))
-
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()

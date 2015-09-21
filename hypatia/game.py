@@ -150,8 +150,14 @@ class Game(object):
         self.scene.runtime_setup()
         self.start_loop()
 
-    def render(self):
+    # will be removed
+    def old_render(self):
         """Drawing behavior for game objects.
+
+        Parts of this should go to their respective classes, .e.g,
+        scene.
+
+        Needs to be updated to use sprite groups.
 
         """
 
@@ -164,12 +170,14 @@ class Game(object):
         # render each npc walkabout
         for npc in self.scene.npcs:
             npc.walkabout.blit(
+                               self.screen.clock,
                                self.viewport.surface,
                                self.viewport.rect.topleft
                               )
 
         # finally human and rest map layers last
         self.scene.human_player.walkabout.blit(
+                                               self.screen.clock,
                                                self.viewport.surface,
                                                self.viewport.rect.topleft
                                               )
@@ -178,6 +186,19 @@ class Game(object):
             self.viewport.blit(layer)
             self.scene.tilemap.blit_layer_animated_tiles(self.viewport, i)
 
+        self.dialogbox.blit(self.viewport.surface)
+
+    def render(self):
+        """Drawing behavior for game objects.
+
+        Parts of this should go to their respective classes, .e.g,
+        scene.
+
+        Needs to be updated to use sprite groups.
+
+        """
+
+        self.scene.render(self.viewport, self.screen.clock)
         self.dialogbox.blit(self.viewport.surface)
 
     def start_loop(self):
@@ -202,6 +223,9 @@ class Scene(object):
       human_player (hypatia.player.Player): the human player object.
       npcs (list): a list of hypatia.player.NPC objects
 
+    Notes:
+        Should have methods for managing npcs, e.g., add/remove.
+
     """
 
     def __init__(self, tilemap, player_start_position,
@@ -213,13 +237,19 @@ class Scene(object):
                 for the human player's starting position.
             human_player (players.HumanPlayer): --
             npcs (List[players.Npc]): --
+            npc_sprite_group (pygame.sprite.Group): --
 
         """
 
         self.tilemap = tilemap
+
         self.player_start_position = player_start_position
         self.human_player = human_player
+
         self.npcs = npcs or []
+
+        npc_walkabouts = [n.walkabout for n in self.npcs]
+        self.npc_sprite_group = pygame.sprite.Group(*npc_walkabouts)
 
     @staticmethod
     def create_human_player(start_position):
@@ -365,6 +395,9 @@ class Scene(object):
                 to test for collisions against NPCs and
                 the tilemap's wallmap.
 
+        Notes:
+            Should use pygame.sprite.spritecollide()
+
         """
 
         possible_collisions = self.tilemap.impassable_rects
@@ -388,6 +421,46 @@ class Scene(object):
 
         for object_to_setup in objects_to_setup + npcs_to_setup:
             object_to_setup.runtime_setup()
+
+    def render(self, viewport, clock):
+        """Render this Scene onto viewport.
+
+        Args:
+            viewport (render.Viewport): The global/master viewport,
+                where stuff will be blitted to. Also used for some
+                calculations.
+            clock (pygame.time.Clock): Global/master/the game
+                clock used for timing in this game.
+
+        """
+
+        (self.tilemap.tilesheet.animated_tiles_group.
+         update(clock, viewport.surface, viewport.rect.topleft))
+        first_tilemap_layer = self.tilemap.layer_images[0]
+        viewport.center_on(self.human_player.walkabout,
+                           first_tilemap_layer.get_rect())
+        viewport.blit(first_tilemap_layer)
+        self.tilemap.blit_layer_animated_tiles(viewport, 0)
+
+        # render each npc walkabout
+        # should use group draw
+        for npc in self.npcs:
+            npc.walkabout.blit(
+                               clock,
+                               viewport.surface,
+                               viewport.rect.topleft
+                              )
+
+        # finally human and rest map layers last
+        self.human_player.walkabout.blit(
+                                         clock,
+                                         viewport.surface,
+                                         viewport.rect.topleft
+                                        )
+
+        for i, layer in enumerate(self.tilemap.layer_images[1:], 1):
+            viewport.blit(layer)
+            self.tilemap.blit_layer_animated_tiles(viewport, i)
 
 
 class TMX(object):

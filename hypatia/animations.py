@@ -2,7 +2,7 @@
 # MIT license: http://opensource.org/licenses/MIT
 
 """Tools for animation. Animation sources are GIFs from disk, which
-have been made into a PygAnimation [1]_ object. Stateful animations
+have been made into an AnimatedSprite object. Stateful animations
 which represent objects, e.g., :class:`Walkabout` represents an
 :class:`actor.Actor`.
 
@@ -10,12 +10,8 @@ Examples of "tools":
 
   * functions for creating an animation from a single suface
   * loading animations from disk
-  * adding frame-dependent positional data
+  * adding frame-specific positional data
   * contextually-aware sprites
-
-References:
-    .. [1] PygAnim:
-       http://inventwithpython.com/pyganim/
 
 Warning:
     Sometimes an "animation" can consist of one frame.
@@ -34,7 +30,6 @@ See Also:
 
 import os
 import copy
-import glob
 import itertools
 import collections
 
@@ -44,36 +39,48 @@ except ImportError:
     import configparser
 
 import pygame
-import pyganim
 from PIL import Image
 
 from hypatia import util
-from hypatia import render
 from hypatia import constants
+from hypatia import animatedsprite
 
 
 class BadWalkabout(Exception):
-    """The supplied directory has no files which match ``*.gif.`` The
-    walkabout resource specified does not contain any GIFs.
+    """Walkabout Resource specified does not contain any
+    GIF files (AnimatedSprite) for creating a Walkabout sprite.
+
+    Used in Walkabout when no files match "*.gif"
+    in the provided Resource.
+
+    Attributes:
+        failed_name (str): The supplied archive was appended to the
+            resources' walkabout direction. This is the value of
+            the attempted which resulted in KeyError.
 
     See Also:
-        :meth:`Walkabout.__init__`
+        * Walkabout.__init__()
+        * util.Resource
 
     """
 
-    def __init__(self, supplied_archive):
-        """
+    def __init__(self, failed_name):
+        """Set the exception message and "failed_name" attribute
+        to the provided failed_name argument.
 
         Args:
-            supplied_archive (str): :class:`Walkabout` resource archive
+            failed_name (str): :class:`Walkabout` resource archive
                 which *should* have contained files of pattern
                 ``*.gif,`` but didn't.
 
         """
 
-        super(BadWalkabout, self).__init__(supplied_archive)
+        super(BadWalkabout, self).__init__(failed_name)
+        self.failed_name = failed_name
 
 
+# NOTE: will be getting removed and replaced with the anchor system
+# in animatedsprite.py
 class AnimAnchors(object):
     """The anchors per frame of a :class:`pyganim.PygAnimation`. Anchors
     are coordinates belonging to a :class:`pygame.Surface`, which can be
@@ -199,6 +206,8 @@ class AnimAnchors(object):
             return self.anchor_points[anchor_point_group][-1]
 
 
+# NOTE: will be getting removed and replaced with the anchor system
+# in animatedsprite.py
 class AnchorPoint(object):
     """A coordinate on a surface which is used for pinning to another
     surface AnchorPoint. Used when attempting to afix one surface to
@@ -274,7 +283,11 @@ class AnchorPoint(object):
                 self.y - other_anchor_point.y)
 
 
-class Walkabout(object):
+# NOTE: this will eventually be replaced with a much more
+# sophisicated version, as seen in the EVERYTHING-CHANGES
+# branch. Right now I am trying to implement AnimatedSprite
+# with as little changes as possible.
+class Walkabout(pygame.sprite.Sprite):
     """Sprite animations for a character which walks around.
 
     Contextually-aware graphical representation.
@@ -314,9 +327,11 @@ class Walkabout(object):
         Example:
             >>> hat = Walkabout('hat')
             >>> Walkabout('debug', position=(44, 55), children=[hat])
-            <hypatia.animations.Walkabout object at 0x...>
+            <Walkabout sprite(in ... groups)>
 
         """
+
+        super(Walkabout, self).__init__()
 
         # the attributes we're generating
         self.animations = {}
@@ -364,6 +379,10 @@ class Walkabout(object):
             except KeyError:
                 self.animations[action] = {direction: animation}
 
+            # NOTE: commented out, because now when GIFs are
+            # loaded into AnimatedSprite objects, they have
+            # their anchor points defined in frame objects.
+            """
             # load anchor points
             # erro here not loading all the time
             # maybe make the ini exlpicit? this caused porbs
@@ -380,15 +399,42 @@ class Walkabout(object):
 
             else:
                 self.animation_anchors = None
+            """
+            # ... thus we have to hackily set the
+            # self.animation_anchors object using the anchor data from
+            # the frames consisting the AnimatedSprite object.
+            #
+            # if first frame has anchor, presume rest do and set
+            # self.animation_anchors based on this, else set to None.
+            if animation.frames[0].anchors:
+                animation_anchors = {}
+
+                for frame in animation.frames:
+
+                    try:
+                        animation_anchors[action][direction] = frame.anchors
+                    except KeyError:
+                        animation_anchors[action] = {direction: frame.anchors}
+
+                self.animation_anchors = animation_anchors
+
+            else:
+                self.animation_anchors = None
 
         # ... set the rest of the attribs
         self.resource = resource
-        self.size = animation.getMaxSize()
+
+        # NOTE: this is lazy and results in smaller frames
+        # having a bunch of "padding"
+        self.size = animation.largest_frame_size()
+
         self.rect = pygame.Rect(position, self.size)
         self.topleft_float = topleft_float
         self.action = constants.Action.stand
         self.direction = constants.Direction.south
         self.child_walkabouts = children or []
+
+        self.image = self.animations[self.action][self.direction]
 
     def __getitem__(self, key):
         """Fetch sprites associated with action (key).
@@ -403,7 +449,7 @@ class Walkabout(object):
         Examples:
             >>> walkabout = Walkabout('debug')
             >>> walkabout[constants.Action.walk][constants.Direction.south]
-            <pyganim.PygAnimation object at 0x...>
+            <AnimatedSprite sprite(in ... groups)>
 
         """
 
@@ -420,7 +466,7 @@ class Walkabout(object):
         Example:
             >>> walkabout = Walkabout('debug')
             >>> walkabout.current_animation()
-            <pyganim.PygAnimation object at 0x...>
+            <AnimatedSprite sprite(in ... groups)>
 
         """
 
@@ -473,11 +519,15 @@ class Walkabout(object):
 
                 return coord
 
-    def blit(self, screen, offset):
-        """Draw the appropriate/active animation to screen.
+    def update(self, clock, screen, offset):
+        active_animation = self.current_animation()
+        active_animation.update(clock,
+                                self.topleft_float,
+                                screen)
+        self.image = active_animation
 
-        Note:
-            Should go to render module?
+    def blit(self, clock, screen, offset):
+        """Draw the appropriate/active animation to screen.
 
         Args:
           screen (pygame.Surface): the primary display/screen.
@@ -492,36 +542,27 @@ class Walkabout(object):
         y -= offset[1]
         position_on_screen = (x, y)
 
-        pyganim_gif = self.current_animation()
-        pyganim_gif.blit(screen, position_on_screen)
-
-        # the rest of this is for children/anchors
-        if self.animation_anchors is None:
-
-            return None
-
-        pyganim_frame_index = pyganim.findStartTime(pyganim_gif._startTimes,
-                                                    pyganim_gif.elapsed)
-        current_frame_surface = pyganim_gif.getFrame(pyganim_frame_index)
-
-        # anchors are all completely wrong
-        animation_anchors = self.animation_anchors[self.action][self.direction]
-        frame_anchor = animation_anchors.get_anchor_point('head_anchor',
-                                                          pyganim_frame_index)
+        self.update(clock, screen, offset)
+        current_frame = self.current_animation().active_frame()
+        screen.blit(current_frame.surface, position_on_screen)
+        animation_anchors = current_frame.anchors
+        # we do this because currently the only
+        # applicable anchor is head
+        frame_anchor = animation_anchors['head_anchor']
+        # outdated method, but using for now...
         parent_anchor = AnchorPoint(position_on_screen[0] + frame_anchor.x,
                                     position_on_screen[1] + frame_anchor.y)
 
         for child_walkabout in self.child_walkabouts:
             # draw at position + difference in child anchor
-            child_anim_anchor = (child_walkabout
-                                 .animation_anchors[self.action]
-                                 [self.direction])
-            child_frame_anchor = (child_anim_anchor
-                                  .get_anchor_point('head_anchor',
-                                                    pyganim_frame_index))
+            child_active_anim = child_walkabout.current_animation()
+            child_active_anim.update(clock,
+                                     self.topleft_float,
+                                     screen)
+            child_active_frame = child_active_anim.active_frame()
+            child_frame_anchor = child_active_frame.anchors['head_anchor']
             child_position = parent_anchor - child_frame_anchor
-            child_anim = child_walkabout.current_animation()
-            child_anim.blit(screen, child_position)
+            screen.blit(child_active_anim.image, child_position)
 
     def runtime_setup(self):
         """Perform actions to setup the walkabout. Actions performed
@@ -549,7 +590,6 @@ class Walkabout(object):
             for direction in directions:
                 animated_sprite = self.animations[action][direction]
                 animated_sprite.convert_alpha()
-                animated_sprite.play()
 
         for walkabout_child in self.child_walkabouts:
             walkabout_child.runtime_setup()
@@ -601,7 +641,7 @@ def palette_cycle(surface):
             new_surface.set_at(coordinate, new_color)
 
         frame = new_surface.copy()
-        frames.append((frame, 0.2))
+        frames.append((frame, 250))
         old_color_list = copy.copy(new_color_list)
 
-    return pyganim.PygAnimation(frames)
+    return animatedsprite.AnimatedSprite.from_surface_duration_list(frames)
