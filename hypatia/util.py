@@ -56,18 +56,32 @@ class Resource(object):
 
         """
 
+        # The default path for a resource is:
+        #   ./resource_category/resource_name
+        # We'll be looking for an archive or directory that
+        # looks something like these examples:
+        #   * ./resources/walkabouts/hat
+        #   * ./resources/scenes/debug.zip
+        # Keep in mind that directories are chosen over
+        # zip archives (if the names are the same).
         path = os.path.join(
                             'resources',
                             resource_category,
                             resource_name
                            )
 
+        # Once files have been collected from the aforementioned
+        # path, the files will be passed through their respective
+        # file_handler, if available for the given file extension.
         file_handlers = {
                          '.ini': configparser_fromfp,
                          '.gif': load_gif,
                          '.png': load_png,
                         }
 
+        # 1. Create a dictionary, where the key is the file name
+        # (including extension) and the value is the result
+        # of using x.open(path).read().
         files = {}
 
         # choose between loading as an unpacked directory, or a zip file.
@@ -97,18 +111,12 @@ class Resource(object):
                     file_data = zip_file.open(file_name).read()
                     files[file_name] = file_data
 
-        # Pass the file name and the files dictionary to
-        # a function which corresponds to the file name's
-        # extension.
+        # 2. "Prepare" the "raw file data" from the files
+        # dictionary we just created. If a given file's
+        # file extension is in file_handlers, the data
+        # will be updated by an associated function.
         for file_name in files.keys():
             file_data = files[file_name]
-
-            # NOTE: should i leave this up to the parsers?
-            try:
-                file_data = file_data.decode('utf-8')
-            except ValueError:
-                file_data = BytesIO(file_data)
-
             file_extension = os.path.splitext(file_name)[1]
 
             # if there is a known "handler" for this extension,
