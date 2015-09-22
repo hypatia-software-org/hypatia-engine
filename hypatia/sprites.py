@@ -1,7 +1,9 @@
 # This module is part of Hypatia and is released under the
 # MIT license: http://opensource.org/licenses/MIT
 
-"""Tools for animation. Animation sources are GIFs from disk, which
+"""Sprites!
+
+Tools for animation. Animation sources are GIFs from disk, which
 have been made into an AnimatedSprite object. Stateful animations
 which represent objects, e.g., :class:`Walkabout` represents an
 :class:`actor.Actor`.
@@ -22,7 +24,7 @@ Note:
 
 See Also:
 
-    * :mod:`util`
+    * :mod:`resources`
     * :mod:`actor`
     * :class:`Walkabout`
 
@@ -41,8 +43,8 @@ except ImportError:
 import pygame
 from PIL import Image
 
-from hypatia import util
 from hypatia import constants
+from hypatia import resources
 from hypatia import animatedsprite
 
 
@@ -60,7 +62,7 @@ class BadWalkabout(Exception):
 
     See Also:
         * Walkabout.__init__()
-        * util.Resource
+        * resources.Resource
 
     """
 
@@ -139,7 +141,7 @@ class Walkabout(pygame.sprite.Sprite):
 
         # specify the files to load
         # how will i glob a resource
-        resource = util.Resource('walkabouts', directory)
+        resource = resources.Resource('walkabouts', directory)
         sprite_files = resource.get_type('.gif')
 
         # no sprites matching pattern!

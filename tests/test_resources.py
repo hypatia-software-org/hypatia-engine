@@ -1,9 +1,9 @@
 # This module is part of Hypatia and is released under the
 # MIT license: http://opensource.org/licenses/MIT
 
-"""py.test unit testing for hypatia/util.py
+"""py.test unit testing for hypatia/resources.py
 
-Run py.test on this module to assert hypatia.util
+Run py.test on this module to assert hypatia.resources
 is completely functional.
 
 """
@@ -18,7 +18,7 @@ except ImportError:
 import pygame
 import pytest
 
-from hypatia import util
+from hypatia import resources
 from hypatia import animatedsprite
 
 try:
@@ -28,11 +28,11 @@ except OSError:
 
 
 def test_resource():
-    """Test the util.Resource class.
+    """Test the resources.Resource class.
 
     """
 
-    resource = util.Resource('walkabouts', 'debug')
+    resource = resources.Resource('walkabouts', 'debug')
 
     # Assure that the "walk_north.gif" (which is default in the
     # debug resources) exists in resource, and that the magic

@@ -31,14 +31,14 @@ except ImportError:
 
 import pygame
 
-from hypatia import util
 from hypatia import tiles
 from hypatia import dialog
 from hypatia import render
 from hypatia import player
+from hypatia import sprites
 from hypatia import physics
+from hypatia import resources
 from hypatia import constants
-from hypatia import animations
 from hypatia import controllers
 
 
@@ -266,10 +266,10 @@ class Scene(object):
         """
 
         # .. create player with player scene data
-        hat = animations.Walkabout('hat')
-        human_walkabout = animations.Walkabout('debug',
-                                               position=start_position,
-                                               children=[hat])
+        hat = sprites.Walkabout('hat')
+        human_walkabout = sprites.Walkabout('debug',
+                                            position=start_position,
+                                            children=[hat])
         velocity = physics.Velocity(20, 20)
         human_player = player.HumanPlayer(walkabout=human_walkabout,
                                           velocity=velocity)
@@ -322,7 +322,7 @@ class Scene(object):
 
         # load the scene zip from the scene resource and read
         # the general scene configuration, first.
-        resource = util.Resource('scenes', scene_name)
+        resource = resources.Resource('scenes', scene_name)
         scene_ini = resource['scene.ini']
 
         # Construct a TileMap from the tilemap.txt
@@ -366,8 +366,8 @@ class Scene(object):
             # create the NPC's walkabout using the
             # designated walkabout name and position
             # from the NPC's config.
-            npc_walkabout = animations.Walkabout(walkabout_name,
-                                                 position=position)
+            npc_walkabout = sprites.Walkabout(walkabout_name,
+                                              position=position)
 
             if npcs_ini.has_option(npc_name, 'say'):
                 # Load some say text for the NPC, so when
@@ -581,7 +581,7 @@ class TMX(object):
                 position = (x, y)
                 walkabout_name = (properties.find(xpath % 'walkabout').
                                   attrib['value'])
-                walkabout = animations.Walkabout(walkabout_name, position)
+                walkabout = sprites.Walkabout(walkabout_name, position)
                 say_text = properties.find(xpath % 'say').attrib['value']
 
                 npc = player.Npc(walkabout=walkabout, say_text=say_text)
