@@ -15,8 +15,8 @@ direction and action. The benefit of this model is:
     velocity to direction
 
 Example:
-    >>> from hypatia import animations
-    >>> sprite = animations.Walkabout('debug')
+    >>> from hypatia import sprites
+    >>> sprite = sprites.Walkabout('debug')
     >>> sprite.animations[Action.walk][Direction.east]
     <AnimatedSprite sprite(in ... groups)>
 

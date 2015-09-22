@@ -74,7 +74,7 @@ class Resource(object):
         # path, the files will be passed through their respective
         # file_handler, if available for the given file extension.
         file_handlers = {
-                         '.ini': configparser_fromfp,
+                         '.ini': load_ini,
                          '.gif': load_gif,
                          '.png': load_png,
                          '.txt': load_txt,
@@ -250,7 +250,7 @@ def load_gif(files, file_name):
         try:
             anchor_config_ini.sections()
         except AttributeError:
-            anchor_config_ini = configparser_fromfp(files, anchor_ini_name)
+            anchor_config_ini = load_ini(files, anchor_ini_name)
 
     except KeyError:
         anchor_config_ini = None
@@ -258,7 +258,7 @@ def load_gif(files, file_name):
     return AnimatedSprite.from_file(gif_bytesio, anchor_config_ini)
 
 
-def configparser_fromfp(files, file_name):
+def load_ini(files, file_name):
     """Return a ConfigParser object based on a bytesio
     object. This is a file handler.
 

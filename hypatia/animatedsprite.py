@@ -3,6 +3,9 @@
 More advanced animation/sprite abstractions are in
 the animations module.
 
+This gets its own module due to its complicated nature,
+and because it avoids circular import issues.
+
 """
 
 import pygame

@@ -23,8 +23,8 @@ from io import BytesIO
 import pygame
 import pytest
 
-from hypatia import util
 from hypatia import tiles
+from hypatia import resources
 
 try:
     os.chdir('demo')
@@ -140,7 +140,7 @@ def test_tilemap():
 
     """
 
-    resource = util.Resource('scenes', 'debug')
+    resource = resources.Resource('scenes', 'debug')
     map_string = resource['tilemap.txt'].strip()
     tilemap = tiles.TileMap.from_string(map_string)
 
