@@ -1,8 +1,8 @@
-# Hypatia 0.2.29 (alpha)
+# Hypatia 0.2.3 (alpha)
 
-![Hypatia 0.2](http://hypatia-engine.github.io/assets/logotype-dark.png)
+![Hypatia 0.2.3](http://hypatia-engine.github.io/assets/logotype-dark.png)
 
-[![GitHub license](https://img.shields.io/github/license/lillian-lemmer/hypatia.svg?style=flat-square)](https://raw.githubusercontent.com/lillian-lemmer/hypatia/master/LICENSE) [![PyPI Version](https://img.shields.io/pypi/v/hypatia_engine.svg?style=flat-square)](https://pypi.python.org/pypi/hypatia_engine/) [![Travis](https://img.shields.io/travis/lillian-lemmer/hypatia.svg?style=flat-square)](https://travis-ci.org/lillian-lemmer/hypatia) [![Coveralls](https://img.shields.io/coveralls/lillian-lemmer/hypatia.svg?style=flat-square)](https://coveralls.io/r/lillian-lemmer/hypatia) [![Code Climate](https://img.shields.io/codeclimate/github/lillian-lemmer/hypatia.svg?style=flat-square)](https://codeclimate.com/github/lillian-lemmer/hypatia) [![PyPI Popularity](https://img.shields.io/pypi/dm/hypatia_engine.svg?style=flat-square)](https://pypi.python.org/pypi/hypatia_engine/) [![Gratipay](https://img.shields.io/gratipay/lillian-lemmer.svg?style=flat-square)](https://gratipay.com/~lillian-lemmer/) [![Bountysource](https://img.shields.io/bountysource/team/hypatia/activity.svg?style=flat-square)](https://www.bountysource.com/teams/hypatia) [![Donate with Paypal](https://img.shields.io/badge/paypal-donate-ff69b4.svg?style=flat-square)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YFHB5TMMXMNT6) [![Donate with Patreon](https://img.shields.io/badge/patreon-donate%20monthly-ff69b4.svg?style=flat-square)](https://www.patreon.com/lilylemmer) [![My Amazon Wishlist](https://img.shields.io/badge/amazon%20wishlist-buy%20me%20things-ff69b4.svg?style=flat-square)](http://amzn.com/w/NKBZ0CX162S9)
+[![GitHub license](https://img.shields.io/github/license/hypatia-engine/hypatia.svg?style=flat-square)](https://raw.githubusercontent.com/hypatia-engine/hypatia/master/LICENSE) [![PyPI Version](https://img.shields.io/pypi/v/hypatia_engine.svg?style=flat-square)](https://pypi.python.org/pypi/hypatia_engine/) [![Travis](https://img.shields.io/travis/hypatia-engine/hypatia.svg?style=flat-square)](https://travis-ci.org/hypatia-engine/hypatia) [![Coveralls](https://img.shields.io/coveralls/lillian-lemmer/hypatia.svg?style=flat-square)](https://coveralls.io/r/lillian-lemmer/hypatia) [![Code Climate](https://img.shields.io/codeclimate/github/lillian-lemmer/hypatia.svg?style=flat-square)](https://codeclimate.com/github/lillian-lemmer/hypatia) [![PyPI Popularity](https://img.shields.io/pypi/dm/hypatia_engine.svg?style=flat-square)](https://pypi.python.org/pypi/hypatia_engine/) [![Bountysource](https://img.shields.io/bountysource/team/hypatia/activity.svg?style=flat-square)](https://www.bountysource.com/teams/hypatia) [![Donate with Paypal](https://img.shields.io/badge/paypal-donate-ff69b4.svg?style=flat-square)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YFHB5TMMXMNT6) [![Donate with Patreon](https://img.shields.io/badge/patreon-donate%20monthly-ff69b4.svg?style=flat-square)](https://www.patreon.com/lilylemmer)
 
 Make 2D action adventure games. For programmers and nonprogrammers alike.
 
@@ -12,50 +12,33 @@ The included demo game (`demo/game.py`) in action:
 
 ![The demo game in action.](http://hypatia-engine.github.io/assets/demo.gif)
 
-[Cross-platform (Windows, Mac, Linux, BSD), putting FreeBSD development first.](https://github.com/lillian-lemmer/hypatia/wiki/Platform-Support)
+## What makes this project special?
 
-A labor of love, [permissively (MIT) licensed](https://raw.githubusercontent.com/lillian-lemmer/hypatia/master/LICENSE), and crafted by [Lillian Lemmer](http://github.com/lillian-lemmer/hypatia/wiki/About-the-Creator).
+  * Each release tested in FreeBSD, Linux, and Windows
+  * Built and tested in FreeBSD first
+  * A labor of love, [permissively (MIT) licensed](https://raw.githubusercontent.com/hypatia-engine/hypatia/master/LICENSE), meaning you Hypatia for commercial or non-commercial purposes and not worry about legalese--it's really free for any purpose without strings attached.
 
-[Please read about how you can help support Hypatia!](https://github.com/lillian-lemmer/hypatia/wiki/Support-the-Project)
+## Resources
 
-# Resources
-
-  * [Installation instructions](https://github.com/lillian-lemmer/hypatia/wiki/Installation-Instructions).
-  * [Hypatia Wiki](https://github.com/lillian-lemmer/hypatia/wiki/) (great resource for nonprogrammers, too!)
-  * [Hypatia API Docs](https://lillian-lemmer.github.io/hypatia/api)
-  * For people, checkout the [socialization and contact methods for the Hypatia project](https://github.com/lillian-lemmer/hypatia/wiki/Profiles).
-  * [The official Hypatia website](http://lillian-lemmer.github.io/hypatia/)
+  * [Platform-specific packages](http://hypatia-engine.github.io/get.html)
+  * [Hypatia Wiki](http://hypatia-engine.github.io/wiki/) (great resource for nonprogrammers, too!)
+  * [The official Hypatia website](http://hypatia-engine.github.io/)
   * Official support chat: [#hypatia on Freenode (webui!)](http://webchat.freenode.net/?channels=hypatia)
+  * [Hypatia Engine Slack team chat](https://hypatia-engine.slack.com/)
   * You can contact the author via email: lillian.lynn.lemmer@gmail.com, [@LilyLemmer](https:/twitter.com/LilyLemmer) on Twitter.
 
 To know your way around the project, I strongly recommend reading the [CONTRIBUTING.md](https://github.com/lillian-lemmer/hypatia/blob/master/CONTRIBUTING.md) file. It covers everything you need to know about contributing to Hypatia, as well as navigating the project.
 
-# Dive in without any programming
+## Install from repo
 
-The included demo allows you to mess with all of its resources (see the `resources` directory!). With it you can:
+To install from the repo there are two instructions:
 
-  * [Create tilesheets to make tilemaps](https://github.com/lillian-lemmer/hypatia/wiki/Tilesheets)
-    * Configure tiles from the tilesheet
-    * Chain tiles together to create animations
-    * Apply the "cycle" effect, which takes a non-animated tile, and creates an animated tile by rotating the colors used in the tile
-    * Set tile flags, like the `impass_all` flag which makes a flag impassable to the player
-  * [Create tilemaps with an arbitrary number of layers, using plaintext files](https://github.com/lillian-lemmer/hypatia/wiki/tilemap.txt)
-  * [Create scenes, with configurable NPCs, configurable scene data (player start position)](https://github.com/lillian-lemmer/hypatia/wiki/Nonprogrammer-Guide#editing-scene-data)
-    * You can create scenes from a Tiled editor TMX file.
-  * [Create character sprites using animated or non-animated GIFs](https://github.com/lillian-lemmer/hypatia/wiki/Walkabout-Sprites)
+  1. Install Pygame (platform-specific)
+  2. In the repository root, run `python -m pip install --user -r requirements/python2.txt` (for Python 2), or if you're running Python 3 run `python -m pip install --user -r rquirements/base.txt`.
 
-For more information, please read the [official wiki guide for non-programmers](https://github.com/lillian-lemmer/hypatia/wiki/Nonprogrammer-Guide).
+Additionally, you can run the demo:
 
-# Quick Demo
-
-## Windows
-
-Simply run `game.exe` after extracting [hypatia-demo-windows-current.zip](https://lillian-lemmer.github.io/hypatia/releases/hypatia-demo-windows-current.zip).
-
-## Other
-
-To get setup quickly and start tinkering around with the demo, simply issue the following commands:
-
-  1. `pip install hypatia_engine`
-  2. `cd demo`
-  3. `python game.py`
+```shell
+$ cd demo
+$ python game.py
+```
