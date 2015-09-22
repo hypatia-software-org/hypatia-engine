@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="25" height="25" tilewidth="16" tileheight="16" nextobjectid="37">
- <tileset firstgid="1" name="debug" tilewidth="16" tileheight="16">
-  <image source="tilesheet-for-tmx-example.png" width="128" height="240"/>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="25" height="25" tilewidth="10" tileheight="10" nextobjectid="37">
+ <tileset firstgid="1" name="debug" tilewidth="10" tileheight="10">
+  <image source="tilesheet-for-tmx-example.png" width="80" height="150"/>
  </tileset>
  <layer name="Tile Layer 1" width="25" height="25">
   <data encoding="csv">
@@ -33,8 +33,8 @@
 </data>
  </layer>
  <objectgroup name="Object Layer 1">
-  <object id="34" type="player_start_position" x="48" y="64" width="16" height="16"/>
-  <object id="36" type="npc" x="272" y="128" width="16" height="16">
+  <object id="34" type="player_start_position" x="70" y="30" width="10" height="10"/>
+  <object id="36" type="npc" x="160" y="60" width="10" height="10">
    <properties>
     <property name="say" value="lol"/>
     <property name="walkabout" value="debug"/>

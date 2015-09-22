@@ -19,7 +19,7 @@ class Anchor(object):
 
     Attributes:
         x (int): x-axis coordinate on a surface to place anchor at
-        y (int): x-axis coordinate on a surface to place anchor at
+        y (int): y-axis coordinate on a surface to place anchor at
 
     Example:
         >>> anchor = Anchor(5, 3)
@@ -31,6 +31,17 @@ class Anchor(object):
     """
 
     def __init__(self, x, y):
+        """Create an Anchor using two integers to
+        represent this Anchor's coordinate.
+
+        Args:
+            x (int): X-axis position of the supplied
+                coordinate in pixels.
+            y (int): Y-axis position of the supplied
+                coordinate in pixels.
+
+        """
+
         self.x = x
         self.y = y
 
@@ -95,17 +106,79 @@ class Anchor(object):
         return (self.x, self.y)
 
 
-class LabeledSurfaceAnchors(object):
-    """Labeled anchors for a surface.
+class FrameAnchors(object):
+    """Labeled anchors for a frame. Each anchor point has
+    an associated and unique label, e.g. "head." This is
+    the anchors attribute on any given Frame instance.
+
+    Not much distinguishes this from a regular dictionary,
+    besides the method to create a FrameAnchors using
+    a configparser object. This object exists in case
+    more advance operations with frame anchors are
+    performed, or perhaps new/more static methods for
+    creating FrameAnchors.
+
+    See Also:
+        * Frame
+        * Frame.anchors
+        * AnimatedSprite
+
+    Note:
+        May add "belongs_to_frame_index" attribute in
+        the future since I'm just discarding that info
+        in from_config().
 
     """
 
-    def __init__(self, anchors_config, frame_index):
-        """The default is to simply load the anchors from
-        the GIF's anchor config file.
+    def __init__(self, labeled_anchors):
+        """Set the _labeled_anchors private attribute.
 
         Args:
-            anchors_config (resources?): --
+            labeled_anchors (dict): A dictionary whose keys
+                are "labels" for an anchor (the value). For
+                example:
+
+                >>> an_anchor = Anchor(5, 88)
+                >>> labeled_anchors = {'head': an_anchor}
+
+        See Also:
+            * FrameAnchors.from_config()
+
+        """
+
+        self._labeled_anchors = labeled_anchors
+
+    def __getitem__(self, label):
+        """Return the anchor corresponding to label.
+
+        Arg:
+            label (str): The label associated with
+                the anchor you want.
+
+        Raises:
+            KeyError: label does not correspond to anything.
+
+        Returns:
+            Anchor: The anchor associated with
+                the provided label.
+
+        """
+
+        return self._labeled_anchors[label]
+
+    @staticmethod
+    def from_config(anchors_config, frame_index):
+        """Load the anchors from a GIF's anchor config file.
+
+        Look for this frame's anchors in an configparser
+        object, where the sections are anchor labels, and
+        the key/value pairs are "frame index=(x, y)".
+
+        Args:
+            anchors_config (ConfigParser): This configparser
+                is used for finding this frame's anchors. This
+                is the INI which is associated with a Walkabout
+                animation or sprite, e.g., walk_down.ini.
             frame_index (int): Which animation frame do the
                 anchors belong to?
 
@@ -114,27 +187,23 @@ class LabeledSurfaceAnchors(object):
             ValueError: INI's corresponding anchor entry is
                 malformed.
 
+        Returns:
+            FrameAnchors: Instance created from supplied
+                anchors_config dictionary and the frame index.
+
         """
 
-        self._labeled_anchors = {}
+        labeled_anchors = {}
 
         for section in anchors_config.sections():
             anchor_for_frame = anchors_config.get(section, str(frame_index))
             x, y = anchor_for_frame.split(',')
-            self._labeled_anchors[section] = Anchor(int(x), int(y))
+            labeled_anchors[section] = Anchor(int(x), int(y))
 
-    def __getitem__(self, label):
-        """Return the anchor corresponding to label.
-
-        Raises:
-            KeyError: label does not correspond to anything.
-
-        """
-
-        return self._labeled_anchors[label]
+        return FrameAnchors(labeled_anchors)
 
 
-class AnimatedSpriteFrame(object):
+class Frame(object):
     """A frame of an AnimatedSprite animation.
 
     Attributes:
@@ -142,25 +211,34 @@ class AnimatedSpriteFrame(object):
             for a frame of an animation.
         duration (integer): Milliseconds this frame lasts. How
             long this frame is displayed in corresponding animation.
-            The default is 0.
-        start_time (integer): The millesecond in which this frame
-            will be displayed. The default is 0.
+        start_time (integer): The animation position in milleseconds,
+            when this frame will start being displayed.
         anchors (LabeledSurfaceAnchors): Optional positional anchors
             used when afixing other surfaces upon another.
 
     See Also:
-        :method:`AnimatedSprite.frames_from_gif()`
+        * AnimatedSprite.frames_from_gif()
+        * AnimatedSprite.animation_position
+        * FrameAnchors
+        * Anchor
 
     """
 
     def __init__(self, surface, start_time, duration, anchors=None):
-        """
+        """Create a frame using a pygame surface, the start time,
+        duration time, and, optionally,  FrameAnchors.
 
         Args:
             surface (pygame.Surface): The surface/image for this
                 frame.
-            duration (integer): Milleseconds this frame lasts.
-            anchors (LabeledSurfaceAnchors): --
+            start_time (int): Millisecond this frame starts. This
+                frame is a part of a larger series of frames and
+                in order to render the animation properly we
+                need to know when each frame begins to be drawn,
+                while duration signifies when it ends.
+            duration (integer): Milleseconds this frame lasts. See:
+                start_time argument description.
+            anchors (FrameAnchors): This frame's anchor points.
 
         """
 
@@ -171,7 +249,7 @@ class AnimatedSpriteFrame(object):
         self.anchors = anchors or None
 
     def __repr__(self):
-        s = "<AnimatedSpriteFrame duration(%s) start_time(%s) end_time(%s)>"
+        s = "<Frame duration(%s) start_time(%s) end_time(%s)>"
 
         return s % (self.duration, self.start_time, self.end_time)
 
@@ -209,13 +287,33 @@ class AnimatedSprite(pygame.sprite.Sprite):
             which frame to select.
 
     See Also:
-
         * :class:`pygame.sprite.Sprite`
-        * :class:`AnimatedSpriteFrame`
+        * :class:`Frame`
 
     """
 
     def __init__(self, frames):
+        """Create this AnimatedSprite using
+        a list of Frame instances.
+
+        Args:
+            frames (list[Frame]): A properly assembled list of frames,
+                which assumes that each Frame's start_time is greater
+                than the previous element and is the previous element's
+                start time + previous element/Frame's duration. Here
+                is an example of aformentioned:
+
+                >>> frame_one_surface = pygame.Surface((16, 16))
+                >>> frame_one = Frame(frame_one_surface, 0, 100)
+                >>> frame_two_surface = pygame.Surface((16, 16))
+                >>> frame_two = Frame(frame_two_surface, 100, 50)
+
+        Note:
+            In the future I may add a method for verifying the
+            validity of Frame start_times and durations.
+
+        """
+
         super(AnimatedSprite, self).__init__()
         self.frames = frames
         self.total_duration = self.total_duration(self.frames)
@@ -233,11 +331,25 @@ class AnimatedSprite(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
     def __getitem__(self, frame_index):
+        """Return the frame corresponding to
+        the supplied frame_index.
+
+        Args:
+            frame_index (int): Index number to lookup
+                a frame by element number in the
+                self.frames list.
+
+        Returns:
+            Frame: The frame of this animation at the
+                specified index of frame_index.
+
+        """
 
         return self.frames[frame_index]
 
     def largest_frame_size(self):
-        """Goes by area.
+        """Return the largest frame's (by area)
+        dimensions as tuple(int x, int y).
 
         Returns:
             tuple (x, y): pixel dimensions of the largest
@@ -266,13 +378,27 @@ class AnimatedSprite(pygame.sprite.Sprite):
 
         A list like [(surface, int duration in ms)]
 
+        Args:
+            surface_duration_list (list[tuple]): A list
+                of tuples, first element is a surface,
+                second element being how long said surface
+                is displayed for. For example:
+
+                >>> a_surface = pygame.Surface((10, 10)
+                >>> duration = 100  # 100 MS
+                >>> surface_duration_list = [(a_surface, duration)]
+
+        Returns:
+            AnimatedSprite: The animated sprite constructed
+                fromt he provided surface_duration_list.
+
         """
 
         running_time = 0
         frames = []
 
         for surface, duration in surface_duration_list:
-            frame = AnimatedSpriteFrame(surface, running_time, duration)
+            frame = Frame(surface, running_time, duration)
             frames.append(frame)
             running_time += duration
 
@@ -283,6 +409,17 @@ class AnimatedSprite(pygame.sprite.Sprite):
         """The default is to create from gif bytes, but this can
         also be done from other methods...
 
+        Args:
+            path_or_readable (str|file-like-object): Either a string
+                or an object with a read() method. So, either a path
+                to an animated GIF, or a file-like-object/buffer of
+                an animated GIF.
+            anchors_config (configparser): INI/config file associated
+                with providing anchors for this animation.
+
+        Returns:
+            AnimatedSprite: --
+
         """
 
         frames = cls.frames_from_gif(path_or_readable, anchors_config)
@@ -290,10 +427,50 @@ class AnimatedSprite(pygame.sprite.Sprite):
         return AnimatedSprite(frames)
 
     def active_frame(self):
+        """Return the frame which update has set as the
+        active frame, through the active_frame_index
+        attribute.
+
+        Returns:
+            Frame: Current frame; this frame has been
+                chosen by the update() method to be
+                "active." This is because the
+                animation_position falls between this
+                frame's start and end time.
+
+        See Also:
+            AnimatedSprite.update()
+
+        """
 
         return self.frames[self.active_frame_index]
 
     def update(self, clock, absolute_position, viewport):
+        """Manipulate the state of this AnimatedSprite, namely
+        the on-screen/viewport position (not absolute) and
+        using the clock to do animation manipulations.
+
+        Using the game's clock we decipher the animation position,
+        which in turn allows us to locate the correct frame.
+
+        Sets the image attribute to the current frame's image. Updates
+        the rect attribute to the new relative position and frame size.
+
+        Warning:
+            Since we're changing the rect size on-the-fly, this can
+            get the player stuck in certain boundaries. I will be
+            remedying this in the future.
+
+        Args:
+            clock (pygame.time.Clock): THE game clock, typically
+                found as the attribute Game.screen.clock.
+            absolute_position (tuple[int]): (x, y) pixel position
+                of this AnimatedSprite on the map--absolute
+                position. Meaning this could be outside of the
+                current viewport area.
+
+        """
+
         self.animation_position += clock.get_time()
 
         if self.animation_position >= self.total_duration:
@@ -306,8 +483,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
 
             self.active_frame_index += 1
 
-        # NOTE: the fact that I'm using -1 here seems kinda sloppy,
-        # because this is a hacky fix due to my own ignorance.
+        # NOTE: the fact that I'm using -1 here seems sloppy/hacky
         self.image = self.frames[self.active_frame_index - 1].surface
 
         image_size = self.image.get_size()
@@ -364,19 +540,18 @@ class AnimatedSprite(pygame.sprite.Sprite):
                 frame_sprite = cls.pil_image_to_pygame_surface(pil_gif, "RGBA")
 
                 if anchors_config:
-                    frame_anchors = LabeledSurfaceAnchors(
-                                                          anchors_config,
-                                                          frame_index
-                                                         )
+                    frame_anchors = FrameAnchors.from_config(anchors_config,
+                                                             frame_index)
+
                 else:
                     frame_anchors = None
 
-                frame = AnimatedSpriteFrame(
-                                            surface=frame_sprite,
-                                            start_time=time_position,
-                                            duration=duration,
-                                            anchors=frame_anchors
-                                           )
+                frame = Frame(
+                              surface=frame_sprite,
+                              start_time=time_position,
+                              duration=duration,
+                              anchors=frame_anchors
+                             )
                 frames.append(frame)
                 frame_index += 1
                 time_position += duration

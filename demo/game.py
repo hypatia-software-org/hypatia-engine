@@ -27,7 +27,7 @@ __status__ = "Development"
 
 
 # should be in settings.ini?
-VIEWPORT_X, VIEWPORT_Y = 256, 240
+VIEWPORT_X, VIEWPORT_Y = 100, 70
 
 
 # init
