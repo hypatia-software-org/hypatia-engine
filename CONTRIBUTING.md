@@ -12,7 +12,7 @@ This document directs potential contributors to resources for contributing to Hy
 
 ## Must Reads
 
-Please read [the project guidelines](https://github.com/lillian-lemmer/hypatia/wiki/Project-Guidelines). It's a far more comprehensive guide for contributing to Hypatia.
+Please read [the project guidelines](http://hypatia-engine.github.io/wiki/contributing.html). It's a far more comprehensive guide for contributing to Hypatia.
 
 You are expected to treat your fellow humans with dignity and respect. Please read the [`CODE-OF-CONDUCT.md`](CODE-OF-CONDUCT.md).
 
