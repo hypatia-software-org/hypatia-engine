@@ -266,10 +266,10 @@ class Scene(object):
         """
 
         # .. create player with player scene data
-        hat = sprites.Walkabout('hat')
-        human_walkabout = sprites.Walkabout('debug',
+        bow = sprites.Walkabout('bow')
+        human_walkabout = sprites.Walkabout('slime',
                                             position=start_position,
-                                            children=[hat])
+                                            children=[bow])
         velocity = physics.Velocity(20, 20)
         human_player = player.HumanPlayer(walkabout=human_walkabout,
                                           velocity=velocity)

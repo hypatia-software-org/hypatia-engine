@@ -105,6 +105,31 @@ class Anchor(object):
 
         return (self.x, self.y)
 
+    def add_ints(self, other_x, other_y):
+        """Return a new Anchor instance by adding this Anchor's
+        x/y values to the provided other_x, other_y values.
+
+        Args:
+            x (int): The x-axis to add to combine with this
+                Anchor's x-axis, to produce a new Anchor.
+            y (int): The y-axis to add to combine with this
+                Anchor's y-axis, to produce a new Anchor.
+
+        Returns:
+            Anchor: --
+
+        Examples:
+            >>> anchor = Anchor(3, 5)
+            >>> new_anchor = anchor.add_ints(7, 5)
+            >>> new_anchor
+            <Anchor at (10, 10)>
+            >>> anchor
+            <Anchor at (3, 5)>
+
+        """
+
+        return Anchor(self.x + other_x, self.y + other_y)
+
 
 class FrameAnchors(object):
     """Labeled anchors for a frame. Each anchor point has
@@ -384,7 +409,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
                 second element being how long said surface
                 is displayed for. For example:
 
-                >>> a_surface = pygame.Surface((10, 10)
+                >>> a_surface = pygame.Surface((10, 10))
                 >>> duration = 100  # 100 MS
                 >>> surface_duration_list = [(a_surface, duration)]
 
@@ -579,11 +604,11 @@ class AnimatedSprite(pygame.sprite.Sprite):
             >>> from io import BytesIO
             >>> from PIL import Image
             >>> path = 'resources/walkabouts/debug.zip'
-            >>> file_name = 'walk_north.gif'
+            >>> file_name = 'only.gif'
             >>> sample = zipfile.ZipFile(path).open(file_name).read()
             >>> gif = Image.open(BytesIO(sample))
             >>> AnimatedSprite.pil_image_to_pygame_surface(gif, "RGBA")
-            <Surface(6x8x32 SW)>
+            <Surface(10x10x32 SW)>
 
         """
 

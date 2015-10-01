@@ -37,9 +37,9 @@ class Resource(object):
     Example:
         >>> from hypatia import animatedsprite as anim
         >>> resource = Resource('walkabouts', 'debug')
-        >>> 'walk_north.gif' in resource
+        >>> 'only.gif' in resource
         True
-        >>> isinstance(resource['walk_north.gif'], anim.AnimatedSprite)
+        >>> isinstance(resource['only.gif'], anim.AnimatedSprite)
         True
         >>> resource = Resource('scenes', 'debug')
         >>> resource['tilemap.txt'].startswith('debug')

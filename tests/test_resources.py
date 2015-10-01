@@ -37,11 +37,11 @@ def test_resource():
     # Assure that the "walk_north.gif" (which is default in the
     # debug resources) exists in resource, and that the magic
     # method for membership testing (__contains__) works.
-    assert 'walk_north.gif' in resource
+    assert 'only.gif' in resource
 
     # Assure GIF files are loading AnimatedSprite objects
-    assert (isinstance(resource['walk_north.gif'],
+    assert (isinstance(resource['only.gif'],
             animatedsprite.AnimatedSprite))
 
     # Assure INI files are loading as ConfigParser objects
-    assert isinstance(resource['walk_north.ini'], configparser.ConfigParser)
+    assert isinstance(resource['only.ini'], configparser.ConfigParser)
