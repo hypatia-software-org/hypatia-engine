@@ -152,5 +152,5 @@ def test_tilemap():
 
     # fetching tile info
     assert tilemap[(2, 4)] is tilemap.tilesheet[11]
-    assert tilemap.get_info((2 * 16, 4 * 16)) is tilemap.tilesheet[11]
-    assert tilemap.get_info((2 * 16, 4 * 16)) is tilemap[(2, 4)]
+    assert tilemap.get_info((2 * 10, 4 * 10)) is tilemap.tilesheet[11]
+    assert tilemap.get_info((2 * 10, 4 * 10)) is tilemap[(2, 4)]

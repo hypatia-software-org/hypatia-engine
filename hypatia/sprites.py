@@ -119,8 +119,8 @@ class Walkabout(pygame.sprite.Sprite):
                 this Walkabout instance.
 
         Example:
-            >>> hat = Walkabout('hat')
-            >>> Walkabout('debug', position=(44, 55), children=[hat])
+            >>> debug = Walkabout('debug')
+            >>> Walkabout('debug', position=(44, 55), children=[debug])
             <Walkabout sprite(in ... groups)>
 
         """
@@ -172,6 +172,29 @@ class Walkabout(pygame.sprite.Sprite):
                 self.animations[action][direction] = animation
             except KeyError:
                 self.animations[action] = {direction: animation}
+
+        # If the last file_name from the above for loop is "only,"
+        # that means that that name denotes the fact that there is
+        # ONLY one sprite for the supplied Walkabout resource.
+        if file_name == 'only':
+
+            # We want to set all the appropriate action/direction
+            # animations in the self.animations dictionary to the
+            # only animation provided, which was assigned as the
+            # "Stand South" animation.
+            animation = (self.animations[constants.Action.stand][
+                         constants.Direction.south])
+
+            for action in constants.Action.all():
+
+                for direction in constants.Direction.cardinals_and_ordinals():
+
+                    # We set everything to the Stand South animation since
+                    # it was set first.
+                    try:
+                        self.animations[action][direction] = animation
+                    except KeyError:
+                        self.animations[action] = {direction: animation}
 
         # ... set the rest of the attribs
         self.resource = resource
@@ -240,6 +263,7 @@ class Walkabout(pygame.sprite.Sprite):
         See Also:
             * Walkabout.current_animation()
             * animatedsprite.AnimatedSprite
+            * animatedsprite.AnimatedSprite.update()
             * pygame.time.Clock
 
         """
@@ -248,50 +272,88 @@ class Walkabout(pygame.sprite.Sprite):
         active_animation.update(clock,
                                 self.topleft_float,
                                 screen)
-        self.image = active_animation
+        self.image = active_animation.image
 
     def blit(self, clock, screen, offset):
         """Draw the appropriate/active animation to screen.
 
         Args:
-            screen (pygame.Surface): the primary display/screen.
-            offset (x, y tuple): the x, y coords of the absolute
-                starting top left corner for the current
-                screen/viewport position.
             clock (pygame.time.Clock): The system clock. Typically
                 and defaultly the game.screen.clock. It will control
                 the animation. Time is a key factor in updating the
                 animations.
+            screen (pygame.Surface): the primary display/screen.
+            offset (x, y tuple): the x, y coords of the absolute
+                starting top left corner for the current
+                screen/viewport position.
+
+        Note:
+            All sprites will be sync'd because of how clock
+            ticks work. The clock is ticked once per main
+            loop iteration, and animations are advanced by
+            getting the difference between two ticks.
 
         """
 
+        # `position_on_screen` is the Walkabout sprite's
+        # position ON SCREEN.
+        #
+        # `position_on_screen` is derived from the absolute
+        # position of this Walkabout, i.e., the `topleft_float`
+        # attribute, being subtracted by the provided `offset`.
         x, y = self.topleft_float
         x -= offset[0]
         y -= offset[1]
-        position_on_screen = (x, y)
+        position_on_screen = (x, y)  # sprite position on viewport
 
+        # Update the state of the current animation. This affects
+        # this Walkabout's `image` property.
+        #
+        # See: Walkabout.update()
         self.update(clock, screen, offset)
-        current_frame = self.current_animation().active_frame()
-        screen.blit(current_frame.surface, position_on_screen)
-        animation_anchors = current_frame.anchors
-        # we do this because currently the only
-        # applicable anchor is head
-        frame_anchor = animation_anchors['head_anchor']
 
-        # outdated method, but using for now...
-        parent_anchor_x = position_on_screen[0] + frame_anchor.x
-        parent_anchor_y = position_on_screen[1] + frame_anchor.y
-        parent_anchor = animatedsprite.Anchor(parent_anchor_x,
-                                              parent_anchor_y)
+        # Blit the current image for this Walkabout to the
+        # supplied viewport surface (`screen`) at the supplied
+        # `position_on_screen`, which we figured out earlier.
+        screen.blit(self.image, position_on_screen)
+
+        # Render and update child walkabouts. Render a child
+        # Walkabout so that its head anchor occupies the same
+        # position as its parent head anchor (THIS Walkabout).
+        #
+        # This means getting the difference between the following
+        # child anchors and THIS Walkabout's (parent) anchors and
+        # using said difference as the offset for the child
+        # Walkabout sprite/animation.
+        current_frame = self.current_animation().active_frame()
+        parent_anchor = current_frame.anchors['head_anchor']
+        # Adjust the parent anchor to consider the
+        # position on screen for child walkabout
+        # anchor calculations.
+        parent_anchor = parent_anchor.add_ints(*position_on_screen)
 
         for child_walkabout in self.child_walkabouts:
-            # draw at position + difference in child anchor
+            # We update the current animation to reflect this
+            # Walkabout's current action and direction.
+            child_walkabout.action = self.action
+            child_walkabout.direction = self.direction
+
+            # Get and update this child walkabout's
+            # current animation.
             child_active_anim = child_walkabout.current_animation()
             child_active_anim.update(clock,
                                      self.topleft_float,
                                      screen)
+
+            # Now that the child walkabout's current animation
+            # has been updated, get the active frame of the
+            # child animation in order to find its head anchor.
             child_active_frame = child_active_anim.active_frame()
             child_frame_anchor = child_active_frame.anchors['head_anchor']
+
+            # As aforementioned, resolve the child Walkabout's
+            # position by subtracting the child's anchor from
+            # the adjusted parent anchor.
             child_position = (parent_anchor - child_frame_anchor).as_tuple()
             screen.blit(child_active_anim.image, child_position)
 
