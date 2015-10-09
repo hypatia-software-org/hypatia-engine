@@ -6,7 +6,7 @@
 
 Make 2D action adventure games. For programmers and nonprogrammers alike.
 
-Create a games like [_Legend of Zelda: Oracle of Ages_ and _Oracle of Seasons_](http://en.wikipedia.org/wiki/The_Legend_of_Zelda:_Oracle_of_Seasons_and_Oracle_of_Ages).
+Create games like [_Legend of Zelda: Oracle of Ages_ and _Oracle of Seasons_](http://en.wikipedia.org/wiki/The_Legend_of_Zelda:_Oracle_of_Seasons_and_Oracle_of_Ages).
 
 The included demo game (`demo/game.py`) in action:
 
