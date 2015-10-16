@@ -16,7 +16,6 @@ import time
 import itertools
 
 import pygame
-import pyganim
 from pygame.locals import *
 
 from hypatia import constants
