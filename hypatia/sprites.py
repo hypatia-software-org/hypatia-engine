@@ -105,6 +105,10 @@ class Walkabout(pygame.sprite.Sprite):
         topleft_float (x,y tuple): --
         position_rect
 
+    See Also:
+        * actor.Actor: The Walkabout class represents an
+        actor object!
+
     """
 
     def __init__(self, directory, position=None, children=None):

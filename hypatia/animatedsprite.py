@@ -556,7 +556,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
 
             while True:
                 duration = pil_gif.info['duration']
-                frame_sprite = cls.pil_image_to_pygame_surface(pil_gif, "RGBA")
+                frame_sprite = cls.pil_image_to_pygame_surface(pil_gif)
 
                 if anchors_config:
                     frame_anchors = FrameAnchors.from_config(anchors_config,
@@ -583,12 +583,11 @@ class AnimatedSprite(pygame.sprite.Sprite):
         return frames
 
     @staticmethod
-    def pil_image_to_pygame_surface(pil_image, encoding):
-        """Convert PIL Image() to pygame Surface.
+    def pil_image_to_pygame_surface(pil_image):
+        """Convert PIL Image() to RGBA pygame Surface.
 
         Args:
             pil_image (Image): image to convert to pygame.Surface().
-            encoding (str): image encoding, e.g., RGBA
 
         Returns:
             pygame.Surface: the converted image
@@ -601,7 +600,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
             >>> file_name = 'only.gif'
             >>> sample = zipfile.ZipFile(path).open(file_name).read()
             >>> gif = Image.open(BytesIO(sample))
-            >>> AnimatedSprite.pil_image_to_pygame_surface(gif, "RGBA")
+            >>> AnimatedSprite.pil_image_to_pygame_surface(gif)
             <Surface(10x10x32 SW)>
 
         """
@@ -617,6 +616,12 @@ class AnimatedSprite(pygame.sprite.Sprite):
     def convert_alpha(self):
         """A runtime method for optimizing all of the
         frame surfaces of this animation.
+
+        Pygame recommends converting all image data with
+        pygame.surface.convert() to speed up game play.
+
+        Convert each frame's surface to an optimized
+        format for pygame gameplay.
 
         """
 
