@@ -27,6 +27,12 @@ class Anchor(object):
         5
         >>> anchor.y
         3
+        >>> coordinate_tuple = (1, 2)
+        >>> anchor = Anchor(*coordinate_tuple)
+        >>> anchor.x
+        1
+        >>> anchor.y
+        2
 
     """
 
@@ -46,6 +52,13 @@ class Anchor(object):
         self.y = y
 
     def __repr__(self):
+        """
+        Example:
+            >>> anchor = Anchor(1, 2)
+            >>> print(anchor)
+            <Anchor at (1, 2)>
+
+        """
 
         return "<Anchor at (%d, %d)>" % (self.x, self.y)
 
@@ -57,7 +70,8 @@ class Anchor(object):
                 to add to this Anchor's coordinates.
 
         Returns:
-            (x, y) tuple: the new x, y coordinate
+            Anchor: A new Anchor with the coordinates of
+                the first and second added together.
 
         Example:
             >>> anchor_a = Anchor(4, 1)
@@ -79,8 +93,8 @@ class Anchor(object):
                 AnchorPoint's coordinates.
 
         Returns:
-            tuple: the (x, y) difference between this
-                anchor and the other supplied.
+            Anchor: A new Anchor with the coordinates of
+                the second subtracted from the first.
 
         Example:
             >>> anchor_a = Anchor(4, 1)
@@ -116,7 +130,8 @@ class Anchor(object):
                 Anchor's y-axis, to produce a new Anchor.
 
         Returns:
-            Anchor: --
+            Anchor: A new Anchor with X and Y coordinates
+                increased by the given integer arguments.
 
         Examples:
             >>> anchor = Anchor(3, 5)
