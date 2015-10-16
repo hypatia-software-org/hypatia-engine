@@ -42,7 +42,17 @@ from hypatia import constants
 from hypatia import controllers
 
 
-class TMXMissingPlayerStartPosition(Exception):
+class TMXException(Exception):
+    """Base class for all exceptions related to TMX.
+
+    See Also:
+        :class:`TMX`
+
+    """
+    pass
+
+
+class TMXMissingPlayerStartPosition(TMXException):
     """TMX file parsed does not have a player start
     position, which is required to create scenes.
 
@@ -56,7 +66,7 @@ class TMXMissingPlayerStartPosition(Exception):
         super(TMXMissingPlayerStartPosition, self).__init__(message)
 
 
-class TMXTooManyTilesheets(Exception):
+class TMXTooManyTilesheets(TMXException):
     """A TMX file was attempted to be imported through
     `TileMap.from_tmx()`, but the TMX defined more than
     one tilesheet. This is a feature Hypatia does not
@@ -79,7 +89,7 @@ class TMXTooManyTilesheets(Exception):
         super(TMXTooManyTilesheets, self).__init__(message)
 
 
-class TMXVersionUnsupported(Exception):
+class TMXVersionUnsupported(TMXException):
     """Attempted to create a TileMap from a TMX map, but
     the TMX map version is unsupported.
 
@@ -103,7 +113,7 @@ class TMXVersionUnsupported(Exception):
         self.map_version = map_version
 
 
-class TMXLayersNotCSV(Exception):
+class TMXLayersNotCSV(TMXException):
     """The data encoding used for layers during Tilemap.from_tmx()
     is not supported. Only CSV is supported.
 
