@@ -265,6 +265,9 @@ class Frame(object):
                 start_time argument description.
             anchors (FrameAnchors): This frame's anchor points.
 
+        See Also:
+            * FrameAnchors
+
         """
 
         self.surface = surface
@@ -300,16 +303,23 @@ class AnimatedSprite(pygame.sprite.Sprite):
         total_duration (int): The total duration of of this
             animation in milliseconds.
         image (pygame.Surface): Current surface belonging to
-            the active frame.
+            the active frame. Set once per tick through
+            the AnimatedSprite.update() method.
         rect (pygame.Rect): Represents the AnimatedSprite's
             position on screen. Not an absolute position;
-            relative position.
+            relative position. Updated once per tick, see
+            the AnimatedSprite.update() method.
         active_frame_index (int): Frame # which is being
-            rendered/to be rendered.
+            rendered/to be rendered. Also updated once per
+            tick, see the AnimatedSprite.update() method.
+        active_frame: The current surface representing this
+            animation at its current animation position. Set
+            once per tick through the update() method.
         animation_position (int): Animation position in
             milliseconds; milleseconds elapsed in this
             animation. This is used for determining
-            which frame to select.
+            which frame to select. Set once per tick through
+            the AnimatedSprite.update() method.
 
     See Also:
         * :class:`pygame.sprite.Sprite`
@@ -343,6 +353,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
         self.frames = frames
         self.total_duration = self.total_duration(self.frames)
         self.active_frame_index = 0
+        self.active_frame = self.frames[self.active_frame_index]
 
         # animation position in milliseconds
         self.animation_position = 0
@@ -451,25 +462,6 @@ class AnimatedSprite(pygame.sprite.Sprite):
 
         return AnimatedSprite(frames)
 
-    def active_frame(self):
-        """Return the frame which update has set as the
-        active frame, through the active_frame_index
-        attribute.
-
-        Returns:
-            Frame: Current frame; this frame has been
-                chosen by the update() method to be
-                "active." This is because the
-                animation_position falls between this
-                frame's start and end time.
-
-        See Also:
-            AnimatedSprite.update()
-
-        """
-
-        return self.frames[self.active_frame_index]
-
     def update(self, clock, absolute_position, viewport):
         """Manipulate the state of this AnimatedSprite, namely
         the on-screen/viewport position (not absolute) and
@@ -520,6 +512,8 @@ class AnimatedSprite(pygame.sprite.Sprite):
         relative_position = (0, 0)
 
         self.rect = pygame.rect.Rect(relative_position, image_size)
+
+        self.active_frame = self.frames[self.active_frame_index]
 
     @staticmethod
     def total_duration(frames):

@@ -325,7 +325,7 @@ class Walkabout(pygame.sprite.Sprite):
         # child anchors and THIS Walkabout's (parent) anchors and
         # using said difference as the offset for the child
         # Walkabout sprite/animation.
-        current_frame = self.current_animation().active_frame()
+        current_frame = self.current_animation().active_frame
         parent_anchor = current_frame.anchors['head_anchor']
         # Adjust the parent anchor to consider the
         # position on screen for child walkabout
@@ -348,7 +348,7 @@ class Walkabout(pygame.sprite.Sprite):
             # Now that the child walkabout's current animation
             # has been updated, get the active frame of the
             # child animation in order to find its head anchor.
-            child_active_frame = child_active_anim.active_frame()
+            child_active_frame = child_active_anim.active_frame
             child_frame_anchor = child_active_frame.anchors['head_anchor']
 
             # As aforementioned, resolve the child Walkabout's
