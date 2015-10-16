@@ -93,7 +93,9 @@ class Resource(object):
             # entry in the files dictionary, whose value is the
             # file data (bytesio) and key is file name.
             for file_name in os.listdir(path):
-                file_data = open(os.path.join(path, file_name)).read()
+                file_path = os.path.join(path, file_name)
+                file_data = open(file_path, "rb").read()
+
                 files[file_name] = file_data
 
         # we're dealing with a zip file for our resources
