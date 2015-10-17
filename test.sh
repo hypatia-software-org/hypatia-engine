@@ -29,13 +29,31 @@
 #   7. The demo game.py will be launched, utilizing the
 #      freshly installed Hypatia package from this local
 #      repository.
+#
+# If the optional environment variable $HYPATIA_PYTHON_VERSION is
+# present then the script will append its value to the `python` and
+# `pip` commands.  For example, if $HYPATIA_PYTHON_VERSION equals
+# "3.5" then the script will use the programs...
+#
+#     1. python3.5
+#     2. pip3.5
+#
+# ...making it possible to control which version of Python Hypatia
+# uses for testing the code, as some platforms and/or developers have
+# versions of Python with slightly different names or have multiple
+# versions installed.  The optional $HYPATIA_PYTHON_VERSION variable
+# gives those developers a way to tell Hypatia which version to use
+# without having to directly modify this script.
 
-pip uninstall hypatia_engine -y
+PIP="pip${HYPATIA_PYTHON_VERSION}"
+PYTHON="python${HYPATIA_PYTHON_VERSION}"
+
+"$PIP" uninstall hypatia_engine -y
 pandoc README.md -t rst -o PKG-INFO
-python setup.py check -r -s
-pip install --user --no-cache-dir .
+"$PYTHON" setup.py check -r -s
+"$PIP" install --user --no-cache-dir .
 rm PKG-INFO
 py.test tests --pep8 --doctest-modules hypatia -v --cov-report term-missing --cov=hypatia | more
 cd demo
-python game.py
+"$PYTHON" game.py
 cd ..
