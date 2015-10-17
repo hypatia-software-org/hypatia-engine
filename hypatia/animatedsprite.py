@@ -185,7 +185,43 @@ class Anchor(object):
         # *add* the coordinates (`y`) to that, which gives us the
         # correct result.
 
-        return Anchor(self.x * -1, self.y * -1) + coordinates
+        return (self * -1) + coordinates
+
+    def __mul__(self, multiplier):
+        """Multiplies the X-Y coordinates of an Anchor by an integer.
+
+        Args:
+            multiplier (int): The number to multiply to each coordinate.
+
+        Returns:
+            Anchor: A new Anchor object with X-Y coordinates multiplied
+                by the `multiplier` argument.
+
+        Example:
+            >>> anchor = Anchor(3, 5)
+            >>> anchor * -1
+            <Anchor at (-3, -5)>
+            >>> anchor * 0
+            <Anchor at (0, 0)>
+            >>> 2 * anchor
+            <Anchor at (6, 10)>
+
+        """
+
+        return Anchor(self.x * multiplier, self.y * multiplier)
+
+    def __rmul__(self, multiplier):
+        """Allows the Anchor to be on the right-hand of multiplication.
+
+        See Also: `Anchor.__mul__()`
+
+        Example:
+            >>> 10 * Anchor(1, 2)
+            <Anchor at (10, 20)>
+
+        """
+
+        return self * multiplier
 
     def as_tuple(self):
         """Represent this anchors's (x, y)
