@@ -75,6 +75,10 @@ class Anchor(object):
             Anchor: A new Anchor with the coordinates of
                 the first and second added together.
 
+        Raises:
+            NotImplemented: If `coordinates` is not an `Anchor`
+                or a 2-tuple of integers.
+
         Example:
             >>> anchor_a = Anchor(4, 1)
             >>> anchor_b = Anchor(2, 0)
@@ -85,6 +89,9 @@ class Anchor(object):
             <Anchor at (14, 21)>
             >>> coordinate_tuple + anchor_a
             <Anchor at (14, 21)>
+            >>> anchor_a + 1.5
+            Traceback (most recent call last):
+            TypeError: 'float' object is not subscriptable
 
         """
 
@@ -93,21 +100,25 @@ class Anchor(object):
             return Anchor(self.x + coordinates.x,
                           self.y + coordinates.y)
 
-        else:
+        elif type(coordinates[0]) == int and type(coordinates[1]) == int:
 
             return Anchor(self.x + coordinates[0],
                           self.y + coordinates[1])
 
+        else:
+
+            raise NotImplemented
+
     def __radd__(self, coordinates):
         """Implements addition when the Anchor is the right-hand operand.
+
+        See Also: `Anchor.__add__()`
 
         Example:
             >>> coordinates = (1, 2)
             >>> anchor = Anchor(100, 200)
             >>> coordinates + anchor
             <Anchor at (101, 202)>
-
-        See Also: `Anchor.__add__()`
 
         """
 
@@ -126,6 +137,10 @@ class Anchor(object):
             Anchor: A new Anchor with the coordinates of
                 the second subtracted from the first.
 
+        Raises:
+            NotImplemented: If `coordinates` is not an `Anchor`
+                or a 2-tuple of integers.
+
         Example:
             >>> anchor_a = Anchor(4, 1)
             >>> anchor_b = Anchor(2, 0)
@@ -136,6 +151,9 @@ class Anchor(object):
             <Anchor at (1, 1)>
             >>> coordinate_tuple - anchor_b
             <Anchor at (1, 0)>
+            >>> anchor_a - 3.2
+            Traceback (most recent call last):
+            TypeError: 'float' object is not subscriptable
 
         """
 
@@ -144,10 +162,14 @@ class Anchor(object):
             return Anchor(self.x - coordinates.x,
                           self.y - coordinates.y)
 
-        else:
+        elif type(coordinates[0]) == int and type(coordinates[1]) == int:
 
             return Anchor(self.x - coordinates[0],
                           self.y - coordinates[1])
+
+        else:
+
+            raise NotImplemented
 
     def __rsub__(self, coordinates):
         """Implements subtraction when the Anchor is the right-hand operand.
@@ -197,6 +219,9 @@ class Anchor(object):
             Anchor: A new Anchor object with X-Y coordinates multiplied
                 by the `multiplier` argument.
 
+        Raises:
+            NotImplemented: If `multiplier` is not an integer.
+
         Example:
             >>> anchor = Anchor(3, 5)
             >>> anchor * -1
@@ -205,10 +230,19 @@ class Anchor(object):
             <Anchor at (0, 0)>
             >>> 2 * anchor
             <Anchor at (6, 10)>
+            >>> anchor * 1.5
+            Traceback (most recent call last):
+            TypeError: exceptions must derive from BaseException
 
         """
 
-        return Anchor(self.x * multiplier, self.y * multiplier)
+        if type(multiplier) == int:
+
+            return Anchor(self.x * multiplier, self.y * multiplier)
+
+        else:
+
+            raise NotImplemented
 
     def __rmul__(self, multiplier):
         """Allows the Anchor to be on the right-hand of multiplication.
@@ -218,6 +252,9 @@ class Anchor(object):
         Example:
             >>> 10 * Anchor(1, 2)
             <Anchor at (10, 20)>
+            >>> 2.5 * Anchor(0, 0)
+            Traceback (most recent call last):
+            TypeError: exceptions must derive from BaseException
 
         """
 
