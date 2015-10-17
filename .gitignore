@@ -43,6 +43,9 @@ htmlcov/
 nosetests.xml
 coverage.xml
 
+# Temporary files created when running unit tests
+PKG-INFO
+
 # Translations
 *.mo
 *.pot
