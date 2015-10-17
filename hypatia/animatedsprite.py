@@ -199,32 +199,6 @@ class Anchor(object):
 
         return (self.x, self.y)
 
-    def add_ints(self, other_x, other_y):
-        """Return a new Anchor instance by adding this Anchor's
-        x/y values to the provided other_x, other_y values.
-
-        Args:
-            x (int): The x-axis to add to combine with this
-                Anchor's x-axis, to produce a new Anchor.
-            y (int): The y-axis to add to combine with this
-                Anchor's y-axis, to produce a new Anchor.
-
-        Returns:
-            Anchor: A new Anchor with X and Y coordinates
-                increased by the given integer arguments.
-
-        Examples:
-            >>> anchor = Anchor(3, 5)
-            >>> new_anchor = anchor.add_ints(7, 5)
-            >>> new_anchor
-            <Anchor at (10, 10)>
-            >>> anchor
-            <Anchor at (3, 5)>
-
-        """
-
-        return Anchor(self.x + other_x, self.y + other_y)
-
 
 class FrameAnchors(object):
     """Labeled anchors for a frame. Each anchor point has

@@ -334,7 +334,7 @@ class Walkabout(pygame.sprite.Sprite):
         # Adjust the parent anchor to consider the
         # position on screen for child walkabout
         # anchor calculations.
-        parent_anchor = parent_anchor.add_ints(*position_on_screen)
+        parent_anchor = parent_anchor + position_on_screen
 
         for child_walkabout in self.child_walkabouts:
             # We update the current animation to reflect this
