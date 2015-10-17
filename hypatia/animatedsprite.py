@@ -83,6 +83,8 @@ class Anchor(object):
             >>> coordinate_tuple = (10, 20)
             >>> anchor_a + coordinate_tuple
             <Anchor at (14, 21)>
+            >>> coordinate_tuple + anchor_a
+            <Anchor at (14, 21)>
 
         """
 
@@ -95,6 +97,21 @@ class Anchor(object):
 
             return Anchor(self.x + coordinates[0],
                           self.y + coordinates[1])
+
+    def __radd__(self, coordinates):
+        """Implements addition when the Anchor is the right-hand operand.
+
+        Example:
+            >>> coordinates = (1, 2)
+            >>> anchor = Anchor(100, 200)
+            >>> coordinates + anchor
+            <Anchor at (101, 202)>
+
+        See Also: `Anchor.__add__()`
+
+        """
+
+        return self + coordinates
 
     def __sub__(self, coordinates):
         """Subtracts the given X-Y coordinates from the Anchor.
@@ -117,6 +134,8 @@ class Anchor(object):
             >>> coordinate_tuple = (3, 0)
             >>> anchor_a - coordinate_tuple
             <Anchor at (1, 1)>
+            >>> coordinate_tuple - anchor_b
+            <Anchor at (1, 0)>
 
         """
 
@@ -129,6 +148,44 @@ class Anchor(object):
 
             return Anchor(self.x - coordinates[0],
                           self.y - coordinates[1])
+
+    def __rsub__(self, coordinates):
+        """Implements subtraction when the Anchor is the right-hand operand.
+
+        Example:
+            >>> coordinates = (100, 200)
+            >>> anchor = Anchor(1, 1)
+            >>> coordinates - anchor
+            <Anchor at (99, 199)>
+
+        See Also: `Anchor.__sub__()`
+
+        """
+        # The naive implementation would be...
+        #
+        #     return self - coordinates
+        #
+        # ...but that produces the wrong result because subtraction is
+        # not commutative.  We also cannot write...
+        #
+        #     return coordinates - self
+        #
+        # ...because then we're invoking this method again, i.e. we
+        # create a never-ending loop.
+        #
+        # To deal with this problem we take advantage of the fact that
+        # the following mathematical expressions are equivalent for
+        # natural numbers:
+        #
+        #     x - y
+        #     (-x) + y
+        #
+        # Therefore we create a new `Anchor` which is the inverse of
+        # the `self`, i.e. the `x` in the example above, and then we
+        # *add* the coordinates (`y`) to that, which gives us the
+        # correct result.
+
+        return Anchor(self.x * -1, self.y * -1) + coordinates
 
     def as_tuple(self):
         """Represent this anchors's (x, y)
