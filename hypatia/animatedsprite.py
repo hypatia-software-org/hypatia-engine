@@ -27,6 +27,12 @@ class Anchor(object):
         5
         >>> anchor.y
         3
+        >>> coordinate_tuple = (1, 2)
+        >>> anchor = Anchor(*coordinate_tuple)
+        >>> anchor.x
+        1
+        >>> anchor.y
+        2
 
     """
 
@@ -46,52 +52,140 @@ class Anchor(object):
         self.y = y
 
     def __repr__(self):
+        """
+        Example:
+            >>> anchor = Anchor(1, 2)
+            >>> print(anchor)
+            <Anchor at (1, 2)>
+
+        """
 
         return "<Anchor at (%d, %d)>" % (self.x, self.y)
 
-    def __add__(self, other_anchor):
-        """Adds the x, y values of this and another anchor.
+    def __add__(self, coordinates):
+        """Adds X-Y coordinates to the coordinates of an Anchor.
 
         Args:
-            other_anchor (Anchor): The Anchor coordinates
-                to add to this Anchor's coordinates.
+            coordinates (Union[Anchor|Tuple[int, int]]):
+                The X-Y coordinates to add to the coordinates
+                of the current Anchor.  The argument may be
+                another Anchor object or tuple of two integers.
 
         Returns:
-            (x, y) tuple: the new x, y coordinate
+            Anchor: A new Anchor with the coordinates of
+                the first and second added together.
 
         Example:
             >>> anchor_a = Anchor(4, 1)
             >>> anchor_b = Anchor(2, 0)
             >>> anchor_a + anchor_b
             <Anchor at (6, 1)>
+            >>> coordinate_tuple = (10, 20)
+            >>> anchor_a + coordinate_tuple
+            <Anchor at (14, 21)>
+            >>> coordinate_tuple + anchor_a
+            <Anchor at (14, 21)>
 
         """
 
-        return Anchor(self.x + other_anchor.x,
-                      self.y + other_anchor.y)
+        if isinstance(coordinates, Anchor):
 
-    def __sub__(self, other_anchor):
-        """Find the difference between this anchor and another.
+            return Anchor(self.x + coordinates.x,
+                          self.y + coordinates.y)
+
+        else:
+
+            return Anchor(self.x + coordinates[0],
+                          self.y + coordinates[1])
+
+    def __radd__(self, coordinates):
+        """Implements addition when the Anchor is the right-hand operand.
+
+        Example:
+            >>> coordinates = (1, 2)
+            >>> anchor = Anchor(100, 200)
+            >>> coordinates + anchor
+            <Anchor at (101, 202)>
+
+        See Also: `Anchor.__add__()`
+
+        """
+
+        return self + coordinates
+
+    def __sub__(self, coordinates):
+        """Subtracts the given X-Y coordinates from the Anchor.
 
         Args:
-            other_anchor (Anchor): the Anchor
-                coordinates to subtract from this
-                AnchorPoint's coordinates.
+            coordinates (Union[Anchor|Tuple[int, int]]):
+                The X-Y coordinates to subtract from the coordinates
+                of the current Anchor.  The argument may be another
+                Anchor object or tuple of two integers.
 
         Returns:
-            tuple: the (x, y) difference between this
-                anchor and the other supplied.
+            Anchor: A new Anchor with the coordinates of
+                the second subtracted from the first.
 
         Example:
             >>> anchor_a = Anchor(4, 1)
             >>> anchor_b = Anchor(2, 0)
             >>> anchor_a - anchor_b
             <Anchor at (2, 1)>
+            >>> coordinate_tuple = (3, 0)
+            >>> anchor_a - coordinate_tuple
+            <Anchor at (1, 1)>
+            >>> coordinate_tuple - anchor_b
+            <Anchor at (1, 0)>
 
         """
 
-        return Anchor(self.x - other_anchor.x,
-                      self.y - other_anchor.y)
+        if isinstance(coordinates, Anchor):
+
+            return Anchor(self.x - coordinates.x,
+                          self.y - coordinates.y)
+
+        else:
+
+            return Anchor(self.x - coordinates[0],
+                          self.y - coordinates[1])
+
+    def __rsub__(self, coordinates):
+        """Implements subtraction when the Anchor is the right-hand operand.
+
+        Example:
+            >>> coordinates = (100, 200)
+            >>> anchor = Anchor(1, 1)
+            >>> coordinates - anchor
+            <Anchor at (99, 199)>
+
+        See Also: `Anchor.__sub__()`
+
+        """
+        # The naive implementation would be...
+        #
+        #     return self - coordinates
+        #
+        # ...but that produces the wrong result because subtraction is
+        # not commutative.  We also cannot write...
+        #
+        #     return coordinates - self
+        #
+        # ...because then we're invoking this method again, i.e. we
+        # create a never-ending loop.
+        #
+        # To deal with this problem we take advantage of the fact that
+        # the following mathematical expressions are equivalent for
+        # natural numbers:
+        #
+        #     x - y
+        #     (-x) + y
+        #
+        # Therefore we create a new `Anchor` which is the inverse of
+        # the `self`, i.e. the `x` in the example above, and then we
+        # *add* the coordinates (`y`) to that, which gives us the
+        # correct result.
+
+        return Anchor(self.x * -1, self.y * -1) + coordinates
 
     def as_tuple(self):
         """Represent this anchors's (x, y)
@@ -104,31 +198,6 @@ class Anchor(object):
         """
 
         return (self.x, self.y)
-
-    def add_ints(self, other_x, other_y):
-        """Return a new Anchor instance by adding this Anchor's
-        x/y values to the provided other_x, other_y values.
-
-        Args:
-            x (int): The x-axis to add to combine with this
-                Anchor's x-axis, to produce a new Anchor.
-            y (int): The y-axis to add to combine with this
-                Anchor's y-axis, to produce a new Anchor.
-
-        Returns:
-            Anchor: --
-
-        Examples:
-            >>> anchor = Anchor(3, 5)
-            >>> new_anchor = anchor.add_ints(7, 5)
-            >>> new_anchor
-            <Anchor at (10, 10)>
-            >>> anchor
-            <Anchor at (3, 5)>
-
-        """
-
-        return Anchor(self.x + other_x, self.y + other_y)
 
 
 class FrameAnchors(object):
