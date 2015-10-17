@@ -62,12 +62,14 @@ class Anchor(object):
 
         return "<Anchor at (%d, %d)>" % (self.x, self.y)
 
-    def __add__(self, other_anchor):
-        """Adds the x, y values of this and another anchor.
+    def __add__(self, coordinates):
+        """Adds X-Y coordinates to the coordinates of an Anchor.
 
         Args:
-            other_anchor (Anchor): The Anchor coordinates
-                to add to this Anchor's coordinates.
+            coordinates (Union[Anchor|Tuple[int, int]]):
+                The X-Y coordinates to add to the coordinates
+                of the current Anchor.  The argument may be
+                another Anchor object or tuple of two integers.
 
         Returns:
             Anchor: A new Anchor with the coordinates of
@@ -78,19 +80,30 @@ class Anchor(object):
             >>> anchor_b = Anchor(2, 0)
             >>> anchor_a + anchor_b
             <Anchor at (6, 1)>
+            >>> coordinate_tuple = (10, 20)
+            >>> anchor_a + coordinate_tuple
+            <Anchor at (14, 21)>
 
         """
 
-        return Anchor(self.x + other_anchor.x,
-                      self.y + other_anchor.y)
+        if isinstance(coordinates, Anchor):
 
-    def __sub__(self, other_anchor):
-        """Find the difference between this anchor and another.
+            return Anchor(self.x + coordinates.x,
+                          self.y + coordinates.y)
+
+        else:
+
+            return Anchor(self.x + coordinates[0],
+                          self.y + coordinates[1])
+
+    def __sub__(self, coordinates):
+        """Subtracts the given X-Y coordinates from the Anchor.
 
         Args:
-            other_anchor (Anchor): the Anchor
-                coordinates to subtract from this
-                AnchorPoint's coordinates.
+            coordinates (Union[Anchor|Tuple[int, int]]):
+                The X-Y coordinates to subtract from the coordinates
+                of the current Anchor.  The argument may be another
+                Anchor object or tuple of two integers.
 
         Returns:
             Anchor: A new Anchor with the coordinates of
@@ -101,11 +114,21 @@ class Anchor(object):
             >>> anchor_b = Anchor(2, 0)
             >>> anchor_a - anchor_b
             <Anchor at (2, 1)>
+            >>> coordinate_tuple = (3, 0)
+            >>> anchor_a - coordinate_tuple
+            <Anchor at (1, 1)>
 
         """
 
-        return Anchor(self.x - other_anchor.x,
-                      self.y - other_anchor.y)
+        if isinstance(coordinates, Anchor):
+
+            return Anchor(self.x - coordinates.x,
+                          self.y - coordinates.y)
+
+        else:
+
+            return Anchor(self.x - coordinates[0],
+                          self.y - coordinates[1])
 
     def as_tuple(self):
         """Represent this anchors's (x, y)
