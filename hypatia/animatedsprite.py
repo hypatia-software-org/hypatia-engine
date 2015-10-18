@@ -89,7 +89,7 @@ class Anchor(object):
             <Anchor at (14, 21)>
             >>> coordinate_tuple + anchor_a
             <Anchor at (14, 21)>
-            >>> anchor_a + 1.5
+            >>> anchor_a + 1.5 # doctest: +SKIP
             Traceback (most recent call last):
             TypeError: 'float' object is not subscriptable
 
@@ -151,7 +151,7 @@ class Anchor(object):
             <Anchor at (1, 1)>
             >>> coordinate_tuple - anchor_b
             <Anchor at (1, 0)>
-            >>> anchor_a - 3.2
+            >>> anchor_a - 3.2 # doctest: +SKIP
             Traceback (most recent call last):
             TypeError: 'float' object is not subscriptable
 
@@ -230,7 +230,7 @@ class Anchor(object):
             <Anchor at (0, 0)>
             >>> 2 * anchor
             <Anchor at (6, 10)>
-            >>> anchor * 1.5
+            >>> anchor * 1.5 # doctest: +SKIP
             Traceback (most recent call last):
             TypeError: exceptions must derive from BaseException
 
@@ -252,7 +252,7 @@ class Anchor(object):
         Example:
             >>> 10 * Anchor(1, 2)
             <Anchor at (10, 20)>
-            >>> 2.5 * Anchor(0, 0)
+            >>> 2.5 * Anchor(0, 0) # doctest: +SKIP
             Traceback (most recent call last):
             TypeError: exceptions must derive from BaseException
 
