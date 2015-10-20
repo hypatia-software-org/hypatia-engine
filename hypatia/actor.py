@@ -219,7 +219,7 @@ class Actor(object):
             * :meth:`actor.Actor.say()`
 
         Args:
-            npcs (List[player.Npc]): NPCs to check for
+            npcs (List[player.NPC]): NPCs to check for
                 collisions immediately in front of this
                 actor.
             dialogbox (dialog.DialogBox): The dialogbox which

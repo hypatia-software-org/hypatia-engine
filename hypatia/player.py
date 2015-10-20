@@ -79,7 +79,7 @@ class HumanPlayer(actor.Actor):
         return False
 
 
-class Npc(actor.Actor):
+class NPC(actor.Actor):
 
     def __init__(self, *args, **kwargs):
         actor.Actor.__init__(self, *args, **kwargs)
