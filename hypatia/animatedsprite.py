@@ -107,7 +107,7 @@ class Anchor(object):
 
         else:
 
-            raise NotImplemented
+            raise NotImplementedError(coordinates)
 
     def __radd__(self, coordinates):
         """Implements addition when the Anchor is the right-hand operand.
