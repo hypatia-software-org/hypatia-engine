@@ -495,7 +495,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
 
         Returns:
             AnimatedSprite: The animated sprite constructed
-                fromt he provided surface_duration_list.
+                from the provided surface_duration_list.
 
         """
 
