@@ -2,20 +2,43 @@
 
 Read this *before* you make a pull request. _Hopefully_ everything a Python dev would want to know about contributing to Hypatia, e.g., style, guidelines, requirements, testing.
 
-Before you continue, make sure you've read:
+Before you continue, read:
 
   * `LICENSE`
-  * `README.md`: everything the user needs to know
-  * `CODE-OF-CONDUCT.md`: spells out respect for you, it is strictly enforced
+  * `README.md`: Everything the user needs to know
+  * `CODE-OF-CONDUCT.md`: Be compassionate and respectful
 
-## Quick Info
+## Social
 
-  * branch from, pull request to `develop`
-  * use descriptive branch names
-  * We're strict about documentation (docstrings, commit messages, comments)
-  * use `test.sh` to test before you commit!
-  * You'll probably want to `pip install --user requirements/testing.txt`
-  * This repo's `etc/` directory contains additional/optional tools to assist contributors
+Hypatia has strives to be a safe place for all. Please read the `CODE-OF-CONDUCT.md`.
+
+### Contact and Communication
+
+Please communicate with our lovely team:
+
+  * IRC: Freenode #hypatia
+  * Twitter: @hypatia_engine
+  * Email: hypatia.engine@gmail.com
+
+Lily, project mommy:
+
+  * Email: lillian.lynn.lemmer@gmail.com
+  * Twitter: @LilyLemmer
+
+### Letter to Women
+
+Hey you!
+
+It's Lily, the project mommy. I just wanna say that this project is especially for you as a developer; you come first. I'm a woman who's openly lesbian and trans, I hope that reassures you that Hypatia has a welcoming, open, and safe culture.
+
+I'd like to offer you free one-on-one sessions, where I'll teach you software engineering! I'll teach you until you're making quality contributions to Hypatia! My hope is to help women develop a portfolio for a career in software engineering.
+
+I'd also like to invite you to the official, invite-only, Hypatia developer chat. We use a service called Slack to chat; you don't need to download anything. Send an email to lillian.lynn.lemmer@gmail.com requesting an invite!
+
+Let me know if you need anything.
+
+Warm Regards,
+Lillian Lynn Lemmer
 
 ## Git
 
@@ -41,9 +64,9 @@ If your commit relates to a GitHub issue then reference that issue in the messag
 
 ## General Documentation Rules
 
-* Always use gender neutral pronouns in all documentation, including code comments, e.g., they, them, their.
-* Use one space (not two) to separate sentences.
-* Docstrings are in reStructuredText, all other documents are in Markdown.
+  * Always explain what everything is and how it works, to the best of your understanding!
+  * Amazing docstrings are a must!
+  * Always use gender neutral pronouns in all documentation, including code comments, e.g., they, them, their.
  
 ## Code Style
 
