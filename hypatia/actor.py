@@ -58,6 +58,16 @@ class ActorException(Exception):
     pass
 
 
+class ActorCannotTalk(ActorException):
+    """When an actor cannot talk.
+
+    See Also:
+        :class:`Actor`
+        :meth:`Actor.say()`
+
+    """
+    pass
+
 class NoActorResponse(ActorException):
     """When an Actor fails to respond (say).
 
@@ -249,7 +259,16 @@ class Actor(object):
                 another actor will print to if they have
                 something to say.
 
+        Raises:
+            ActorCannotTalk: If the actor cannot speak to
+                the `npcs` around.
+
         """
+
+        if self.walkabout is None:
+
+            raise ActorCannotTalk(("Actor has no 'direction' to face "
+                                   "when talking."))
 
         # get the current direction, check a bit in front with a rect
         # to talk to npc if collide
