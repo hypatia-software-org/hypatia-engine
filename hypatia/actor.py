@@ -144,11 +144,14 @@ class Actor(object):
         Is it possible to set this property to a new value.
 
         Raises:
-            AttributeError: If the new value is not a valid object
-                of the :class:`constants.Direction` class.
+            AttributeError: If the instance has no `walkabout` property.
             TypeError: If one tries to delete this property
 
         """
+
+        if self.walkabout is None:
+
+            raise AttributeError("Actor has no 'walkabout' property")
 
         return self.walkabout.direction
 
@@ -162,9 +165,14 @@ class Actor(object):
 
         Raises:
             AttributeError: If the new value is not a valid object
-                of the :class:`constants.Direction` class.
+                of the :class:`constants.Direction` class or if
+                the actor has no `walkabout` property.
 
         """
+
+        if self.walkabout is None:
+
+            raise AttributeError("Actor has no 'walkabout' property")
 
         if not isinstance(new_direction, constants.Direction):
 
@@ -200,6 +208,7 @@ class Actor(object):
         Raises:
             NoActorResponse: This NPC has no response for the
                 included reason.
+            AttributeError: The actor has no `walkabout` property.
 
         Notes:
             Even if this actor doesn't say anything, it will
@@ -209,6 +218,10 @@ class Actor(object):
             actor's :meth:`actor.Actor.talk()`.
 
         """
+
+        if self.walkabout is None:
+
+            raise AttributeError("Actor has no 'walkabout' property")
 
         self.walkabout.direction = (constants.Direction.
                                     opposite(at_direction))
