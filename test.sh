@@ -47,13 +47,14 @@
 
 PIP="pip${HYPATIA_PYTHON_VERSION}"
 PYTHON="python${HYPATIA_PYTHON_VERSION}"
+PAGER="${PAGER:=more}"
 
 "$PIP" uninstall hypatia_engine -y
 pandoc README.md -t rst -o PKG-INFO
 "$PYTHON" setup.py check -r -s
 "$PIP" install --user --no-cache-dir .
 rm PKG-INFO
-py.test tests --pep8 --doctest-modules hypatia -v --cov-report term-missing --cov=hypatia | more
+py.test tests --pep8 --doctest-modules hypatia -v --cov-report term-missing --cov=hypatia | "$PAGER"
 cd demo
 "$PYTHON" game.py
 cd ..
