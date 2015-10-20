@@ -40,6 +40,15 @@ Let me know if you need anything.
 Warm Regards,
 Lillian Lynn Lemmer
 
+## Quick Info
+
+  * Branch from, pull request to develop
+  * Use descriptive branch names
+  * We're strict about documentation (docstrings, commit messages, comments)
+  * Use test.sh to test before you commit!
+  * You'll probably want to pip install --user requirements/testing.txt
+  * This repo's etc/ directory contains additional/optional tools to assist contributors
+
 ## Git
 
 Branch from `develop`, pull requests against `develop`.
