@@ -34,7 +34,7 @@ To know your way around the project, I strongly recommend reading the [CONTRIBUT
 To install from the repo there are two instructions:
 
   1. Install Pygame (platform-specific)
-  2. In the repository root, run `python -m pip install --user -r requirements/python2.txt` (for Python 2), or if you're running Python 3 run `python -m pip install --user -r rquirements/base.txt`.
+  2. In the repository root, run `python -m pip install --user -r requirements/python2.txt .` (for Python 2), or if you're running Python 3 run `python -m pip install --user -r rquirements/base.txt .`
 
 Additionally, you can run the demo:
 
