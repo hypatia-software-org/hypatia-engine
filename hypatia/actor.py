@@ -49,7 +49,16 @@ class NoResponseReason(enum.Enum):
     no_say_text = "Actor cannot respond."
 
 
-class NoResponse(Exception):
+class ActorException(Exception):
+    """The base class for all exceptions related to Actors.
+
+    See Also:
+        :class:`Actor`
+    """
+    pass
+
+
+class NoActorResponse(ActorException):
     """When an Actor fails to respond (say).
 
     Attribs:
@@ -75,7 +84,7 @@ class NoResponse(Exception):
 
         """
 
-        super(NoResponse, self).__init__(reason_enum)
+        super(NoActorResponse, self).__init__(reason_enum)
 
         # Check for a valid reason or fail.
         if isinstance(reason_enum, NoResponseReason):
@@ -189,7 +198,7 @@ class Actor(object):
                 attribute will be printed to this.
 
         Raises:
-            NoResponse: This NPC has no response for the
+            NoActorResponse: This NPC has no response for the
                 included reason.
 
         Notes:
@@ -208,7 +217,7 @@ class Actor(object):
             dialogbox.set_message(self.say_text)
         else:
 
-            raise NoResponse(NoResponseReason.no_say_text)
+            raise NoActorResponse(NoResponseReason.no_say_text)
 
     def talk(self, npcs, dialogbox):
         """Trigger another actor's :meth:`actor.Actor.say()` if
@@ -252,7 +261,7 @@ class Actor(object):
                 # the good feature of having a reason for an
                 # NPC not being able to respond. This currently
                 # does nothing...
-                except NoResponse as no_response:
+                except NoActorResponse as no_response:
 
                     if response_failure is NoResponse.no_say_text:
                         # The NPC we're seeking a response from lacks
