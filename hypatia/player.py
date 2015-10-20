@@ -12,6 +12,17 @@ from hypatia import actor
 
 
 class HumanPlayer(actor.Actor):
+    """A human-controlled actor.
+
+    This class represents an actor under the control of the player.
+    Basically, this class represents the "player" or the "main
+    character" of a game.
+
+    See Also:
+        :class:`actor.Actor`
+        :class:`NPC`
+
+    """
 
     def __init__(self, *args, **kwargs):
         actor.Actor.__init__(self, *args, **kwargs)
@@ -80,6 +91,17 @@ class HumanPlayer(actor.Actor):
 
 
 class NPC(actor.Actor):
+    """A computer controlled actor.
+
+    This class represents all actors under the control of the engine,
+    or to put it another way, all actors which the player **does not**
+    control.
+
+    See Also:
+        :class:`actor.Actor`
+        :class:`HumanPlayer`
+
+    """
 
     def __init__(self, *args, **kwargs):
         actor.Actor.__init__(self, *args, **kwargs)
