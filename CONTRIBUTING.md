@@ -37,7 +37,6 @@ I'd also like to invite you to the official, invite-only, Hypatia developer chat
 
 Let me know if you need anything.
 
-Warm Regards,
 Lillian Lynn Lemmer
 
 ## Quick Info
