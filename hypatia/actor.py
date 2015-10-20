@@ -39,6 +39,7 @@ from hypatia import constants
 from hypatia import physics
 
 
+@enum.unique
 class NoResponseReason(enum.Enum):
     """Enumeration of reasons Actor.get_response()
     could fail and raise NoResponse.
