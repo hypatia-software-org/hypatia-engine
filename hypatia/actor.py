@@ -93,7 +93,6 @@ class NoActorResponse(ActorException):
                 NoResponseReason enumeration.
 
         """
-
         super(NoActorResponse, self).__init__(reason_enum)
 
         # Check for a valid reason or fail.
@@ -295,7 +294,7 @@ class Actor(object):
                 # does nothing...
                 except NoActorResponse as no_response:
 
-                    if response_failure is NoResponse.no_say_text:
+                    if response_failure is NoResponseReason.no_say_text:
                         # The NPC we're seeking a response from lacks
                         # a value for say text.
                         pass
