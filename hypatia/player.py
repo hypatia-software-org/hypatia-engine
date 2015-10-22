@@ -143,6 +143,30 @@ class NPC(actor.Actor):
         actor.Actor.__init__(self, *args, **kwargs)
         self._active = False
 
+    def __str__(self):
+        """Returns a string representation of the NPC
+
+        This representation is meant for debugging purposes only.  It
+        does not return a valid Python expression and thus cannot
+        recreate instances of the NPC class.
+
+        Examples:
+            >>> npc = NPC()
+            >>> str(npc)
+            '<Inactive NPC>'
+            >>> npc.active = True
+            >>> str(npc)
+            '<Active NPC>'
+
+        """
+        if self.active is True:
+
+            return "<Active NPC>"
+
+        else:
+
+            return "<Inactive NPC>"
+
     @property
     def active(self):
         """A boolean indicating whether or not the NPC is active.
