@@ -97,6 +97,13 @@ class NPC(actor.Actor):
     or to put it another way, all actors which the player **does not**
     control.
 
+    Attributes:
+        active (bool): True if the NPC is active, false otherwise.
+            By default the attribute is False.  When set to True it
+            will invoke the on_activation() method for that NPC.
+            Likewise, when assigned the False value the object will
+            invoke its on_deactivation() method.
+
     See Also:
         :class:`actor.Actor`
         :class:`HumanPlayer`
@@ -105,3 +112,51 @@ class NPC(actor.Actor):
 
     def __init__(self, *args, **kwargs):
         actor.Actor.__init__(self, *args, **kwargs)
+        self._active = False
+
+    @property
+    def active(self):
+        """A boolean indicating whether or not the NPC is active.
+
+        Assigning this property a True value will invoke the object's
+        on_activation() method.  Likewise, assigning False will invoke
+        its on_deactivation() method.
+
+        """
+
+        return self._active
+
+    @active.setter
+    def active(self, status):
+        """Sets the active status for the NPC to True or False.
+
+        Args:
+            status (bool): The new active status.
+
+        Raises:
+            ValueError: If the status argument is not True or False.
+                Arguably this could be a TypeError instead
+
+        """
+        self._active = status
+
+        if status is True:
+            self.on_activation()
+        elif status is False:
+            self.on_deactivation()
+        else:
+
+            raise ValueError("Status must be boolean True or False")
+
+    @active.deleter
+    def active(self):
+        """Deletes the active property, which is always an error because an
+        NPC must always have the active property.  Therefore this
+        operation actually does nothing but raise an error.
+
+        Raises:
+            TypeError
+
+        """
+
+        raise TypeError("Cannot delete the 'active' property of an NPC")
