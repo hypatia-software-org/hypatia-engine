@@ -25,7 +25,7 @@ class HumanPlayer(actor.Actor):
     """
 
     def __init__(self, *args, **kwargs):
-        actor.Actor.__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     # NOTE: outdated/needs to be updated for velocity
     def move(self, game, direction):
@@ -140,8 +140,8 @@ class NPC(actor.Actor):
     """
 
     def __init__(self, *args, **kwargs):
-        actor.Actor.__init__(self, *args, **kwargs)
         self._active = False
+        super().__init__(*args, **kwargs)
 
     def __str__(self):
         """Returns a string representation of the NPC
