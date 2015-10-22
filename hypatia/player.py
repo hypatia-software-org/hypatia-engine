@@ -104,6 +104,35 @@ class NPC(actor.Actor):
             Likewise, when assigned the False value the object will
             invoke its on_deactivation() method.
 
+    Examples:
+        >>> npc = NPC()
+        >>> npc.active
+        False
+        >>> npc.active = True
+        >>> npc.active
+        True
+
+        >>> class Door(NPC):
+        ...     def __init__(self, *args, **kwargs):
+        ...         NPC.__init__(self, *args, **kwargs)
+        ...         self.locked = False
+        ...
+        ...     def on_activation(self): self.locked = True
+        ...
+        ...     def on_deactivation(self): self.locked = False
+
+        >>> door = Door()
+        >>> door.locked
+        False
+        >>> door.active
+        False
+        >>> door.active = True
+        >>> door.locked
+        True
+        >>> door.active = False
+        >>> door.locked
+        False
+
     See Also:
         :class:`actor.Actor`
         :class:`HumanPlayer`
@@ -160,3 +189,23 @@ class NPC(actor.Actor):
         """
 
         raise TypeError("Cannot delete the 'active' property of an NPC")
+
+    def on_activation(self):
+        """Perform any necessary logic when the NPC becomes active.
+
+        Whenever the active property of the NPC is set to True the
+        object invokes this method.  By default the method is a no-op.
+
+        """
+        pass
+
+    def on_deactivation(self):
+        """Performs any necessary logic when we deactivate the NPC.
+
+        When the active property is set to False the object invokes
+        this method, which should perform anything appropriate for
+        deactivating that object, e.g. removing it from the game.  By
+        default, however, this method is a no-op.
+
+        """
+        pass
