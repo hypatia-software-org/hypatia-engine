@@ -42,3 +42,25 @@ Additionally, you can run the demo:
 $ cd demo
 $ python game.py
 ```
+
+### Windows
+
+For Python 2.x I recommend using [Pygame's official Windows installers](http://www.pygame.org/download.shtml).
+
+If you're using Python 3.x, I recommend using Christoph Gohlke's _unofficial_ Pygame binaries. Make sure to download the `whl` specific to your Python version and architecture (win32 vs win_amd64). To install the `whl` do the following in command prompt (in the directory containing the `whl):
+
+```shell
+pip install wheel
+pip install pygame-*.whl
+```
+
+### Mac OS X
+
+Install pygame through Homebrew.
+
+```shell
+# install homebrew
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+# install pygame through homebrew
+brew install homebrew/python/pygame
+```
