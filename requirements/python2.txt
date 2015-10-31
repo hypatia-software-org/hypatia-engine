@@ -1,2 +1,2 @@
 -r base.txt
-enum34==1.0.4
+enum34
