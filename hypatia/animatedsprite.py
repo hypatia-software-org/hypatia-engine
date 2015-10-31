@@ -747,7 +747,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
 
         """
 
-        image_as_string = pil_image.convert('RGBA').tostring()
+        image_as_string = pil_image.convert('RGBA').tobytes()
 
         return pygame.image.fromstring(
                                        image_as_string,
