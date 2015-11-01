@@ -9,7 +9,7 @@ actions, examples include:
   * human player
   * an enemy NPC
   * a friendly NPC
-  * an invisible NPC which simply displays
+  * Invisible NPC placed above a sign tile, which displays
     a message when "talked" to.
 
 This module implements a basic :class:`Actor` class to serve as
@@ -28,11 +28,60 @@ shared actions. The class is also useful in role-playing games for
 storing data that tends to be common between the Player, NPCs, enemies,
 etalia, a common example being statistics like hit-points.
 
+See Also:
+    * animations.Walkabout
+
 """
 
-from hypatia import animations
+import enum
+
 from hypatia import constants
 from hypatia import physics
+
+
+class NoResponseReason(enum.Enum):
+    """Enumeration of reasons Actor.get_response()
+    could fail and raise NoResponse.
+
+    """
+
+    no_say_text = "Actor cannot respond."
+
+
+class NoResponse(Exception):
+    """When an Actor fails to respond (say).
+
+    Attribs:
+        reason (NoResponseReason): The reason the
+            get_response attempt failed.
+
+    See Also:
+        * Actor.respond()
+        * NoResponseReason
+
+    """
+
+    def __init__(self, reason_enum):
+        """
+
+        Args:
+            reason_enum (NoResponseReason): Why there's
+                no response.
+
+        Raises:
+            TypeError: reason_enum is not a valid
+                NoResponseReason enumeration.
+
+        """
+
+        super(NoResponse, self).__init__(reason_enum)
+
+        # Check for a valid reason or fail.
+        if isinstance(reason_enum, NoResponseReason):
+            self.reason = reason_enum
+        else:
+
+            raise TypeError(reason_enum)
 
 
 class Actor(object):
@@ -126,46 +175,39 @@ class Actor(object):
 
         raise TypeError("Cannot delete the 'direction' of an Actor")
 
-    def say(self, at_direction, dialogbox):
-        """Change this actor's direction, and say this actor's
-        say_text in the global dialog box.
+    def get_response(self, at_direction, dialogbox):
+        """Respond to an NPC in the direction of at_direction. Change
+        this actor's direction. Display this actor's say_text attribute
+        on the provided dialogbox.
 
-        This method is typically called by another
-        actor's :meth:`actor.Actor.talk()`.
 
         Args:
             at_direction (constants.Direction): The new direction
                 for this actor to face.
-            dialogbox (dialog.DialogBox): the DialogBox to print
-                this actor's say_text to.
+            dialogbox (dialog.DialogBox): This actor's say_text
+                attribute will be printed to this.
 
-        Returns:
-            bool: True if this actor can and did say something, False
-                if this actor cannot say something. This quality is
-                determined by the presence of say_text.
+        Raises:
+            NoResponse: This NPC has no response for the
+                included reason.
 
-        Note:
+        Notes:
             Even if this actor doesn't say anything, it will
             change the direction it's facing.
 
+            This method is typically called by another
+            actor's :meth:`actor.Actor.talk()`.
+
         """
 
-        facing = {
-                  constants.Direction.north: constants.Direction.south,
-                  constants.Direction.east: constants.Direction.west,
-                  constants.Direction.west: constants.Direction.east,
-                  constants.Direction.south: constants.Direction.north
-                 }[at_direction]
-        self.walkabout.direction = facing
+        self.walkabout.direction = (constants.Direction.
+                                    opposite(at_direction))
 
         if self.say_text:
             dialogbox.set_message(self.say_text)
-
-            return True
-
         else:
 
-            return False
+            raise NoResponse(NoResponseReason.no_say_text)
 
     def talk(self, npcs, dialogbox):
         """Trigger another actor's :meth:`actor.Actor.say()` if
@@ -190,14 +232,10 @@ class Actor(object):
         # to talk to npc if collide
         facing = self.walkabout.direction
 
-        if facing is constants.Direction.north:
-            disposition = (0, -1)
-        elif facing is constants.Direction.east:
-            disposition = (1, 0)
-        elif facing is constants.Direction.south:
-            disposition = (0, 1)
-        elif facing is constants.Direction.west:
-            disposition = (-1, 0)
+        # The pixel offset which acts as the collision boundary
+        # for checking if there is an actor to get a response from
+        # in front of this actor.
+        disposition = constants.Direction.disposition(facing)
 
         talk_rect = self.walkabout.rect.copy()
         talk_rect.move_ip(disposition)
@@ -205,4 +243,17 @@ class Actor(object):
         for npc in npcs:
 
             if npc.walkabout.rect.colliderect(talk_rect):
-                npc.say(facing, dialogbox)
+
+                try:
+                    npc.get_response(facing, dialogbox)
+
+                # NOTE: I'm just being explicit and showing off
+                # the good feature of having a reason for an
+                # NPC not being able to respond. This currently
+                # does nothing...
+                except NoResponse as no_response:
+
+                    if response_failure is NoResponse.no_say_text:
+                        # The NPC we're seeking a response from lacks
+                        # a value for say text.
+                        pass

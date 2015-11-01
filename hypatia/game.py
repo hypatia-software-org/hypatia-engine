@@ -31,18 +31,28 @@ except ImportError:
 
 import pygame
 
-from hypatia import util
 from hypatia import tiles
 from hypatia import dialog
 from hypatia import render
 from hypatia import player
+from hypatia import sprites
 from hypatia import physics
+from hypatia import resources
 from hypatia import constants
-from hypatia import animations
 from hypatia import controllers
 
 
-class TMXMissingPlayerStartPosition(Exception):
+class TMXException(Exception):
+    """Base class for all exceptions related to TMX.
+
+    See Also:
+        :class:`TMX`
+
+    """
+    pass
+
+
+class TMXMissingPlayerStartPosition(TMXException):
     """TMX file parsed does not have a player start
     position, which is required to create scenes.
 
@@ -56,7 +66,7 @@ class TMXMissingPlayerStartPosition(Exception):
         super(TMXMissingPlayerStartPosition, self).__init__(message)
 
 
-class TMXTooManyTilesheets(Exception):
+class TMXTooManyTilesheets(TMXException):
     """A TMX file was attempted to be imported through
     `TileMap.from_tmx()`, but the TMX defined more than
     one tilesheet. This is a feature Hypatia does not
@@ -79,7 +89,7 @@ class TMXTooManyTilesheets(Exception):
         super(TMXTooManyTilesheets, self).__init__(message)
 
 
-class TMXVersionUnsupported(Exception):
+class TMXVersionUnsupported(TMXException):
     """Attempted to create a TileMap from a TMX map, but
     the TMX map version is unsupported.
 
@@ -103,7 +113,7 @@ class TMXVersionUnsupported(Exception):
         self.map_version = map_version
 
 
-class TMXLayersNotCSV(Exception):
+class TMXLayersNotCSV(TMXException):
     """The data encoding used for layers during Tilemap.from_tmx()
     is not supported. Only CSV is supported.
 
@@ -150,8 +160,14 @@ class Game(object):
         self.scene.runtime_setup()
         self.start_loop()
 
-    def render(self):
+    # will be removed
+    def old_render(self):
         """Drawing behavior for game objects.
+
+        Parts of this should go to their respective classes, .e.g,
+        scene.
+
+        Needs to be updated to use sprite groups.
 
         """
 
@@ -164,12 +180,14 @@ class Game(object):
         # render each npc walkabout
         for npc in self.scene.npcs:
             npc.walkabout.blit(
+                               self.screen.clock,
                                self.viewport.surface,
                                self.viewport.rect.topleft
                               )
 
         # finally human and rest map layers last
         self.scene.human_player.walkabout.blit(
+                                               self.screen.clock,
                                                self.viewport.surface,
                                                self.viewport.rect.topleft
                                               )
@@ -178,6 +196,19 @@ class Game(object):
             self.viewport.blit(layer)
             self.scene.tilemap.blit_layer_animated_tiles(self.viewport, i)
 
+        self.dialogbox.blit(self.viewport.surface)
+
+    def render(self):
+        """Drawing behavior for game objects.
+
+        Parts of this should go to their respective classes, .e.g,
+        scene.
+
+        Needs to be updated to use sprite groups.
+
+        """
+
+        self.scene.render(self.viewport, self.screen.clock)
         self.dialogbox.blit(self.viewport.surface)
 
     def start_loop(self):
@@ -202,6 +233,9 @@ class Scene(object):
       human_player (hypatia.player.Player): the human player object.
       npcs (list): a list of hypatia.player.NPC objects
 
+    Notes:
+        Should have methods for managing npcs, e.g., add/remove.
+
     """
 
     def __init__(self, tilemap, player_start_position,
@@ -213,13 +247,19 @@ class Scene(object):
                 for the human player's starting position.
             human_player (players.HumanPlayer): --
             npcs (List[players.Npc]): --
+            npc_sprite_group (pygame.sprite.Group): --
 
         """
 
         self.tilemap = tilemap
+
         self.player_start_position = player_start_position
         self.human_player = human_player
+
         self.npcs = npcs or []
+
+        npc_walkabouts = [n.walkabout for n in self.npcs]
+        self.npc_sprite_group = pygame.sprite.Group(*npc_walkabouts)
 
     @staticmethod
     def create_human_player(start_position):
@@ -236,10 +276,10 @@ class Scene(object):
         """
 
         # .. create player with player scene data
-        hat = animations.Walkabout('hat')
-        human_walkabout = animations.Walkabout('debug',
-                                               position=start_position,
-                                               children=[hat])
+        bow = sprites.Walkabout('bow')
+        human_walkabout = sprites.Walkabout('slime',
+                                            position=start_position,
+                                            children=[bow])
         velocity = physics.Velocity(20, 20)
         human_player = player.HumanPlayer(walkabout=human_walkabout,
                                           velocity=velocity)
@@ -292,7 +332,7 @@ class Scene(object):
 
         # load the scene zip from the scene resource and read
         # the general scene configuration, first.
-        resource = util.Resource('scenes', scene_name)
+        resource = resources.Resource('scenes', scene_name)
         scene_ini = resource['scene.ini']
 
         # Construct a TileMap from the tilemap.txt
@@ -336,8 +376,8 @@ class Scene(object):
             # create the NPC's walkabout using the
             # designated walkabout name and position
             # from the NPC's config.
-            npc_walkabout = animations.Walkabout(walkabout_name,
-                                                 position=position)
+            npc_walkabout = sprites.Walkabout(walkabout_name,
+                                              position=position)
 
             if npcs_ini.has_option(npc_name, 'say'):
                 # Load some say text for the NPC, so when
@@ -365,6 +405,9 @@ class Scene(object):
                 to test for collisions against NPCs and
                 the tilemap's wallmap.
 
+        Notes:
+            Should use pygame.sprite.spritecollide()
+
         """
 
         possible_collisions = self.tilemap.impassable_rects
@@ -388,6 +431,46 @@ class Scene(object):
 
         for object_to_setup in objects_to_setup + npcs_to_setup:
             object_to_setup.runtime_setup()
+
+    def render(self, viewport, clock):
+        """Render this Scene onto viewport.
+
+        Args:
+            viewport (render.Viewport): The global/master viewport,
+                where stuff will be blitted to. Also used for some
+                calculations.
+            clock (pygame.time.Clock): Global/master/the game
+                clock used for timing in this game.
+
+        """
+
+        (self.tilemap.tilesheet.animated_tiles_group.
+         update(clock, viewport.surface, viewport.rect.topleft))
+        first_tilemap_layer = self.tilemap.layer_images[0]
+        viewport.center_on(self.human_player.walkabout,
+                           first_tilemap_layer.get_rect())
+        viewport.blit(first_tilemap_layer)
+        self.tilemap.blit_layer_animated_tiles(viewport, 0)
+
+        # render each npc walkabout
+        # should use group draw
+        for npc in self.npcs:
+            npc.walkabout.blit(
+                               clock,
+                               viewport.surface,
+                               viewport.rect.topleft
+                              )
+
+        # finally human and rest map layers last
+        self.human_player.walkabout.blit(
+                                         clock,
+                                         viewport.surface,
+                                         viewport.rect.topleft
+                                        )
+
+        for i, layer in enumerate(self.tilemap.layer_images[1:], 1):
+            viewport.blit(layer)
+            self.tilemap.blit_layer_animated_tiles(viewport, i)
 
 
 class TMX(object):
@@ -508,7 +591,7 @@ class TMX(object):
                 position = (x, y)
                 walkabout_name = (properties.find(xpath % 'walkabout').
                                   attrib['value'])
-                walkabout = animations.Walkabout(walkabout_name, position)
+                walkabout = sprites.Walkabout(walkabout_name, position)
                 say_text = properties.find(xpath % 'say').attrib['value']
 
                 npc = player.Npc(walkabout=walkabout, say_text=say_text)

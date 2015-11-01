@@ -67,7 +67,7 @@ class HumanPlayer(actor.Actor):
                 new_topleft = (new_topleft_x, new_topleft_y)
                 self.walkabout.action = constants.Action.walk
                 animation = self.walkabout.current_animation()
-                self.walkabout.size = animation.getMaxSize()
+                self.walkabout.size = animation.largest_frame_size()
                 self.walkabout.rect = destination_rect
                 self.walkabout.topleft_float = new_topleft
 
