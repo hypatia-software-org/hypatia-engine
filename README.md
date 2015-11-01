@@ -1,6 +1,6 @@
-# Hypatia 0.2.30 (alpha)
+# Hypatia 0.3.0 (alpha)
 
-![Hypatia 0.2.30](http://hypatia-engine.github.io/assets/logotype-dark.png)
+![Hypatia 0.3.0](http://hypatia-engine.github.io/assets/logotype-dark.png)
 
 [![GitHub license](https://img.shields.io/github/license/hypatia-engine/hypatia.svg?style=flat-square)](https://raw.githubusercontent.com/hypatia-engine/hypatia/master/LICENSE) [![PyPI Version](https://img.shields.io/pypi/v/hypatia_engine.svg?style=flat-square)](https://pypi.python.org/pypi/hypatia_engine/) [![Travis](https://img.shields.io/travis/hypatia-engine/hypatia.svg?style=flat-square)](https://travis-ci.org/hypatia-engine/hypatia) [![Coveralls](https://img.shields.io/coveralls/lillian-lemmer/hypatia.svg?style=flat-square)](https://coveralls.io/r/lillian-lemmer/hypatia) [![Code Climate](https://img.shields.io/codeclimate/github/lillian-lemmer/hypatia.svg?style=flat-square)](https://codeclimate.com/github/lillian-lemmer/hypatia) [![PyPI Popularity](https://img.shields.io/pypi/dm/hypatia_engine.svg?style=flat-square)](https://pypi.python.org/pypi/hypatia_engine/) [![Bountysource](https://img.shields.io/bountysource/team/hypatia/activity.svg?style=flat-square)](https://www.bountysource.com/teams/hypatia) [![Donate with Paypal](https://img.shields.io/badge/paypal-donate-ff69b4.svg?style=flat-square)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YFHB5TMMXMNT6) [![Donate with Patreon](https://img.shields.io/badge/patreon-donate%20monthly-ff69b4.svg?style=flat-square)](https://www.patreon.com/lilylemmer)
 
@@ -29,7 +29,7 @@ The included demo game (`demo/game.py`) in action:
 
 To know your way around the project, I strongly recommend reading the [CONTRIBUTING.md](https://github.com/lillian-lemmer/hypatia/blob/master/CONTRIBUTING.md) file. It covers everything you need to know about contributing to Hypatia, as well as navigating the project.
 
-## Install from repo
+## Getting Started
 
 To install from the repo there are two instructions:
 
@@ -43,7 +43,9 @@ $ cd demo
 $ python game.py
 ```
 
-### Windows
+### Platform-Specific Pre-requisite Instructions
+
+#### Windows
 
 For Python 2.x I recommend using [Pygame's official Windows installers](http://www.pygame.org/download.shtml).
 
@@ -54,7 +56,7 @@ pip install wheel
 pip install pygame-*.whl
 ```
 
-### Mac OS X
+#### Mac OS X
 
 Install pygame through Homebrew.
 

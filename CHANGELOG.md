@@ -2,6 +2,69 @@
 
 Uses http://keepachangelog.com/ as a guideline.
 
+## [0.3.0] - 2015-10-31
+
+Halloween release! "Oops, I waited too long to release" edition!
+
+Please forgive me if I missed anything or err, there's just *so many* changes.
+
+Lily Lemmer
+
+### Added
+
+  * Python 3.5 support
+  * Platform-specific pre-requisite instructions in `README.md`
+  * Anchor maths, type-checking
+  * Base class for all TMX-related exceptions
+  * Windows test script
+  * animatedsprite module: AnimatedSprite class replaces pyganim
+  * New demo sprites, tilemap, settings
+  * Add `all()` method to Action enum, which returns all available actions
+  * Add `cardinals_and_ordinals()` static method to Direction
+  * Add Scene.render()
+  * Allow loading of resources from an unpacked directory.
+  * Create new Direction method, disposition
+  * tests
+  * more comments!
+  * better docstrings
+
+### Changed
+
+  * `README.md`
+  * Revamped `CONTRIBUTING.md`
+  * Replace AnimatedSprite.current_frame() with a property of the same function; AnimatedSprite.current_frame is updated with the current frame every time AnimatedSprite.update() is called.
+  * Update `AUTHORS.md`
+  * tests
+  * Change debug walkabout
+  * Change game/demo's viewport dimensions
+  * Change debug TMX scene
+  * Rename LabeledSurfaceAnchors to FrameAnchors
+  * FrameAnchors.__init__() now only takes a dictionary. To load with config see new method FrameAnchors.from_config(). Reflecting changes where required. 
+  * Rename AnimatedSpriteFrame to Frame
+  * Changed dialogbox font size
+  * Modify Walkabout to inherit pygame.sprite.Sprite. Add image attribute; set by the update method. Blit method split into and uses update method.
+
+### Fixed
+
+  * `test.sh` uses the `$PAGER` environmental variable instead of `more`
+  * `test.sh` allows for different python versions
+  * `README.md` repo install instructions
+  * Anchor math
+  * Docstrings
+  * `.gitignore` PKG-INFO
+  * Bug #80: python 3 unicode issues when reading files in resources.py. Resource files read as binary/rb
+  * Fix/implement support for Walkabouts which use ONE sprite for ALL action/direction combinations (only)
+  * Fix Walkabout `update()` method so Walkabout's `image` attribute is set to the active animation image, thereafter updating said active animation
+  * tests
+  * Resolved bug in Direction.from_velocity(): it previously only worked for generating ordinal products whereas there are nonzero values for both axis. This allows for NO direction as well as cardinal directions. Now when a velocity is (0, 0) the returned direction is None.
+
+### Removed
+
+  * pyganim as dependency
+  * Anchor.add_ints()
+  * Remove "encoding" as an argument from AnimatedSprite.pil_image_to_pygame_surface()
+  * Remove `hat` walkabout 
+
 ## [0.2.29] - 2015-07-23
 
 ### Changed
