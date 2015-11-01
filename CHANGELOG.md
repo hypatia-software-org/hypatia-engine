@@ -2,6 +2,26 @@
 
 Uses http://keepachangelog.com/ as a guideline.
 
+## [0.3.1] - 2015-11-01
+
+Lily Lemmer
+
+### Added
+
+  * `setup.cfg` file used to specify the package description as `README.md` for PyPi distributing (see: `distrib.sh`).
+
+### Changed
+
+  * `AnimatedSprite.total_duration()` renamed to `AnimatedSprite.get_total_duration()`
+
+### Fixed
+
+  * `AnimatedSprite.total_duration()` renamed to `AnimatedSprite.get_total_duration()`, because there is an attribute of the same name, i.e., `AnimatedSprite.total_duration`.
+
+### Removed
+
+  * Lines from `distrib.sh` which converts `README.md` for the package description for PyPi distributing.
+
 ## [0.3.0] - 2015-10-31
 
 Halloween release! "Oops, I waited too long to release" edition!
