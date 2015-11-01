@@ -493,7 +493,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
 
         super(AnimatedSprite, self).__init__()
         self.frames = frames
-        self.total_duration = self.total_duration(self.frames)
+        self.total_duration = self.get_total_duration(self.frames)
         self.active_frame_index = 0
         self.active_frame = self.frames[self.active_frame_index]
 
@@ -658,7 +658,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
         self.active_frame = self.frames[self.active_frame_index]
 
     @staticmethod
-    def total_duration(frames):
+    def get_total_duration(frames):
         """Return the total duration of the animation in milliseconds,
         milliseconds, from animation frame durations.
 
