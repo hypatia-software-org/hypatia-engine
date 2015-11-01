@@ -1,22 +1,36 @@
 #!/bin/sh
 
-# Distribute on PyPI.
+# Distribute a new release on PyPi.
 #
-# Setup for zsh with FreeBSD with Python 2.
-
-rm -rf build dist
-
-# This section used to create the PKG-INFO file
-# for PyPi. I've left it in just-in-case. It
-# is no longer required because of the setup.cfg.
-# 
-#     pandoc README.md -t rst -o PKG-INFO
+# Test on the PyPi testing site before you distribute!
+# https://testpypi.python.org/
 #
-# this checks pypi rst validity
+# Prerequisites:
+#     1. You'll need a PyPi Test Site account to proceed, which
+#        you'll set in ~/.pyirc. The PyPi Test Site login is
+#        separate from your regular PyPi login.
+#     1. pip install -r requirements/distrib.sh
+#     2. cp etc/EXAMPLE-PYPIRC ~/.pypirc
+#     3. vim ~/.pypirc
 #
-#     python setup.py check -r -s
+# Usage:
+#     ./distrib.sh TARGET_SITE
+#
+# Args:
+#     TARGET_SITE -- either 'live' or 'test'. If test, distributes
+#                    to the PyPi test repo. If live, distributes to
+#                    PyPi. Otherwise an error!
 
-python setup.py sdist bdist_wheel
-twine upload dist/*
+rm -rf build dist  # ??
+
+if [ "$1" == "live" ]; then
+  python setup.py sdist bdist_wheel
+  twine upload dist/*
+elif [ "$1" == "test" ]; then
+  python setup.py register -r pypitest
+else
+  exit 1
+fi
+
 rm -rf build dist PKG-INFO
 rm -rf hypatia_engine.egg-info

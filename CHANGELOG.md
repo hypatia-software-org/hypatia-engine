@@ -2,6 +2,25 @@
 
 Uses http://keepachangelog.com/ as a guideline.
 
+## [0.3.2] - 2015-11-01
+
+Lily Lemmer
+
+### Fixed
+
+  * PyPi package description
+
+### Added
+
+  * `requirements/distrib.txt` for installing dependencies for `distrib.sh`
+  * `etc/EXAMPLE-PYPIRC` to be copied to `~/.pypirc` and edited if you want to distribute/use `distrib.sh`
+
+### Changed
+
+  * `setup.py` uses the `setuptools-markdown` package to use `README.md` as the package description, which is much more reliable than the old `distrib.sh`
+  * `distrib.sh` has one argument which must be either: _test_ or _live_. If the arg is _test_, it will distribute to the PyPi test site, otherwise, if the arg is __live__ it will publish to the main PyPi website.
+  * `CONTRIBUTING.md` to mention `distrib.txt` and why you would use it.
+
 ## [0.3.1] - 2015-11-01
 
 Lily Lemmer
