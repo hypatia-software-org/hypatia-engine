@@ -526,6 +526,7 @@ The requirements files installable by `pip`. Notes on the files:
 |python2.txt      |You use Python 2.x!                            |
 |testing.txt      |You want to test and/or contribute to the code!|
 |travis.txt       |NEVER                                          |
+|distrib.txt      |Distributing new release on PyPi               |
 
 ### tests/
 

@@ -14,21 +14,18 @@ to clear your dist when finished.
 from setuptools import setup
 
 
-try:
-    long_description = open('PKG-INFO').read()
-except IOError:
-    long_description = None
-
 exec(open('hypatia/__init__.py').read())
 setup(name='hypatia_engine',
+      packages=['hypatia'],
       version=__version__,
       description='2D action adventure game engine',
-      long_description=long_description,
+      setup_requires=['setuptools-markdown'],
+      long_description_markdown_filename='README.md',
       author='Lillian Lemmer',
       author_email='lillian.lynn.lemmer@gmail.com',
-      url='http://lillian-lemmer.github.io/hypatia',
+      url='http://hypatia-engine.github.io/hypatia',
+      download_url = 'https://github.com/hypatia-engine/hypatia/releases/tag/' + __version__,
       license='MIT',
-      packages=['hypatia'],
       classifiers=['Development Status :: 3 - Alpha',
                    'Intended Audience :: Developers',
                    'Natural Language :: English',
