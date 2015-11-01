@@ -29,7 +29,7 @@ The included demo game (`demo/game.py`) in action:
 
 To know your way around the project, I strongly recommend reading the [CONTRIBUTING.md](https://github.com/lillian-lemmer/hypatia/blob/master/CONTRIBUTING.md) file. It covers everything you need to know about contributing to Hypatia, as well as navigating the project.
 
-## Install from repo
+## Getting Started
 
 To install from the repo there are two instructions:
 
@@ -43,7 +43,9 @@ $ cd demo
 $ python game.py
 ```
 
-### Windows
+### Platform-Specific Pre-requisite Instructions
+
+#### Windows
 
 For Python 2.x I recommend using [Pygame's official Windows installers](http://www.pygame.org/download.shtml).
 
@@ -54,7 +56,7 @@ pip install wheel
 pip install pygame-*.whl
 ```
 
-### Mac OS X
+#### Mac OS X
 
 Install pygame through Homebrew.
 
