@@ -58,7 +58,7 @@ pkg install py27-game
 #### OpenBSD
 
 ```shell
-pkg install pygame
+pkg_add pygame
 ```
 
 #### Debian, Ubuntu
