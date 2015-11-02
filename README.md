@@ -55,7 +55,7 @@ The easiest thing to do is use Python 2.7. You can simply:
 pkg install py27-game
 ```
 
-### OpenBSD
+#### OpenBSD
 
 ```shell
 pkg install pygame
