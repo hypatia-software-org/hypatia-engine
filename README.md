@@ -45,6 +45,39 @@ $ python game.py
 
 ### Platform-Specific Pre-requisite Instructions
 
+Installing Pygame on various platforms. I assume you have Python installed and know how to use `pip`.
+
+#### FreeBSD, DragonflyBSD, PC-BSD, etc.
+
+The easiest thing to do is use Python 2.7. You can simply:
+
+```shell
+pkg install py27-game
+```
+
+#### OpenBSD
+
+```shell
+pkg install pygame
+```
+
+#### Debian, Ubuntu
+
+```shell
+sudo apt-get install python-pygame
+```
+
+#### Mac OS X
+
+Install pygame through Homebrew. You may want to install Python through Homebrew as well.
+
+```shell
+# install homebrew
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+# install pygame through homebrew
+brew install homebrew/python/pygame
+```
+
 #### Windows
 
 For Python 2.x I recommend using [Pygame's official Windows installers](http://www.pygame.org/download.shtml).
@@ -54,15 +87,4 @@ If you're using Python 3.x, I recommend using Christoph Gohlke's _unofficial_ Py
 ```shell
 pip install wheel
 pip install pygame-*.whl
-```
-
-#### Mac OS X
-
-Install pygame through Homebrew.
-
-```shell
-# install homebrew
-ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-# install pygame through homebrew
-brew install homebrew/python/pygame
 ```
