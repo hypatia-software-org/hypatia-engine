@@ -2,6 +2,12 @@
 
 Uses http://keepachangelog.com/ as a guideline.
 
+## [0.3.3] - 2015-11-01
+
+## Added
+
+  * More detailed platform-specific pygame install instructions in `README.md`
+
 ## [0.3.2] - 2015-11-01
 
 Lily Lemmer
