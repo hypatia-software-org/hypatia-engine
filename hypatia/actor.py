@@ -68,6 +68,7 @@ class ActorCannotTalk(ActorException):
     """
     pass
 
+
 class NoActorResponse(ActorException):
     """When an Actor fails to respond (say).
 
