@@ -522,10 +522,8 @@ The requirements files installable by `pip`. Notes on the files:
 
 |Requirements File|You'd want to use if...                        |
 |-----------------|-----------------------------------------------|
-|base.txt         |ALWAYS!                                        |
-|python2.txt      |You use Python 2.x!                            |
 |testing.txt      |You want to test and/or contribute to the code!|
-|travis.txt       |NEVER                                          |
+|travis.txt       |NEVER, this is for Travis CI                   |
 |distrib.txt      |Distributing new release on PyPi               |
 
 ### tests/

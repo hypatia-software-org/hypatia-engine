@@ -2,12 +2,18 @@
 # Bootstrap script. Installs all required dependences as well as Hypatia in
 # development mode.
 
+"""This needs to use DocOpt.
+
+"""
+
 from __future__ import print_function
 import subprocess
 import os
 import sys
 import readline
 
+
+# isn't this supposed to be a constant, i.e., PACKAGES
 packages = {
     # 'package-manager': { 
     #     2: 'install-params-for-python-2',
@@ -31,6 +37,7 @@ packages = {
 }
 
 
+# SPECIAL_CASES?
 special_cases = {
     "travis_ci": {
         "test": (lambda b: "TRAVIS" in os.environ.keys() and os.environ["TRAVIS"] == 'true'),
@@ -210,19 +217,6 @@ def install(ver=None):
             print("-> Installing pip")
             print("!! Pip installation is not implemented yet and your platform is requesting it.")
             print("!! You can try installing Pip manually using easy_install.")
-
-    # attempt to install remaining python deps
-    try:
-        print("-> Installing Hypatia python dependencies")
-
-        py2install = "python%s -m pip install -r %s" % (pyver, os.path.join(path, "requirements", "python2.txt"))
-        py3install = "python%s -m pip install -r %s" % (pyver, os.path.join(path, "requirements", "base.txt"))
-
-        assert subprocess.call(py2install if pybasever == "2" else py3install, shell=True, stdout=sys.stdout, stderr=sys.stderr) == 0
-
-    except Exception as e:
-        print(e)
-        raise RuntimeError("Error installing Python dependencies")
 
     # attempt to install hypatia
     try:
