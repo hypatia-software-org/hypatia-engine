@@ -1,6 +1,6 @@
-# Hypatia 0.3.3 (alpha)
+# Hypatia 0.3.4 (alpha)
 
-![Hypatia 0.3.3](http://hypatia-engine.github.io/assets/logotype-dark.png)
+![Hypatia 0.3.4](http://hypatia-engine.github.io/assets/logotype-dark.png)
 
 [![GitHub license](https://img.shields.io/github/license/hypatia-engine/hypatia.svg?style=flat-square)](https://raw.githubusercontent.com/hypatia-engine/hypatia/master/LICENSE) [![PyPI Version](https://img.shields.io/pypi/v/hypatia_engine.svg?style=flat-square)](https://pypi.python.org/pypi/hypatia_engine/) [![Travis](https://img.shields.io/travis/hypatia-engine/hypatia.svg?style=flat-square)](https://travis-ci.org/hypatia-engine/hypatia) [![Coveralls](https://img.shields.io/coveralls/lillian-lemmer/hypatia.svg?style=flat-square)](https://coveralls.io/r/lillian-lemmer/hypatia) [![Code Climate](https://img.shields.io/codeclimate/github/lillian-lemmer/hypatia.svg?style=flat-square)](https://codeclimate.com/github/lillian-lemmer/hypatia) [![PyPI Popularity](https://img.shields.io/pypi/dm/hypatia_engine.svg?style=flat-square)](https://pypi.python.org/pypi/hypatia_engine/) [![Bountysource](https://img.shields.io/bountysource/team/hypatia/activity.svg?style=flat-square)](https://www.bountysource.com/teams/hypatia) [![Donate with Paypal](https://img.shields.io/badge/paypal-donate-ff69b4.svg?style=flat-square)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YFHB5TMMXMNT6) [![Donate with Patreon](https://img.shields.io/badge/patreon-donate%20monthly-ff69b4.svg?style=flat-square)](https://www.patreon.com/lilylemmer)
 
@@ -34,7 +34,7 @@ To know your way around the project, I strongly recommend reading the [CONTRIBUT
 To install from the repo there are two instructions:
 
   1. Install Pygame (platform-specific)
-  2. In the repository root, run `python -m pip install --user -r requirements/python2.txt .` (for Python 2), or if you're running Python 3 run `python -m pip install --user -r rquirements/base.txt .`
+  2. In the repository root, run `pip install --user .`
 
 Additionally, you can run the demo:
 

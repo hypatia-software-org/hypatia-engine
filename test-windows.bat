@@ -7,14 +7,17 @@
 # test.sh is more comprehensive, but this is a script
 # I slapped together for fixing errors related to
 # Windows.
+#
+# Apparently `read -p` doesn't work so hot in another
+# version of git bash I'm using?
 
 read -p "Press [Enter] to uninstall then install hypatia_engine..."
 # uninstall
 py -2 -m pip uninstall hypatia_engine -y
 py -3 -m pip uninstall hypatia_engine -y
 # install
-py -2 -m pip install --user --no-cache-dir -r requirements/python2.txt .
-py -3 -m pip install --user --no-cache-dir -r requirements/base.txt .
+py -2 -m pip install --user --no-cache-dir .
+py -3 -m pip install --user --no-cache-dir .
 
 # RUN THE DEMO
 cd demo
