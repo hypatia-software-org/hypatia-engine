@@ -308,7 +308,9 @@ class Walkabout(pygame.sprite.Sprite):
         x, y = self.topleft_float
         x -= offset[0]
         y -= offset[1]
-        position_on_screen = (x, y)  # sprite position on viewport
+        # sprite position on viewport
+        # There are no half-pixels, thus we don't use floats.
+        position_on_screen = (int(x), int(y))
 
         # Update the state of the current animation. This affects
         # this Walkabout's `image` property.

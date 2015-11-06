@@ -75,6 +75,10 @@ class Anchor(object):
             Anchor: A new Anchor with the coordinates of
                 the first and second added together.
 
+        Raises:
+            NotImplemented: If `coordinates` is not an `Anchor`
+                or a 2-tuple of integers.
+
         Example:
             >>> anchor_a = Anchor(4, 1)
             >>> anchor_b = Anchor(2, 0)
@@ -85,6 +89,9 @@ class Anchor(object):
             <Anchor at (14, 21)>
             >>> coordinate_tuple + anchor_a
             <Anchor at (14, 21)>
+            >>> anchor_a + 1.5 # doctest: +SKIP
+            Traceback (most recent call last):
+            TypeError: 'float' object is not subscriptable
 
         """
 
@@ -93,21 +100,25 @@ class Anchor(object):
             return Anchor(self.x + coordinates.x,
                           self.y + coordinates.y)
 
-        else:
+        elif type(coordinates[0]) == int and type(coordinates[1]) == int:
 
             return Anchor(self.x + coordinates[0],
                           self.y + coordinates[1])
 
+        else:
+
+            raise NotImplementedError(coordinates)
+
     def __radd__(self, coordinates):
         """Implements addition when the Anchor is the right-hand operand.
+
+        See Also: `Anchor.__add__()`
 
         Example:
             >>> coordinates = (1, 2)
             >>> anchor = Anchor(100, 200)
             >>> coordinates + anchor
             <Anchor at (101, 202)>
-
-        See Also: `Anchor.__add__()`
 
         """
 
@@ -126,6 +137,10 @@ class Anchor(object):
             Anchor: A new Anchor with the coordinates of
                 the second subtracted from the first.
 
+        Raises:
+            NotImplemented: If `coordinates` is not an `Anchor`
+                or a 2-tuple of integers.
+
         Example:
             >>> anchor_a = Anchor(4, 1)
             >>> anchor_b = Anchor(2, 0)
@@ -136,6 +151,9 @@ class Anchor(object):
             <Anchor at (1, 1)>
             >>> coordinate_tuple - anchor_b
             <Anchor at (1, 0)>
+            >>> anchor_a - 3.2 # doctest: +SKIP
+            Traceback (most recent call last):
+            TypeError: 'float' object is not subscriptable
 
         """
 
@@ -144,10 +162,14 @@ class Anchor(object):
             return Anchor(self.x - coordinates.x,
                           self.y - coordinates.y)
 
-        else:
+        elif type(coordinates[0]) == int and type(coordinates[1]) == int:
 
             return Anchor(self.x - coordinates[0],
                           self.y - coordinates[1])
+
+        else:
+
+            raise NotImplemented
 
     def __rsub__(self, coordinates):
         """Implements subtraction when the Anchor is the right-hand operand.
@@ -185,7 +207,58 @@ class Anchor(object):
         # *add* the coordinates (`y`) to that, which gives us the
         # correct result.
 
-        return Anchor(self.x * -1, self.y * -1) + coordinates
+        return (self * -1) + coordinates
+
+    def __mul__(self, multiplier):
+        """Multiplies the X-Y coordinates of an Anchor by an integer.
+
+        Args:
+            multiplier (int): The number to multiply to each coordinate.
+
+        Returns:
+            Anchor: A new Anchor object with X-Y coordinates multiplied
+                by the `multiplier` argument.
+
+        Raises:
+            NotImplemented: If `multiplier` is not an integer.
+
+        Example:
+            >>> anchor = Anchor(3, 5)
+            >>> anchor * -1
+            <Anchor at (-3, -5)>
+            >>> anchor * 0
+            <Anchor at (0, 0)>
+            >>> 2 * anchor
+            <Anchor at (6, 10)>
+            >>> anchor * 1.5 # doctest: +SKIP
+            Traceback (most recent call last):
+            TypeError: exceptions must derive from BaseException
+
+        """
+
+        if type(multiplier) == int:
+
+            return Anchor(self.x * multiplier, self.y * multiplier)
+
+        else:
+
+            raise NotImplemented
+
+    def __rmul__(self, multiplier):
+        """Allows the Anchor to be on the right-hand of multiplication.
+
+        See Also: `Anchor.__mul__()`
+
+        Example:
+            >>> 10 * Anchor(1, 2)
+            <Anchor at (10, 20)>
+            >>> 2.5 * Anchor(0, 0) # doctest: +SKIP
+            Traceback (most recent call last):
+            TypeError: exceptions must derive from BaseException
+
+        """
+
+        return self * multiplier
 
     def as_tuple(self):
         """Represent this anchors's (x, y)
@@ -420,7 +493,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
 
         super(AnimatedSprite, self).__init__()
         self.frames = frames
-        self.total_duration = self.total_duration(self.frames)
+        self.total_duration = self.get_total_duration(self.frames)
         self.active_frame_index = 0
         self.active_frame = self.frames[self.active_frame_index]
 
@@ -585,7 +658,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
         self.active_frame = self.frames[self.active_frame_index]
 
     @staticmethod
-    def total_duration(frames):
+    def get_total_duration(frames):
         """Return the total duration of the animation in milliseconds,
         milliseconds, from animation frame durations.
 
@@ -674,7 +747,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
 
         """
 
-        image_as_string = pil_image.convert('RGBA').tostring()
+        image_as_string = pil_image.convert('RGBA').tobytes()
 
         return pygame.image.fromstring(
                                        image_as_string,

@@ -21,4 +21,4 @@ __contributors__ = [
                     "William D. Jones",
                    ]
 
-__version__ = '0.2.30'
+__version__ = '0.3.3'
