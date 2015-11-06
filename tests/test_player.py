@@ -26,6 +26,17 @@ class TestNPC(object):
         with pytest.raises(TypeError):
             del npc.active
 
+    def test_cannot_modify_activation_count_property(self):
+        """Asserts that trying to directly modify or delete the
+        `activation_count` property of an NPC raises a TypeError.
+
+        """
+        npc = player.NPC()
+        with pytest.raises(TypeError):
+            npc.activation_count += 1
+        with pytest.raises(TypeError):
+            del npc.activation_count
+
     def test_cannot_exceed_activation_limit(self):
         """Asserts that we cannot activate an NPC more times than allowed by
         its activation limit property.

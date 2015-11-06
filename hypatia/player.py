@@ -173,10 +173,10 @@ class NPC(actor.Actor):
     def __init__(self, *args, **kwargs):
         # Private members:
         self._active = False
+        self._activation_count = 0
 
         # Public members:
         self.activation_limit = None
-        self.activation_count = 0
 
         super().__init__(*args, **kwargs)
 
@@ -231,7 +231,7 @@ class NPC(actor.Actor):
 
         """
         if (self.activation_limit is not None
-                and self.activation_count >= self.activation_limit):
+                and self._activation_count >= self.activation_limit):
 
             raise CannotActivateNPC("Cannot exceed activation limit")
 
@@ -239,7 +239,7 @@ class NPC(actor.Actor):
 
         if status is True:
             self.on_activation()
-            self.activation_count += 1
+            self._activation_count += 1
         elif status is False:
             self.on_deactivation()
         else:
@@ -258,6 +258,42 @@ class NPC(actor.Actor):
         """
 
         raise TypeError("Cannot delete the 'active' property of an NPC")
+
+    @property
+    def activation_count(self):
+        """An integer indicating how many times the NPC has been set as
+        active, i.e. had its `active` property set to True.
+
+        """
+
+        return self._activation_count
+
+    @activation_count.setter
+    def activation_count(self):
+        """Only methods of the NPC class can modify the activation count in
+        order to prevent accidental changes from code outside the
+        class.  Therefore trying to set the activation count directly
+        is always an error.
+
+        Raises:
+            TypeError
+
+        """
+
+        raise TypeError("Cannot set the 'activation_count' property")
+
+    @activation_count.deleter
+    def activation_count(self):
+        """NPCs always have an activation counter which the class tracks
+        internally.  In order to prevent accidental errors, it is
+        always an error to delete the `activation_count` property.
+
+        Raises:
+            TypeError
+
+        """
+
+        raise TypeError("Cannot delete the 'activation_count' property")
 
     def on_activation(self):
         """Perform any necessary logic when the NPC becomes active.
