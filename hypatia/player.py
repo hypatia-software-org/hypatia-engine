@@ -90,6 +90,15 @@ class HumanPlayer(actor.Actor):
         return False
 
 
+class CannotActivateNPC(actor.ActorException):
+    """This exception indicates that an NPC cannot become active.
+
+    See Also:
+        :class:`NPC`
+    """
+    pass
+
+
 class NPC(actor.Actor):
     """A computer controlled actor.
 
@@ -104,13 +113,35 @@ class NPC(actor.Actor):
             Likewise, when assigned the False value the object will
             invoke its on_deactivation() method.
 
+        activation_count (int): The number of times the NPC has been
+            set to active, i.e. had its `active` property set to True.
+
+        activation_limit (Optional[int]): This number indicates how
+            many times the NPC can become active.  Every time we set
+            the `active` property to True an internal counter will
+            increase by one.  When that counter equals this limit the
+            NPC can never again become active---unless code explicitly
+            resets or changes the activation limit, but code should
+            avoid doing this, as in the future the design may not
+            allow modifications to the activation limit once set.
+
+            If the `activation_limit` is equal to None, its default
+            value, then the NPC has no limit to how many times it can
+            become active.
+
     Examples:
         >>> npc = NPC()
         >>> npc.active
         False
+        >>> npc.activation_count
+        0
+        >>> npc.activation_limit is None
+        True
         >>> npc.active = True
         >>> npc.active
         True
+        >>> npc.activation_count
+        1
 
         >>> class Door(NPC):
         ...     def __init__(self, *args, **kwargs):
@@ -140,7 +171,13 @@ class NPC(actor.Actor):
     """
 
     def __init__(self, *args, **kwargs):
+        # Private members:
         self._active = False
+
+        # Public members:
+        self.activation_limit = None
+        self.activation_count = 0
+
         super().__init__(*args, **kwargs)
 
     def __str__(self):
@@ -189,12 +226,20 @@ class NPC(actor.Actor):
         Raises:
             ValueError: If the status argument is not True or False.
                 Arguably this could be a TypeError instead
+            CannotActivateNPC: If we try to activate an NPC more times
+                than its activation limit allows.
 
         """
+        if (self.activation_limit is not None
+                and self.activation_count >= self.activation_limit):
+
+            raise CannotActivateNPC("Cannot exceed activation limit")
+
         self._active = status
 
         if status is True:
             self.on_activation()
+            self.activation_count += 1
         elif status is False:
             self.on_deactivation()
         else:

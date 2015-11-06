@@ -26,6 +26,16 @@ class TestNPC(object):
         with pytest.raises(TypeError):
             del npc.active
 
+    def test_cannot_exceed_activation_limit(self):
+        """Asserts that we cannot activate an NPC more times than allowed by
+        its activation limit property.
+
+        """
+        npc = player.NPC()
+        npc.activation_limit = 0
+        with pytest.raises(player.CannotActivateNPC):
+            npc.active = True
+
     def test_setting_active_invokes_methods(self):
         """Asserts that setting the `active` property of an NPC to True will
         invoke its on_activation() method, and likewise, setting the
