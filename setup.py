@@ -42,7 +42,7 @@ setup(name='hypatia_engine',
       description='2D action adventure game engine',
       setup_requires=['setuptools-markdown'],
       # pygame isn't on pypi
-      # i should maybe also specifiy Pillow<4
+      # TODO: i should maybe also specifiy Pillow<4
       install_requires=install_requires,
       long_description_markdown_filename='README.md',
       author='Lillian Lemmer',
