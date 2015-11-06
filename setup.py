@@ -24,8 +24,6 @@ from setuptools import setup
 from distutils.version import StrictVersion
 
 
-exec(open('hypatia/__init__.py').read())
-
 # Build the list of packages required according to Python version
 install_requires = ['Pillow>=2']
 
@@ -37,6 +35,7 @@ python_version = StrictVersion('.'.join(str(n) for n in sys.version_info[:3]))
 if python_version < StrictVersion('3.5'):
     install_requires.append('enum34')
 
+exec(open('hypatia/__init__.py').read())
 setup(name='hypatia_engine',
       packages=['hypatia'],
       version=__version__,

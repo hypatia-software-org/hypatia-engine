@@ -1,0 +1,60 @@
+#!/usr/bin/env python
+
+"""Hypatia Installer
+
+Bootstrap script. Installs all required dependences as
+well as Hypatia in development mode.
+
+Globs LinuxInstall* objects...
+
+"""
+
+import sys
+import platform
+import subprocess
+from setuptools import setup
+from distutils.version import StrictVersion
+
+
+class Install(object):
+    POSSIBLE_PIP_NAMES = ('pip', 'pip2', 'pip3')
+    POSSIBLE_PYTHON_COMMANDS = (
+                                'python',
+                                'python2',
+                                'python3',
+                                'py -2',
+                                'py -3'
+                               )
+
+    @static
+    def which_commands_exist(possible_commands):
+        these_commands_exist = []
+
+        for command in possible_commands:
+
+            try:
+                call([command])
+            except OSError:
+
+                continue
+
+            these_commands_exist.append(name)
+ 
+        return these_commands_exist
+
+    @classmethod
+    def find_pip(cls):
+
+        return cls.which_commands_exist(cls.POSSIBLE_PIP_NAMES)
+
+    @classmethod
+    def find_python(cls):
+
+        return cls.which_commands_exist(cls.POSSIBLE_PYTHON_COMMANDS)
+
+
+# E.g., Windows, FreeBSD
+platform = platform.system()
+
+# x.y.z
+python_version = StrictVersion('.'.join(str(n) for n in sys.version_info[:3]))
