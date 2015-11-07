@@ -203,7 +203,7 @@ args = vars(parser.parse_args())
 # Do the magic
 
 # Is this a TravisCI install or should we detect version?
-if args['--travis']:
+if args['travis']:
     operating_system = 'TravisCI'
 else:
     operating_system = platform.system()
