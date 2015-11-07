@@ -58,7 +58,7 @@ class Install(object):
     PREP_COMMANDS = tuple()
     PREP_COMMANDS_PYTHON_2 = tuple()
     PREP_COMMANDS_PYTHON_3 = tuple()
-    PIP_INSTALL = "."
+    PIP_INSTALL = "--user ."
     POSSIBLE_COMMANDS_FOR_PYTHON = (
                                     'python',
                                     'python{major}',
