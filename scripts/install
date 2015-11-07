@@ -19,6 +19,7 @@ Warning:
 import sys
 import inspect
 import platform
+import argparse
 import subprocess
 from setuptools import setup
 from distutils.version import StrictVersion
@@ -147,16 +148,16 @@ class Install(object):
 
 class Linuxmint(Install):
     PREP_COMMANDS = [
-                     ("apt-get install python3-pip python3-dev "
-                      "libsdl1.2-dev libsdl-image1.2-dev "
-                      "libsdl-mixer1.2-dev libsdl-ttf2.0-dev "
-                      "libsdl-gfx1.2-dev libsdl-net1.2-dev "
-                      "libsdl-image1.2-dev libsdl-mixer1.2-dev "
-                      "libsdl-ttf2.0-dev libsmpeg-dev libsdl1.2-dev "
-                      "libportmidi-dev libswscale-dev libavformat-dev "
-                      "libavcodec-dev libsdl-sge-dev "
-                      "libsdl-sound1.2-dev libportmidi-dev "
-                      "libsmpeg-dev"),
+                     '''apt-get install python3-pip python3-dev \
+                            libsdl1.2-dev libsdl-image1.2-dev \
+                            libsdl-mixer1.2-dev libsdl-ttf2.0-dev \
+                            libsdl-gfx1.2-dev libsdl-net1.2-dev \
+                            libsdl-image1.2-dev libsdl-mixer1.2-dev \
+                            libsdl-ttf2.0-dev libsmpeg-dev libsdl1.2-dev \
+                            libportmidi-dev libswscale-dev libavformat-dev \
+                            libavcodec-dev libsdl-sge-dev \
+                            libsdl-sound1.2-dev libportmidi-dev \
+                            libsmpeg-dev''',
                      "pip install hg+http://bitbucket.org/pygame/pygame",
                     ]
 
@@ -178,10 +179,37 @@ class Ubuntu(Install):
     PREP_COMMANDS_PYTHON_3 = ('install python3-dev python3-numpy python3-pip',)
 
 
-operating_system = platform.system()
+class TravisCI(Install):
+    PREP_COMMANDS = (
+                     'sudo apt-get update',
+                     '''sudo apt-get install --fix-missing mercurial \
+                             python3-dev python3-numpy libav-tools \
+                             libsdl-image1.2-dev libsdl-mixer1.2-dev \
+                             libsdl-ttf2.0-dev libsmpeg-dev \
+                             libsdl1.2-dev libportmidi-dev \
+                             libswscale-dev libavformat-dev \
+                             libavcodec-dev''',
+                     'pip install hg+http://bitbucket.org/pygame/pygame',
+                     'pip install -r requirements/travis.txt',
+                    )
 
-if operating_system == "Linux":
-    operating_system = platform.linux_distribution()[0]
+
+# Parse the args to find out if the user wants a specific
+# installer/target or Python version.
+parser = argparse.ArgumentParser(description='Hypatia installer')
+parser.add_argument('--travis', action='store_true', help='TravisCI install')
+args = parser.parse_args()
+
+# Do the magic
+
+# Is this a TravisCI install or should we detect version?
+if args['--travis']:
+    operating_system = 'TravisCI'
+else:
+    operating_system = platform.system()
+
+    if operating_system == "Linux":
+        operating_system = platform.linux_distribution()[0]
 
 # for Class in module's classes,
 #     if Class is child of install and name equals platform detected
