@@ -181,7 +181,7 @@ class Ubuntu(Install):
 operating_system = platform.system()
 
 if operating_system == "Linux":
-    operating_system = platform.linux_distribution()
+    operating_system = platform.linux_distribution()[0]
 
 # for Class in module's classes,
 #     if Class is child of install and name equals platform detected
