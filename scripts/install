@@ -1,0 +1,168 @@
+#!/usr/bin/env python
+
+"""Hypatia Installer
+
+Bootstrap script. Installs everything required for Hypatia.
+
+"""
+
+import sys
+import inspect
+import platform
+import subprocess
+from setuptools import setup
+from distutils.version import StrictVersion
+
+
+class Install(object):
+    """Installation process.
+
+    Optionally execute some PREP_COMMANDS, then install the
+    `setup.py` as defined in PIP_INSTALL.
+
+    Note:
+        We do not need to know the pip command, because
+        you can simply do something like:
+
+            $ python -m pip install whatever
+
+    Constants:
+        POSSIBLE_COMMANDS_FOR_PYTHON (tuple): Hopefully one
+            of these commands work! Each string is something
+            which _hopefully_ executes on the system. Each
+            member has access to the major and minor of the
+            Python version running this script, through
+            {major} and {minor} respectively. This is because
+            the command for python can be stuff like `python3.3',
+            'py -2', etc.
+        PREP_COMMANDS (tuple): Override this to provide a tuple of
+            strings. Each string is a command to execute BEFORE
+            running the `setup.py` script.
+        PIP_INSTALL (str): This is the last thing executed, it
+            finishes the incomplete command `pip install `. This
+            value is seriously just appended to `pip install `.
+            
+    """
+
+    PREP_COMMANDS = tuple()
+    PIP_INSTALL = "."
+    POSSIBLE_COMMANDS_FOR_PYTHON = (
+                                    'python',
+                                    'python{major}',
+                                    'python{major}.{minor}',
+                                    'py -{major}',
+                                   )
+
+    @classmethod
+    def find_python_commands(cls):
+        """Find teh Python commands which work.
+
+        Test using `python --version`.
+
+        """
+
+        major, minor = sys.version_info[:2]
+        these_commands_exist = []
+
+        for command in cls.POSSIBLE_COMMANDS_FOR_PYTHON:
+            command = command.format(major=major, minor=minor)
+
+            try:
+                subprocess.check_output(command + " --version",
+                                        shell=True)
+
+            except subprocess.CalledProcessError as e:
+                print(e.output)
+
+                continue
+
+            these_commands_exist.append(command)
+ 
+        return these_commands_exist
+
+    @classmethod
+    def run(cls):
+        """Run the installation procedure.
+
+        Will use the first viable Python command it finds.
+
+        """
+
+        # If we have preparation commands to execute
+        # PRIOR to the setup.py installation, let's
+        # do them now!
+        if cls.PREP_COMMANDS:
+
+            for preparation_command in cls.PREP_COMMANDS:
+
+                try:
+                    subprocess.check_output(preparation_command,
+                                            shell=True)
+
+                except subprocess.CalledProcessError as e:
+                    print(e.output)
+
+        # now run the python command which installs Hypatia and its
+        # dependencies through pip.
+        python_commands = cls.find_python_commands()
+        number_of_commands_found = len(python_commands)
+
+        if number_of_commands_found == 0:
+
+            raise Exception("Could not find the Python Command!")
+
+        # TODO: test for more than one avail
+        # command or if a specific version is being sought
+        # after...
+
+        python_command = python_commands[0]
+        setup_command = "%s -m pip install %s" % (python_command,
+                                                  cls.PIP_INSTALL)
+
+        print(subprocess.check_output(setup_command, shell=True))
+
+
+class Linuxmint(Install):
+    PREP_COMMANDS = [
+                     ("apt-get install python3-pip python3-dev "
+                      "libsdl1.2-dev libsdl-image1.2-dev "
+                      "libsdl-mixer1.2-dev libsdl-ttf2.0-dev "
+                      "libsdl-gfx1.2-dev libsdl-net1.2-dev "
+                      "libsdl-image1.2-dev libsdl-mixer1.2-dev "
+                      "libsdl-ttf2.0-dev libsmpeg-dev libsdl1.2-dev "
+                      "libportmidi-dev libswscale-dev libavformat-dev "
+                      "libavcodec-dev libsdl-sge-dev "
+                      "libsdl-sound1.2-dev libportmidi-dev "
+                      "libsmpeg-dev"),
+                     "pip install hg+http://bitbucket.org/pygame/pygame",
+                    ]
+
+
+class Darwin(Install):
+    """Probably Mac OS X
+
+    """
+
+    PREP_COMMANDS = [
+                     ('ruby -e "$(curl -fsSL https://raw.githubuser'
+                      'content.com/Homebrew/install/master/install)"'),
+                     "brew install homebrew/python/pygame",
+                    ]
+
+
+platform = platform.system()
+
+# if detect linux, run find distro
+
+# x.y.z
+python_version = StrictVersion('.'.join(str(n) for n in sys.version_info[:3]))
+
+# for Class in module's classes,
+#     if Class is child of install and name equals platform detected
+#         Class.run()
+current_module = sys.modules[__name__]
+
+for name, obj in inspect.getmembers(current_module, inspect.isclass):
+
+    if name == platform:
+        obj.run()
