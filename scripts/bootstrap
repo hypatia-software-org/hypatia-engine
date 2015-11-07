@@ -47,12 +47,21 @@ class Install(object):
         PREP_COMMANDS (tuple): Override this to provide a tuple of
             strings. Each string is a command to execute BEFORE
             running the `setup.py` script.
+        PREP_COMMANDS_PYTHON_2 (tuple): Commands only to be executed
+            if the major Python version executing this script is 2.
+        PREP_COMMANDS_PYTHON_3 (tuple): Commands only to be executed
+            if the major Python version executing this script is 3.
         PIP_INSTALL (str): This is the last thing executed, it
             finishes the incomplete command `pip install `. This
             value is seriously just appended to `pip install `.
+        PREAMBLE (str): A notice message to display to the user
+            before installing. This can be bypassed with the
+            --skip-preamble flag. This is displayed along with
+            the commands to be executed.
             
     """
 
+    PREAMBLE = ''
     PREP_COMMANDS = tuple()
     PREP_COMMANDS_PYTHON_2 = tuple()
     PREP_COMMANDS_PYTHON_3 = tuple()
@@ -92,19 +101,16 @@ class Install(object):
         return these_commands_exist
 
     @classmethod
-    def run(cls):
+    def run(cls, skip_preamble=True):
         """Run the installation procedure.
 
         Will use the first viable Python command it finds.
 
         """
 
-        # If we have preparation commands to execute
-        # PRIOR to the setup.py installation, let's
-        # do them now!
-
-        # we use PREP_COMMANDS, but we check the major
-        # to figure out if we want support for 2, 3
+        # Determine the Python version, and thus
+        # form all of the necessary prep commands
+        # into one tuple
         major, minor = sys.version_info[:2]
         prep_commands = cls.PREP_COMMANDS
 
@@ -113,6 +119,50 @@ class Install(object):
         elif major == 3 and cls.PREP_COMMANDS_PYTHON_3:
             prep_commands = prep_commands + cls.PREP_COMMANDS_PYTHON_3
 
+        # determine the python command to install setup.py through pip
+        python_commands = cls.find_python_commands()
+        number_of_commands_found = len(python_commands)
+
+        if number_of_commands_found == 0:
+
+            raise Exception("Could not find the Python Command!")
+
+        python_command = python_commands[0]
+        setup_command = "%s -m pip install %s" % (python_command,
+                                                  cls.PIP_INSTALL)
+
+        # The preamble displays an optional message,
+        # along with the commands to be executed. If
+        # skip_preamble is True, this step is skipped.
+        if not skip_preamble:
+            
+            if cls.PREAMBLE:
+                print(cls.PREAMBLE)
+
+            print("The following commands are to be executed:\n")
+
+            for command in prep_commands:
+                print('  * ' + command)
+
+            print('  * ' + setup_command + '\n')
+
+            # Is the above okay (yes or no):
+            while True:
+                answer = raw_input("Is the above okay (yes or no): ")
+
+                if answer == "yes":
+
+                    break
+
+                elif answer == "no":
+                    sys.exit()
+                else:
+                    print('Please type "yes" or "no"!')
+
+
+        # If we have preparation commands to execute
+        # PRIOR to the setup.py installation, let's
+        # do them now!
         if prep_commands:
 
             for preparation_command in prep_commands:
@@ -122,23 +172,8 @@ class Install(object):
                 except subprocess.CalledProcessError as e:
                     print(e.output)
 
-        # now run the python command which installs Hypatia and its
+        # run the python command which installs Hypatia and its
         # dependencies through pip.
-        python_commands = cls.find_python_commands()
-        number_of_commands_found = len(python_commands)
-
-        if number_of_commands_found == 0:
-
-            raise Exception("Could not find the Python Command!")
-
-        # TODO: test for more than one avail
-        # command or if a specific version is being sought
-        # after...
-
-        python_command = python_commands[0]
-        setup_command = "%s -m pip install %s" % (python_command,
-                                                  cls.PIP_INSTALL)
-
         print(subprocess.check_output(setup_command, shell=True))
 
 
@@ -208,6 +243,8 @@ class TravisCI(Install):
 # installer/target or Python version.
 parser = argparse.ArgumentParser(description='Hypatia installer')
 parser.add_argument('--travis', action='store_true', help='TravisCI install')
+parser.add_argument('--skip-preamble', action='store_true',
+                    help='Auto approve install')
 args = vars(parser.parse_args())
 
 # Do the magic
@@ -230,4 +267,4 @@ for name, obj in inspect.getmembers(current_module, inspect.isclass):
 
     # TODO: this isn't testing if the obj is a child of install...
     if name == operating_system:
-        obj.run()
+        obj.run(skip_preamble=args['skip_preamble'])

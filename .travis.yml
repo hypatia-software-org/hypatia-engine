@@ -6,7 +6,7 @@ python:
 sudo: required
 
 install:
-    - "./scripts/install --travis"
+    - "./scripts/install --travis --skip-preamble"
 
 # command to run tests
 script:
