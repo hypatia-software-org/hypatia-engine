@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 
-"""Hypatia Installer
-
-Bootstrap script. Installs everything required for Hypatia.
+"""Hypatia bootstrap script, installs everything required
+for Hypatia. Go from 0 to contributing in one command.
 
 Warning:
     Possible bug whereas you could execute this script with
@@ -21,7 +20,6 @@ import inspect
 import platform
 import argparse
 import subprocess
-from setuptools import setup
 from distutils.version import StrictVersion
 
 
@@ -59,11 +57,12 @@ class Install(object):
     PREP_COMMANDS_PYTHON_2 = tuple()
     PREP_COMMANDS_PYTHON_3 = tuple()
     PIP_INSTALL = "."
+    # prefer specific commands first
     POSSIBLE_COMMANDS_FOR_PYTHON = (
-                                    'python',
-                                    'python{major}',
                                     'python{major}.{minor}',
+                                    'python{major}',
                                     'py -{major}',
+                                    'python',
                                    )
 
     @classmethod
@@ -81,8 +80,7 @@ class Install(object):
             command = command.format(major=major, minor=minor)
 
             try:
-                subprocess.check_output(command + " --version",
-                                        shell=True)
+                subprocess.check_output(command + " --version", shell=True)
 
             except subprocess.CalledProcessError as e:
                 print(e.output)
@@ -120,9 +118,7 @@ class Install(object):
             for preparation_command in prep_commands:
 
                 try:
-                    subprocess.check_output(preparation_command,
-                                            shell=True)
-
+                    subprocess.check_output(preparation_command, shell=True)
                 except subprocess.CalledProcessError as e:
                     print(e.output)
 
@@ -177,6 +173,20 @@ class Darwin(Install):
 class Ubuntu(Install):
     PREP_COMMANDS_PYTHON_2 = ('sudo apt-get install python-pygame python-pip',)
     PREP_COMMANDS_PYTHON_3 = ('install python3-dev python3-numpy python3-pip',)
+
+
+class FreeBSD(Install):
+    """Presumes user has `sudo`.
+
+    For easy installation, presume py27. Otherwise
+    it'd have to clone and install Pygame from repo.
+
+    Uses pip --user install for Hypatia.
+
+    """
+
+    PIP_INSTALL = "--user ."
+    PREP_COMMANDS = ['sudo pkg install -y py27-game py27-pip']
 
 
 class TravisCI(Install):
