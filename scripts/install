@@ -198,7 +198,7 @@ class TravisCI(Install):
 # installer/target or Python version.
 parser = argparse.ArgumentParser(description='Hypatia installer')
 parser.add_argument('--travis', action='store_true', help='TravisCI install')
-args = parser.parse_args()
+args = vars(parser.parse_args())
 
 # Do the magic
 
