@@ -6,7 +6,7 @@ python:
 sudo: required
 
 install:
-    - "./scripts/boostrap --travis --skip-preamble"
+    - "./scripts/bootstrap --travis --skip-preamble"
 
 # command to run tests
 script:
