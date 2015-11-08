@@ -19,7 +19,7 @@ Create games like
 
 The included demo game (`demo/game.py`) in action:
 
-![The demo game in action.](http://hypatia-engine.github.io/assets/demo.gif)
+![The demo game in action.](http://hypatia-engine.github.io/assets/demo-2015-11-07.gif)
 
 ## What makes this project special?
 
