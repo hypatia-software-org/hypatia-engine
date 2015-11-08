@@ -1,18 +1,24 @@
 # Contributing to Hypatia
 
-Read this *before* you make a pull request. _Hopefully_ everything a Python dev would want to know about contributing to Hypatia, e.g., style, guidelines, requirements, testing.
+This document is for Python devs to read before making contributions
+to Hypatia. When you make a _pull request_ it is assumed you have
+read this document.
 
-Before you continue, read:
+Before you continue, you need to read `LICENSE`, `README.md`,
+and `CODE-OF-CONDUCT`.
 
-  * `LICENSE`
-  * `README.md`: Everything the user needs to know
-  * `CODE-OF-CONDUCT.md`: Be compassionate and respectful
+Hypatia stricly enforces the `CODE-OF-CONDUCT.md`. We strive for a
+safe, healthy social environment for women, especially trans women.
 
-## Social
+Women have exclusive access to:
 
-Hypatia has strives to be a safe place for all. Please read the `CODE-OF-CONDUCT.md`.
-
-### Contact and Communication
+  * *Mentorships*: A mentor will help you: learn Python, make quality
+    contributions to Hypatia, and start your own project. Ideally,
+    this is a fast track to a career in software engineering.
+  * *Women-only team chat*: Hypatia team chat already mostly consists
+    of women, but the `#women-only` chat is a safe place exclusively
+    for women! Email `lillian.lynn.lemmer@gmail.com` asking for an
+    invite; mention a tiny bit about who you are.
 
 Please communicate with our lovely team:
 
@@ -25,19 +31,10 @@ Lily, project mommy:
   * Email: lillian.lynn.lemmer@gmail.com
   * Twitter: @LilyLemmer
 
-### Letter to Women
-
-Hey you!
-
-It's Lily, the project mommy. I just wanna say that this project is especially for you as a developer; you come first. I'm a woman who's openly lesbian and trans, I hope that reassures you that Hypatia has a welcoming, open, and safe culture.
-
-I'd like to offer you free one-on-one sessions, where I'll teach you software engineering! I'll teach you until you're making quality contributions to Hypatia! My hope is to help women develop a portfolio for a career in software engineering.
-
-I'd also like to invite you to the official, invite-only, Hypatia developer chat. We use a service called Slack to chat; you don't need to download anything. Send an email to lillian.lynn.lemmer@gmail.com requesting an invite!
-
-Let me know if you need anything.
-
-Lillian Lynn Lemmer
+You may ask Lillian for access to the private team chat. When you
+email `lillian.lynn.lemmer@gmail.com` be sure to mention why
+you're interested, a tiny bit about yourself, and maybe a Twitter,
+blog, or something!
 
 ## Quick Info
 
