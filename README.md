@@ -89,13 +89,13 @@ installed and know how to use `pip`.
 The easiest thing to do is use Python 2.7. You can simply:
 
 ```shell
-pkg install py27-game
+sudo pkg install py27-game
 ```
 
 #### OpenBSD
 
 ```shell
-pkg_add pygame
+sudo pkg_add pygame
 ```
 
 #### Debian, Ubuntu
