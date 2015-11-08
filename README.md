@@ -67,7 +67,7 @@ If the bootstrap fails, you can try to install yourself:
 
   1. Install Pygame (platform-specific). Installing Pygame is
      a different process on various systems. See the
-     __Installing Pygame__ section below.
+     *Installing Pygame* section below.
   2. `pip install --user .`
 
 ### Checkout the Demo
@@ -79,7 +79,7 @@ $ python game.py
 
 ### Installing Pygame
 
-*You can skip this section if the bootstrap worked for you.*
+**You can skip this section if the bootstrap worked for you.**
 
 Installing Pygame on various platforms. I assume you have Python
 installed and know how to use `pip`.
@@ -122,7 +122,7 @@ For Python 2.x I recommend using
 [Pygame's official Windows installers](http://www.pygame.org/download.shtml).
 
 If you're using Python 3.x, I recommend using Christoph Gohlke's
-_unofficial_ Pygame binaries. Make sure to download the `whl` specific
+*unofficial* Pygame binaries. Make sure to download the `whl` specific
 to your Python version and architecture (win32 vs win_amd64). To
 install the `whl` do the following in command prompt (in the directory
 containing the `whl`):
