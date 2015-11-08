@@ -51,7 +51,8 @@ Lillian Lynn Lemmer
     change in a pull request. The convention for showing approval for a commit is giving
     your thumbs-up :+1:, hopefully with a comment.
   * Complete repository review is required to merge back to `master`, this means a pull
-    request requiring the approval and input of (hopefully) all contributors.
+    request requiring the approval and input of (hopefully) all contributors. Also,
+    changes must first be tested in all supported platforms.
 
 ## Git
 

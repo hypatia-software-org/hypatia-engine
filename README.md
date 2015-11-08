@@ -23,7 +23,7 @@ The included demo game (`demo/game.py`) in action:
 
 ## What makes this project special?
 
-  * Each release tested in FreeBSD, Linux, and Windows
+  * Each release tested in FreeBSD, Mac OS X, Linux, and Windows
   * Built and tested in FreeBSD first
   * A labor of love,
     [permissively (MIT) licensed](https://raw.githubusercontent.com/hypatia-engine/hypatia/master/LICENSE),
