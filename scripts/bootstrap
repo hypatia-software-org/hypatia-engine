@@ -3,6 +3,14 @@
 """Hypatia bootstrap script, installs everything required
 for Hypatia. Go from 0 to contributing in one command.
 
+Usage:
+    scripts/bootstrap --travis --skip-preamble
+
+    The optional --skip-preamble flag skips asking for
+    user's permission to do a list of commands.
+
+    --travis flag is for bootstraping for Travis CI.
+
 Warning:
     Possible bug whereas you could execute this script with
     `python3.3 scripts/install`, but since it sees `python`
@@ -199,7 +207,7 @@ class Linuxmint(Install):
 
 
 class Darwin(Install):
-    """Probably Mac OS X
+    """Mac OS X
 
     """
 
@@ -216,9 +224,7 @@ class Ubuntu(Install):
 
 
 class FreeBSD(Install):
-    """Presumes user has `sudo`.
-
-    Uses pip --user install for Hypatia.
+    """FreeBSD, pretty much any version.
 
     """
 
@@ -232,6 +238,10 @@ class FreeBSD(Install):
 
 
 class TravisCI(Install):
+    """Installer for Travis CI ONLY.
+
+    """
+
     PREAMBLE = '''
                This is only for Travis CI! You probably don't mean
                to use this!

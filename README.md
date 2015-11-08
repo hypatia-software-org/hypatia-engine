@@ -14,7 +14,8 @@
 
 Make 2D action adventure games. For programmers and nonprogrammers alike.
 
-Create games like [_Legend of Zelda: Oracle of Ages_ and _Oracle of Seasons_](http://en.wikipedia.org/wiki/The_Legend_of_Zelda:_Oracle_of_Seasons_and_Oracle_of_Ages).
+Create games like
+[_Legend of Zelda: Oracle of Ages_ and _Oracle of Seasons_](http://en.wikipedia.org/wiki/The_Legend_of_Zelda:_Oracle_of_Seasons_and_Oracle_of_Ages).
 
 The included demo game (`demo/game.py`) in action:
 
@@ -55,10 +56,20 @@ If you have just one version of Python installed, simply use:
 ./scripts/bootstrap
 ```
 
-Otherwise, follow these two instructions:
+Otherwise, if you want to install for a
+specific version of Python, use something like:
+
+```shell
+python3.3 scripts/bootstrap
+```
+
+If the bootstrap fails, you can try to install yourself:
 
   1. Install Pygame (platform-specific)
-  2. In the repository root, run `pip install --user .`
+  2. `pip install --user .`
+
+Installing Pygame is different on various systems. See the
+_Installing Pygame_ section.
 
 ### Checkout the Demo
 
@@ -67,7 +78,7 @@ $ cd demo
 $ python game.py
 ```
 
-### Platform-Specific Pre-requisite Instructions
+### Installing Pygame
 
 Installing Pygame on various platforms. I assume you have Python
 installed and know how to use `pip`.
@@ -113,7 +124,7 @@ If you're using Python 3.x, I recommend using Christoph Gohlke's
 _unofficial_ Pygame binaries. Make sure to download the `whl` specific
 to your Python version and architecture (win32 vs win_amd64). To
 install the `whl` do the following in command prompt (in the directory
-containing the `whl):
+containing the `whl`):
 
 ```shell
 pip install wheel
