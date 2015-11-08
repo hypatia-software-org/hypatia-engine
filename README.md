@@ -19,7 +19,7 @@ Create games like
 
 The included demo game (`demo/game.py`) in action:
 
-![The demo game in action.](http://hypatia-engine.github.io/assets/demo.gif)
+![The demo game in action.](http://hypatia-engine.github.io/assets/demo-2015-11-07.gif)
 
 ## What makes this project special?
 
@@ -65,11 +65,10 @@ python3.3 scripts/bootstrap
 
 If the bootstrap fails, you can try to install yourself:
 
-  1. Install Pygame (platform-specific)
+  1. Install Pygame (platform-specific). Installing Pygame is
+     a different process on various systems. See the
+     *Installing Pygame* section below.
   2. `pip install --user .`
-
-Installing Pygame is different on various systems. See the
-_Installing Pygame_ section.
 
 ### Checkout the Demo
 
@@ -80,6 +79,8 @@ $ python game.py
 
 ### Installing Pygame
 
+**You can skip this section if the bootstrap worked for you.**
+
 Installing Pygame on various platforms. I assume you have Python
 installed and know how to use `pip`.
 
@@ -88,13 +89,13 @@ installed and know how to use `pip`.
 The easiest thing to do is use Python 2.7. You can simply:
 
 ```shell
-pkg install py27-game
+sudo pkg install py27-game
 ```
 
 #### OpenBSD
 
 ```shell
-pkg_add pygame
+sudo pkg_add pygame
 ```
 
 #### Debian, Ubuntu
@@ -121,7 +122,7 @@ For Python 2.x I recommend using
 [Pygame's official Windows installers](http://www.pygame.org/download.shtml).
 
 If you're using Python 3.x, I recommend using Christoph Gohlke's
-_unofficial_ Pygame binaries. Make sure to download the `whl` specific
+*unofficial* Pygame binaries. Make sure to download the `whl` specific
 to your Python version and architecture (win32 vs win_amd64). To
 install the `whl` do the following in command prompt (in the directory
 containing the `whl`):
