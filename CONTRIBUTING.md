@@ -53,15 +53,19 @@ blog, or something!
 
 ## Git
 
-Branch from `develop`, pull requests against `develop`.
+### Creating a New Branch
 
-  * Try to avoid large/huge commits
-  * Try to avoid imlementing multiple concepts in one commit
-  * A branch should only implement what its name describes, e.g., "add-display-settings-and-tools"
+All new branches **must** fork from `master`, e.g. `git checkout -b your-new-feature-or-fix master`.
 
-### Git Flow
+#### Rationale
 
-The general git flow of the project follows [A Successful git Branching Model](http://nvie.com/posts/a-successful-git-branching-model/). Please branch from the `develop` branch.
+The `master` branch at all times represents the most stable version of Hypatia.  All new branches must fork from `master` so that they begin with the most stable foundation possible.  This helps cut down on the number of bugs and problems that can arise from forking a branch from a less stable branch, e.g. an existing feature branch; the new branch will inherit any problems or conflicts of that branch.  By forking all branches from `master` those branches are less likely to inherit any problems than if they forked from anywhere else.
+
+### General Practices
+
+* Try to avoid large/huge commits
+* Try to avoid imlementing multiple concepts in one commit
+* A branch should only implement what its name describes, e.g., "add-display-settings-and-tools"
 
 ### Git Messages
 
@@ -72,6 +76,64 @@ Commit messages must be as explanatory as possible.  Any developer should be abl
 If your commit is a bug-fix then try to find the commit which introduced the bug and reference that in your message.  The preferred format is `first eight digits of the SHA-1 (The Commit's First Line)`.  [Here is an example](https://github.com/hypatia-engine/hypatia/commit/b52c3345ae8e312017c2a1cf21793fdbc63b2493) demonstrating how to refer to previous commits.  Note well that GitHub automatically creates links to commits you reference in this way.
 
 If your commit relates to a GitHub issue then reference that issue in the message by writing `GitHub-Issue: #NNN` where `NNN` is the issue number.  [Here is an example](https://github.com/hypatia-engine/hypatia/commit/04d64aa1c76d1958d934c9d64e72a6928ab6466f) of such references.  Again, note well that GitHub turns these references into links.  The threads for those issues will also receive a link back to the commit.
+
+### Merging Branches
+
+#### Getting Reviews and Testing
+
+A branch is not acceptable for merging until one of the "core contributors" has reviewed and tested the branch.  In this context "core contributors" refers to the people with read/write permissions on the official repository.  At this time of writing those people are:
+
+- Lillian Lemmer
+- Alice Jenkinson
+- Eric James Michael Ritz
+
+#### Merging Branches in Preparation for Updating Master
+
+All branches deemed acceptable for merging into Hypatia are first merged into the `develop` branch.  The `develop` branch is always forked from `master`.  It represents "the next version of `master`", i.e. what `master` will become after all merging and integration testing is complete.  These are the steps that the "core contributors" must follow for merging branches in preparation for updating `master`.
+
+1. Create `develop` if it does not already exist, i.e. `git branch develop master`.
+
+2. `git checkout develop`
+
+3. For each branch `foo` that is acceptable for merging, first run `git checkout develop` to switch to the `develop` branch.  If the branch `foo` contains only a single commit: `git cherry-pick -s foo`.  If the branch `foo` contains more than one commit: `git merge --no-ff --edit foo`.  The purpose of these two commands is to add metadata to the commits indicating that the core contributor performing the merge has "signed off" on the branch, i.e. that contributor takes full responsibility for having tested and reviewed the branch in question.
+
+4. `git push origin develop` so that everyone may test the proposed changes.
+
+##### Rationale for Merging Process
+
+Using `git cherry-pick -s foo` for a branch that contains only one commit avoids creating a merge commit, which is unnecessary noise for such branches.  If it is necessary to revert a branch in the future then we only need a single commit to revert.  For branches containing only one commit we do not need a merge commit to revert; we can simply revert the commit itself.  For branches containing more than one commit, `git merge --no-ff --edit foo` guarantees that we will have a merge commit that we can use with `git revert` at any point in the future to "unhook" that branch from the repository, thus undoing all of its changes.  The `-s` flag for `git cherry-pick` and the `--edit` flag for `git merge` gives the core contributors the chance to sign-off on the branch, indicating they have reviewed and tested the branch and that they accept responsibility for the quality of that branch meeting the standards of the project.
+
+#### Merging All Changes Into Master
+
+Once all branches deemed acceptable for merging are in `develop` then all developers should `git checkout develop` and test the changes as much as possible.  Once satisfied with their quality then one of the core contributors updates `master` with the following commands:
+
+    git checkout master
+    git merge --ff-only develop
+
+##### Rationale for `--ff-only`
+
+A "fast-forward" merge in Git is a merge which **does not** create a merge commit.  Using `--ff-only` will reject the merge if it cannot be done without creating a merge commit.  The reason this flag is mandatory is that if we cannot fast-forward merge `develop` into `master` then that indicates there are merge conflicts which are either unresolved or need to be re-reviewed.  To put it another way, `git merge --ff-only develop` guarantees that Git can update `master` "cleanly" by simply updating `master` to point to the same commit as `develop`.
+
+#### Tagging Master for a New Release
+
+After merging `develop` into `master` it may be time to tag `master` as a new version for release.  The commands for this are:
+
+    git checkout master
+    git tag -s v0.4.0
+
+Here `v0.4.0` is only an example tag name.  *Only Lillian can run these commands.*  That is because the `-s` flag to `git tag` will sign the tag with her GPG key, which other developers can use to verify the validity and authenticity of the tag.  As the project lead of Hypatia, Lillian is the only person with authority to use `git tag -s`.  **No other developers must ever use `git tag -s` under any circumstances.**  However, using `git tag` without `-s` is fine, which developers can use to create local "lightweight" tags if needed to help development.
+
+#### Pushing Updates to Master and Preparing for the Next Development Cycle
+
+- `git fetch origin --prune`
+- `git checkout master`
+- `git push origin master --tags`
+- `git branch -d develop && git branch develop master`
+
+The command `git branch --merged` will show all branches merged into `master`.  For each such branch:
+
+- `git branch -d that-branch` **Note:** `-D` will be necessary for branches merged via `git cherry-pick -s`.
+- `git push origin --delete that-branch`
 
 ## General Documentation Rules
 
