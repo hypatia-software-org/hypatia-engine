@@ -65,11 +65,10 @@ python3.3 scripts/bootstrap
 
 If the bootstrap fails, you can try to install yourself:
 
-  1. Install Pygame (platform-specific)
+  1. Install Pygame (platform-specific). Installing Pygame is
+     a different process on various systems. See the
+     __Installing Pygame__ section below.
   2. `pip install --user .`
-
-Installing Pygame is different on various systems. See the
-_Installing Pygame_ section.
 
 ### Checkout the Demo
 
@@ -79,6 +78,8 @@ $ python game.py
 ```
 
 ### Installing Pygame
+
+*You can skip this section if the bootstrap worked for you.*
 
 Installing Pygame on various platforms. I assume you have Python
 installed and know how to use `pip`.
