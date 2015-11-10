@@ -26,7 +26,7 @@ The included demo game (`demo/game.py`) in action:
   * Each release tested in FreeBSD, Mac OS X, Linux, and Windows
   * Built and tested in FreeBSD first
   * A labor of love,
-    [permissively (MIT) licensed](https://raw.githubusercontent.com/hypatia-engine/hypatia/master/LICENSE),
+    [permissively (MIT) licensed](./LICENSE),
     meaning you Hypatia for commercial or non-commercial purposes and
     not worry about legalese--it's really free for any purpose without
     strings attached.
@@ -44,7 +44,7 @@ The included demo game (`demo/game.py`) in action:
     [@LilyLemmer](https:/twitter.com/LilyLemmer) on Twitter.
 
 To know your way around the project, I strongly recommend reading the
-[CONTRIBUTING.md](https://github.com/lillian-lemmer/hypatia/blob/master/CONTRIBUTING.md)
+[CONTRIBUTING.md](./CONTRIBUTING.md)
 file. It covers everything you need to know about contributing to
 Hypatia, as well as navigating the project.
 
