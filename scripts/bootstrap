@@ -237,6 +237,32 @@ class FreeBSD(Install):
     PREP_COMMANDS = ['sudo pkg install -y py27-game py27-pip']
 
 
+class OpenBSD(Install):
+    """OpenBSD, any version.
+    """
+
+    PREAMBLE = '''
+               This install requires sudo. This install only 
+               works for Python 2. Will install Hypatia to 
+               the user's site packages (with pip install --user).
+               '''
+    PIP_INSTALL = "--user ."
+    PREP_COMMANDS = ['sudo pkg_add pygame py-pip']
+
+
+class NetBSD(Install):
+    """NetBSD, pkgsrc.
+    """
+
+    PREAMBLE = '''
+               This install requires sudo. This install only 
+               works for Python 2. Will install Hypatia to 
+               the user's site packages (with pip install --user).
+               '''
+    PIP_INSTALL = "--user ."
+    PREP_COMMANDS = ['sudo pkgin install py-game py-pip']
+
+
 class TravisCI(Install):
     """Installer for Travis CI ONLY.
 
