@@ -8,7 +8,7 @@ Before you continue, you need to read `LICENSE`, `README.md`,
 and `CODE-OF-CONDUCT`.
 
 Hypatia stricly enforces the `CODE-OF-CONDUCT.md`. We strive for a
-safe, healthy social environment for women, especially trans women.
+safe, healthy social environment for all women, whether cis or trans.
 
 Women have exclusive access to:
 
@@ -29,7 +29,7 @@ Please communicate with our lovely team:
 Lily, project mommy:
 
   * Email: lillian.lynn.lemmer@gmail.com
-  * Twitter: @LilyLemmer
+  * Twitter: @LilyLemmer (you can *really* get to know her)
 
 You may ask Lillian for access to the private team chat. When you
 email `lillian.lynn.lemmer@gmail.com` be sure to mention why
