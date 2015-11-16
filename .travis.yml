@@ -6,7 +6,7 @@ python:
 sudo: required
 
 install:
-    - "./scripts/bootstrap --travis --skip-preamble"
+  - "./scripts/bootstrap --travis --skip-preamble"
 
 # command to run tests
 script:
@@ -14,3 +14,6 @@ script:
 
 after_success:
   - coveralls
+
+notifications:
+  slack: hypatia-engine:r4XPRCLFDfroFXzyLsHYfjdD
