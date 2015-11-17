@@ -31,6 +31,21 @@ The included demo game (`demo/game.py`) in action:
     not worry about legalese--it's really free for any purpose without
     strings attached.
 
+Hypatia stricly enforces the `CODE-OF-CONDUCT.md`. We strive for a
+safe, healthy social environment for all women, whether cis or trans.
+
+Women (whether cis or trans) have exclusive access to:
+
+  * *Mentorships*: A mentor will help you: learn Python, make quality
+    contributions to Hypatia, and start your own project. Ideally,
+    this is a fast track to a career in software engineering.
+  * *Women-only team chat*: Hypatia team chat already mostly consists
+    of women, but the `#women-only` chat is a safe place exclusively
+    for women! Email `lillian.lynn.lemmer@gmail.com` asking for an
+    invite; mention a tiny bit about who you are.
+  * *Funding*: Team revenue share from Gratipay, access to issue
+    bounties on Bountysource.
+
 ## Resources
 
   * [Platform-specific packages](http://hypatia-engine.github.io/get.html)
