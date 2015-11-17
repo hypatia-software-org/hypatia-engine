@@ -2,9 +2,56 @@
 
 Uses http://keepachangelog.com/ as a guideline.
 
+## [0.3.4] - 2015-11-16
+
+### Added
+
+  * New demo GIF.
+  * `scripts/install`, a new script for bootstrapping the engine, which is a simplified version of the now-removed `scripts/bootstrap`.
+  * FreeBSD, NetBSD, and OpenBSD installation support.
+  * Linux Mint support.
+  * "Scenes" which the engine can `render()`.
+  * A new anchor system for animated sprites.
+  * Sprite-groups have walkabout information to help animate NPCs.
+  * Windows test script supports Python 2 and 3.
+  * Script that generates documentation using Sphinx uses the developer's preferred browser.
+  * Shell environment variables to control which version of Python the engine uses:
+    - `PREP_COMMANDS`
+    - `PREP_COMMANDS_PYTHON_2`
+    - `PREP_COMMANDS_PYTHON_3`
+  * The test script uses `$PAGER`.
+
+### Fixed
+
+  * All unit tests pass.
+  * Multiple bugs preventing Python 3.5 from running Hypatia.
+  * Doctests and PEP8 style errors in many modules.
+  * Actors cannot `talk()` if they do not have the necessary properties.
+  * `setup.py` correctly handles the `enum34` package as a dependency based on the version of Python used to install Hypatia.
+  * README has correct URLs for images.
+  * `Direction.from_velocity()` works for directions with zero values for position coordinates.
+  * Hypatia reads UTF-8 encoded text resource files properly.
+  * Math on `Anchor` objects is associative and commutative.
+  * Various typos in documentation.
+
+### Changed
+
+  * Contribution guidelines.
+  * All exceptions related to the `Actor` class have a new parent, `ActorException`, instead of deriving directly from `Exception`.
+  * Running the (non-Windows) test script forcibly reinstalls all dependencies.
+  * Installation script learned the `--travis` flag for better Travis-CI configuration.
+  * The demo has a new viewport and resolution, along with new sprites.
+
+### Removed
+
+  * `scripts/bootstrap`, replaced by `scripts/install`.  See above for details.
+  * The requirements for Travis-CI no longer include `requirements/python2.txt` as they are no longer necessary.
+  * Outdated references to PygAnimation.
+  * The old anchor system, replaced in the module for animating sprites.
+
 ## [0.3.3] - 2015-11-01
 
-## Added
+### Added
 
   * More detailed platform-specific pygame install instructions in `README.md`
 
