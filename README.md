@@ -32,7 +32,8 @@ The included demo game (`demo/game.py`) in action:
     strings attached.
 
 Hypatia stricly enforces the `CODE-OF-CONDUCT.md`. We strive for a
-safe, healthy social environment for all women, whether cis or trans.
+safe, healthy social environment for all women, whether
+[https://en.wikipedia.org/wiki/Cisgender](cis) or trans.
 
 Women (whether cis or trans) have exclusive access to:
 
