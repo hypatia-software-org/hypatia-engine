@@ -1,16 +1,14 @@
 # Hypatia 0.3.4 (alpha)
 
-![Hypatia 0.3.4](http://hypatia-engine.github.io/assets/logotype-dark.png)
+![Hypatia 0.3.4](http://engine.hypatia.software/assets/logotype-dark.png)
 
-[![GitHub license](https://img.shields.io/github/license/hypatia-engine/hypatia.svg?style=flat-square)](https://raw.githubusercontent.com/hypatia-engine/hypatia/master/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/hypatia-software-organization/hypatia-engine.svg?style=flat-square)](https://raw.githubusercontent.com/hypatia-software-organization/hypatia-engine/master/LICENSE)
 [![PyPI Version](https://img.shields.io/pypi/v/hypatia_engine.svg?style=flat-square)](https://pypi.python.org/pypi/hypatia_engine/)
 [![Travis](https://img.shields.io/travis/hypatia-engine/hypatia.svg?style=flat-square)](https://travis-ci.org/hypatia-engine/hypatia)
-[![Coveralls](https://img.shields.io/coveralls/lillian-lemmer/hypatia.svg?style=flat-square)](https://coveralls.io/r/lillian-lemmer/hypatia)
-[![Code Climate](https://img.shields.io/codeclimate/github/lillian-lemmer/hypatia.svg?style=flat-square)](https://codeclimate.com/github/lillian-lemmer/hypatia)
+[![Code Climate](https://img.shields.io/codeclimate/github/lillian-lemmer/hypatia.svg?style=flat-square)](https://codeclimate.com/github/hypatia-software-organization/hypatia-engine)
 [![PyPI Popularity](https://img.shields.io/pypi/dm/hypatia_engine.svg?style=flat-square)](https://pypi.python.org/pypi/hypatia_engine/)
-[![Bountysource](https://img.shields.io/bountysource/team/hypatia-engine/activity.svg?style=flat-square)](https://www.bountysource.com/teams/hypatia-engine)
-[![Donate with Paypal](https://img.shields.io/badge/paypal-donate-ff69b4.svg?style=flat-square)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YFHB5TMMXMNT6)
-[![Donate with Patreon](https://img.shields.io/badge/patreon-donate%20monthly-ff69b4.svg?style=flat-square)](https://www.patreon.com/lilylemmer)
+[![Bountysource](https://img.shields.io/bountysource/team/hypatia-engine/activity.svg?style=flat-square)](https://www.bountysource.com/teams/hypatia-software-org)
+[![Donate with Paypal](https://img.shields.io/badge/paypal-donate-ff69b4.svg?style=flat-square)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZU5EVKVY2DX2S)
 
 Make 2D action adventure games. For programmers and nonprogrammers alike.
 
@@ -19,7 +17,7 @@ Create games like
 
 The included demo game (`demo/game.py`) in action:
 
-![The demo game in action.](http://hypatia-engine.github.io/assets/demo-2015-11-07.gif)
+![The demo game in action.](http://engine.hypatia.software/assets/demo-2015-11-07.gif)
 
 ## What makes this project special?
 
