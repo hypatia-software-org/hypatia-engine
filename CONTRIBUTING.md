@@ -39,10 +39,9 @@ blog, or something!
   * Before anything is merged to `develop` you need at least one person to approve the
     change in a pull request. The convention for showing approval for a commit is giving
     your thumbs-up :+1:, hopefully with a comment.
-  * Complete repository review is required to merge back to `master`, this means a pull
+  * Complete repository review is required to merge `develop` to `master`, this means a pull
     request requiring the approval and input of (hopefully) all contributors. Also,
-    changes must first be tested in all supported platforms. This refers to `develop`
-    merging to `master` for a new release.
+    changes must first be tested in all supported platforms. This refers to
 
 ## Git
 
