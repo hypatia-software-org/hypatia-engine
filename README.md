@@ -33,17 +33,9 @@ Hypatia stricly enforces the `CODE-OF-CONDUCT.md`. We strive for a
 safe, healthy social environment for all women, whether
 [https://en.wikipedia.org/wiki/Cisgender](cis) or trans.
 
-Women (whether cis or trans) have exclusive access to:
-
-  * *Mentorships*: A mentor will help you: learn Python, make quality
-    contributions to Hypatia, and start your own project. Ideally,
-    this is a fast track to a career in software engineering.
-  * *Women-only team chat*: Hypatia team chat already mostly consists
-    of women, but the `#women-only` chat is a safe place exclusively
-    for women! Email `lillian.lynn.lemmer@gmail.com` asking for an
-    invite; mention a tiny bit about who you are.
-  * *Funding*: Team revenue share from Gratipay, access to issue
-    bounties on Bountysource.
+Trans women have exclusive access to mentorships, funding, and more! For
+more information please see the
+[Hypatia Software Organization website](http://hypatia.software).
 
 ## Resources
 
