@@ -28,18 +28,21 @@ blog, or something!
 
 ## Quick Info
 
-  * Branch from, pull request to develop
+  * Branch from and pull request to `master`
+  * After pull request/peer review, features/branches are
+    merged to `develop`, this is our "next release" branch,
+    which is deleted/recreated every release.
   * Use descriptive branch names
   * We're strict about documentation (docstrings, commit messages, comments)
-  * Use test.sh to test before you commit!
-  * You'll probably want to pip install --user requirements/testing.txt
-  * This repo's etc/ directory contains additional/optional tools to assist contributors
+  * Use `test.sh` to test before you commit!
+  * You'll probably want to `pip install --user requirements/testing.txt`
   * Before anything is merged to `develop` you need at least one person to approve the
     change in a pull request. The convention for showing approval for a commit is giving
     your thumbs-up :+1:, hopefully with a comment.
   * Complete repository review is required to merge back to `master`, this means a pull
     request requiring the approval and input of (hopefully) all contributors. Also,
-    changes must first be tested in all supported platforms.
+    changes must first be tested in all supported platforms. This refers to `develop`
+    merging to `master` for a new release.
 
 ## Git
 
