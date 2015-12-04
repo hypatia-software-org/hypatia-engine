@@ -4,7 +4,7 @@
 
 [![GitHub license](https://img.shields.io/github/license/hypatia-software-organization/hypatia-engine.svg?style=flat-square)](https://raw.githubusercontent.com/hypatia-software-organization/hypatia-engine/master/LICENSE)
 [![PyPI Version](https://img.shields.io/pypi/v/hypatia_engine.svg?style=flat-square)](https://pypi.python.org/pypi/hypatia_engine/)
-[![Travis](https://img.shields.io/travis/hypatia-engine/hypatia.svg?style=flat-square)](https://travis-ci.org/hypatia-engine/hypatia)
+[![Travis](https://img.shields.io/travis/hypatia-engine/hypatia.svg?style=flat-square)](https://travis-ci.org/hypatia-software-organization/hypatia)
 [![Code Climate](https://img.shields.io/codeclimate/github/lillian-lemmer/hypatia.svg?style=flat-square)](https://codeclimate.com/github/hypatia-software-organization/hypatia-engine)
 [![PyPI Popularity](https://img.shields.io/pypi/dm/hypatia_engine.svg?style=flat-square)](https://pypi.python.org/pypi/hypatia_engine/)
 [![Bountysource](https://img.shields.io/bountysource/team/hypatia-engine/activity.svg?style=flat-square)](https://www.bountysource.com/teams/hypatia-software-org)
@@ -33,19 +33,20 @@ Hypatia stricly enforces the `CODE-OF-CONDUCT.md`. We strive for a
 safe, healthy social environment for all women, whether
 [https://en.wikipedia.org/wiki/Cisgender](cis) or trans.
 
-Trans women have exclusive access to mentorships, funding, and more! For
-more information please see the
+Trans women have access to mentorships, funding, team chat,
+and more! For more information please see the
 [Hypatia Software Organization website](http://hypatia.software).
 
 ## Resources
 
+  * [Hypatia Software Organization](http://hypatia.software): The
+    organization which made this fine product.
   * [Platform-specific packages](http://hypatia-engine.github.io/get.html)
   * [Hypatia Wiki](http://hypatia-engine.github.io/wiki/)
     (great resource for nonprogrammers, too!)
-  * [The official Hypatia website](http://hypatia-engine.github.io/)
-  * Official support chat:
+  * [The official Hypatia website](http://engine.hypatia.software)
+  * Official IRC support chat:
     [#hypatia on Freenode (webui!)](http://webchat.freenode.net/?channels=hypatia)
-  * [Hypatia Engine Slack team chat](https://hypatia-engine.slack.com/)
   * You can contact the author via email: lillian.lynn.lemmer@gmail.com,
     [@LilyLemmer](https:/twitter.com/LilyLemmer) on Twitter.
 
