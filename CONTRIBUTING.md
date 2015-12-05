@@ -42,7 +42,9 @@ blog, or something!
   * Complete repository review is required to merge `develop` to `master`, this means a pull
     request requiring the approval and input of (hopefully) all contributors. Also,
     changes must first be tested in all supported platforms. This refers to
-
+  * When you make a change (commit, PR, etc.), add an entry to the `CHANGELOG.md`. We will not
+    go back and review changes for the `CHANGELOG.md` upon release.
+  
 ## Git
 
 ### Creating a New Branch
