@@ -2,6 +2,10 @@
 
 Uses http://keepachangelog.com/ as a guideline.
 
+## [0.3.5] - ???
+
+  * Make distrib.sh POSIX compliant
+
 ## [0.3.4] - 2015-11-16
 
 ### Added
