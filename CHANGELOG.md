@@ -2,6 +2,12 @@
 
 Uses http://keepachangelog.com/ as a guideline.
 
+## [0.3.6] - 2015-12-05
+
+### Fixed
+
+  * Last release was a mis-release
+
 ## [0.3.5] - 2015-12-05
 
 Thanks to Brian Callahan (@ibara) for pointing out
