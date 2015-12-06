@@ -1,6 +1,6 @@
-# Hypatia 0.3.4 (alpha)
+# Hypatia 0.3.5 (alpha)
 
-![Hypatia 0.3.4](http://engine.hypatia.software/assets/logotype-dark.png)
+![Hypatia 0.3.5](http://engine.hypatia.software/assets/logotype-dark.png)
 
 [![GitHub license](https://img.shields.io/github/license/hypatia-software-organization/hypatia-engine.svg?style=flat-square)](https://raw.githubusercontent.com/hypatia-software-organization/hypatia-engine/master/LICENSE)
 [![PyPI Version](https://img.shields.io/pypi/v/hypatia_engine.svg?style=flat-square)](https://pypi.python.org/pypi/hypatia_engine/)

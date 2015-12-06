@@ -2,9 +2,23 @@
 
 Uses http://keepachangelog.com/ as a guideline.
 
-## [0.3.5] - ???
+## [0.3.5] - 2015-12-05
+
+Thanks to Brian Callahan (@ibara) for pointing out
+that their fix for making Hypatia Engine more
+distributable got lost in the clutter. Specifically,
+this helps Brian with packaging on OpenBSD, but this
+certainly will help with packaging on various platforms
+as well!
+
+### Fixed
 
   * Make distrib.sh POSIX compliant
+
+### Changed
+
+  * `CONTRIBUTING.md` has been updated to reflect our
+    new workflow!
 
 ## [0.3.4] - 2015-11-16
 
