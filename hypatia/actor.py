@@ -120,7 +120,7 @@ class Actor(object):
       objects but the implementation does not prevent this.
 
     Attributes:
-        walkabout (animations.Walkabout): --
+        pygame_sprite (pygame.Sprite): --
         direction (constants.Direction): --
 
     See Also:
@@ -128,12 +128,12 @@ class Actor(object):
 
     """
 
-    def __init__(self, walkabout=None, say_text=None, velocity=None):
+    def __init__(self, pygame_sprite=None, say_text=None, velocity=None):
         """Constructs a new Actor.
 
         Args:
-            walkabout (Optional[animations.Walkabout]): Optionally
-                set a walkabout property, which will graphically
+            pygame_sprite (Optional[pygame.Sprite]):
+                Optionally set a sprite which will graphically
                 represent the actor.
             say_text (Optional[str]): Optionally set the text which
                 is displayed when this actor's :meth:`Actor.say()`
@@ -142,7 +142,7 @@ class Actor(object):
 
         """
 
-        self.walkabout = walkabout
+        self.pygame_sprite = pygame_sprite
         self.say_text = say_text
         self.velocity = velocity or physics.Velocity()
 

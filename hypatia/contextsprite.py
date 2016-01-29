@@ -10,7 +10,7 @@ import pygame
 from hypatia import animatedsprite
 
 
-class NoContextForImage(Exception):
+class NoContextForSprite(Exception):
     """It is impossible to create a viable action/direction
     context from a file_name supplied which happens to have
     a file extension we consider to be an image.
@@ -72,6 +72,20 @@ class SpriteContexts(object):
 
         self.sprite_contexts = sprite_contexts
 
+    def __getitem__(self, key):
+        """
+
+        Args:
+            key (tuple[Action, Direction]):
+
+        """
+
+        return self.sprite_contexts[key]
+
+    def __setitem__(self, key, value):
+
+        self.sprite_contexts[key] = value
+
     @classmethod
     def from_files_dict(cls, files):
         """Take dictionary where key is the filename, and
@@ -79,7 +93,7 @@ class SpriteContexts(object):
         objects.
 
         Raises:
-            NoContextForImage:
+            NoContextForSprite:
             InsufficientContexts:
 
         See Also:
@@ -88,8 +102,6 @@ class SpriteContexts(object):
         """
 
         valid_image_extensions = ("gif", "png")
-
-        sprite_contexts = {}
 
         for file_name, file_data in files.items():
             file_name, file_ext = os.path.splitext(sprite_path)
@@ -106,9 +118,7 @@ class SpriteContexts(object):
 
             except AttributeError:
 
-                raise NoContextForImage(file_name)
-
-            sprite_contexts[(action, direction)] = files[file_name]
+                raise NoContextForSprite(file_name)
 
         validate_dict(sprite_contexts)
 
@@ -153,9 +163,7 @@ class ContextSprite(pygame.sprite.Sprite):
     to pygame sprite (we call these "sprite contexts").
 
     Attributes:
-        sprite_contexts (dict): Keys take the pattern of
-            (action, direction) and values are the
-            respective pygame sprites.
+        sprite_contexts (SpriteContexts): 
         image (pygame.Sprite): This is the current image/frame
             that was set by the update() method to reflect
             the current direction + action.
@@ -165,13 +173,13 @@ class ContextSprite(pygame.sprite.Sprite):
 
     """
 
-    def __init__(self, sprite_contexts, contextsprite_children=None,
-                 absolute_position_float=None):
+    def __init__(self, sprite_contexts, children=None,
+                 position_on_screen=None):
 
         super(Walkabout, self).__init__()
 
         self.sprite_contexts = {}
-        self.contextsprite_children = None
+        self.children = None
 
         self.animation = None
         self.image = None
@@ -181,7 +189,7 @@ class ContextSprite(pygame.sprite.Sprite):
 
         self.image = self.sprite_contexts[self.action][self.direction]
 
-        self.absolute_position_float = absolute_position_float or (0.0, 0.0)
+        self.position_on_screen = position_on_screen or (0, 0)
 
     @property
     def size(self):
@@ -191,7 +199,7 @@ class ContextSprite(pygame.sprite.Sprite):
     @property
     def rect(self):
 
-        return self.image.get_rect()
+        return pygame.Rect(self.position_on_screen, self.size)
 
     def update(self, clock, viewport):
         """Call this once per main loop iteration (tick). Advance
@@ -212,12 +220,10 @@ class ContextSprite(pygame.sprite.Sprite):
         """
 
         self.animation = self.image_contexts[self.action][self.direction]
-        self.animation.update(clock
-                              self.topleft_float,
-                              viewport)
+        self.animation.update(clock)
         self.image = self.animation.image
 
-    def blit(self, clock, viewport):
+    def blit(self, clock, screen_surface):
         """Draw the appropriate/active animation to screen.
 
         Args:
@@ -225,6 +231,9 @@ class ContextSprite(pygame.sprite.Sprite):
                 and defaultly the game.screen.clock. It will control
                 the animation. Time is a key factor in updating the
                 animations.
+            screen_surface (pygame.Surface): presumably the surface
+                of the screen, the viewport, etc. The sprite will be
+                drawn on this surface, at coordinate position_on_scren.
 
         Note:
             All sprites will be sync'd because of how clock
@@ -234,27 +243,13 @@ class ContextSprite(pygame.sprite.Sprite):
 
         """
 
-        # `position_on_screen` is the Walkabout sprite's
-        # position ON SCREEN.
-        #
-        # `position_on_screen` is derived from the absolute
-        # position of this Walkabout, i.e., the `topleft_float`
-        # attribute, being subtracted by the provided `offset`.
-        x, y = self.absolute_position_float
-        x -= offset[0]
-        y -= offset[1]
-        # sprite position on viewport
-        # There are no half-pixels, thus we don't use floats.
-        position_on_screen = (int(x), int(y))
+        position_on_screen = self.position_on_screen
 
         # Update the state of the current animation. This affects
         # this Walkabout's `image` property.
         self.update(clock, viewport)
 
-        # Blit the current image for this Walkabout to the
-        # supplied viewport surface (`screen`) at the supplied
-        # `position_on_screen`, which we figured out earlier.
-        viewport.blit(self.image, self.absolute_position_float)
+        self.image.blit(viewport.image, position_on_screen)
 
         # Render and update child walkabouts. Render a child
         # Walkabout so that its head anchor occupies the same
@@ -264,7 +259,7 @@ class ContextSprite(pygame.sprite.Sprite):
         # child anchors and THIS Walkabout's (parent) anchors and
         # using said difference as the offset for the child
         # Walkabout sprite/animation.
-        current_frame = self.animation..active_frame
+        current_frame = self.animation.active_frame
         parent_anchor = current_frame.anchors['head_anchor']
         # Adjust the parent anchor to consider the
         # position on screen for child walkabout
@@ -296,7 +291,7 @@ class ContextSprite(pygame.sprite.Sprite):
             child_position = (parent_anchor - child_frame_anchor).as_tuple()
             screen.blit(child_active_anim.image, child_position)
 
-    def optimize(self):
+    def convert(self, also_ordinals=False):
         """Perform actions to setup the walkabout. Actions performed
         once pygame is running and walkabout has been initialized.
 
@@ -308,20 +303,16 @@ class ContextSprite(pygame.sprite.Sprite):
 
         """
 
-        if len(self.animations) == 1:
-            actions = (constants.Action.stand,)
-            directions = (constants.Direction.south,)
-
+        if also_ordinals:
+            directions = constants.Direction.cardinals_and_ordinals()
         else:
-            actions = (constants.Action.walk, constants.Action.stand)
-            directions = (constants.Direction.north, constants.Direction.south,
-                          constants.Direction.east, constants.Direction.west)
+            directions = constants.Direction.cardinals()
 
-        for action in actions:
+        actions = constants.Action.all()
 
-            for direction in directions:
-                animated_sprite = self.animations[action][direction]
-                animated_sprite.convert_alpha()
+        for action, direction in itertools.product(actions, directions):
+            animated_sprite = self.sprite_contexts[(action, direction)]
+            animated_sprite.convert_alpha()
 
         for child in self.children:
-            child.optimize()
+            child.convert()
