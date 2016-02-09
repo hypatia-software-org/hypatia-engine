@@ -3,10 +3,12 @@ sprite is resultant of its direction and action.
 
 """
 
+import os
 import itertools
 
 import pygame
 
+from hypatia import constants
 from hypatia import animatedsprite
 
 
@@ -101,10 +103,17 @@ class SpriteContexts(object):
 
         """
 
-        valid_image_extensions = ("gif", "png")
+        valid_image_extensions = (".gif", ".png")
 
-        for file_name, file_data in files.items():
-            file_name, file_ext = os.path.splitext(sprite_path)
+        # Just iterate over keys, because it makes it
+        # easier to create dictionary-like objects in
+        # that you don't need some awkward `items()
+        # boilerplate.
+        sprite_contexts = {}
+
+        for file_name in files:
+            file_data = files[file_name]
+            file_name, file_ext = os.path.splitext(file_name)
 
             if file_ext not in valid_image_extensions:
 
@@ -115,12 +124,15 @@ class SpriteContexts(object):
             try:
                 direction = getattr(constants.Direction, direction)
                 action = getattr(constants.Action, action)
+                sprite_contexts[(action, direction)] = file_data
 
             except AttributeError:
 
                 raise NoContextForSprite(file_name)
 
-        validate_dict(sprite_contexts)
+        cls.validate_dict(sprite_contexts)
+
+        return sprite_contexts
 
     @staticmethod
     def validate_dict(sprite_contexts, also_ordinals=False):
@@ -152,7 +164,10 @@ class SpriteContexts(object):
                 sprite_contexts[(action, direction)]
             except KeyError:
 
-                raise InsufficientContexts()
+                raise Exception([sprite_contexts,
+                                 (action, direction)])
+                raise InsufficientContexts([sprite_contexts,
+                                            (action, direction)])
 
 
 class ContextSprite(pygame.sprite.Sprite):
@@ -176,18 +191,17 @@ class ContextSprite(pygame.sprite.Sprite):
     def __init__(self, sprite_contexts, children=None,
                  position_on_screen=None):
 
-        super(Walkabout, self).__init__()
+        super(ContextSprite, self).__init__()
 
-        self.sprite_contexts = {}
-        self.children = None
+        self.sprite_contexts = sprite_contexts
+        self.children = children or None
 
         self.animation = None
-        self.image = None
 
         self.direction = constants.Direction.south
-        self.action = constants.Direction.south
+        self.action = constants.Action.stand
 
-        self.image = self.sprite_contexts[self.action][self.direction]
+        self.image = self.sprite_contexts[(self.action, self.direction)]
 
         self.position_on_screen = position_on_screen or (0, 0)
 
@@ -200,6 +214,18 @@ class ContextSprite(pygame.sprite.Sprite):
     def rect(self):
 
         return pygame.Rect(self.position_on_screen, self.size)
+
+    @classmethod
+    def from_files_dict(cls, files):
+        """Boilerplate which...
+
+        What about children and other args?
+
+        """
+
+        sprite_contexts = SpriteContexts.from_files_dict(files)
+
+        return cls(sprite_contexts)
 
     def update(self, clock, viewport):
         """Call this once per main loop iteration (tick). Advance
