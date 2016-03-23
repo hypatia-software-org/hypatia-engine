@@ -1,6 +1,6 @@
 # Hypatia 0.3.6 (alpha)
 
-![Hypatia 0.3.6](http://engine.hypatia.software/assets/logotype-dark.png)
+![Hypatia 0.3.6](media/logos/logotype-blacktext-transparentbg.png)
 
 [![GitHub license](https://img.shields.io/github/license/hypatia-software-organization/hypatia-engine.svg?style=flat-square)](https://raw.githubusercontent.com/hypatia-software-organization/hypatia-engine/master/LICENSE)
 [![PyPI Version](https://img.shields.io/pypi/v/hypatia_engine.svg?style=flat-square)](https://pypi.python.org/pypi/hypatia_engine/)
@@ -17,7 +17,7 @@ Create games like
 
 The included demo game (`demo/game.py`) in action:
 
-![The demo game in action.](http://engine.hypatia.software/assets/demo-2015-11-07.gif)
+![The demo game in action.](media/demo-2015-11-07.gif)
 
 ## What makes this project special?
 
@@ -41,9 +41,6 @@ and more! For more information please see the
 
   * [Hypatia Software Organization](http://hypatia.software): The
     organization which made this fine product.
-  * [Platform-specific packages](http://hypatia-engine.github.io/get.html)
-  * [Hypatia Wiki](http://hypatia-engine.github.io/wiki/)
-    (great resource for nonprogrammers, too!)
   * [The official Hypatia website](http://engine.hypatia.software)
   * Official IRC support chat:
     [#hypatia on Freenode (webui!)](http://webchat.freenode.net/?channels=hypatia)
