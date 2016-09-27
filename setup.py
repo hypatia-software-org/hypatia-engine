@@ -35,6 +35,8 @@ python_version = StrictVersion('.'.join(str(n) for n in sys.version_info[:3]))
 if python_version < StrictVersion('3.5'):
     install_requires.append('enum34')
 
+install_requires.append('pygame')
+
 exec(open('hypatia/__init__.py').read())
 setup(name='hypatia_engine',
       packages=['hypatia'],
