@@ -2,12 +2,13 @@
 
 ![Hypatia 0.3.6](media/logos/logotype-blacktext-transparentbg.png)
 
-[![GitHub license](https://img.shields.io/github/license/hypatia-software-organization/hypatia-engine.svg?style=flat-square)](https://raw.githubusercontent.com/hypatia-software-organization/hypatia-engine/master/LICENSE)
+
+[![GitHub license](https://img.shields.io/github/license/hypatia-software-org/hypatia-engine.svg?style=flat-square)](https://raw.githubusercontent.com/hypatia-software-org/hypatia-engine/master/LICENSE)
 [![PyPI Version](https://img.shields.io/pypi/v/hypatia_engine.svg?style=flat-square)](https://pypi.python.org/pypi/hypatia_engine/)
-[![Travis](https://img.shields.io/travis/hypatia-software-organization/hypatia-engine.svg?style=flat-square)](https://travis-ci.org/hypatia-software-organization/hypatia-engine)
-[![Code Climate](https://img.shields.io/codeclimate/github/lillian-lemmer/hypatia.svg?style=flat-square)](https://codeclimate.com/github/hypatia-software-organization/hypatia-engine)
+[![Travis](https://img.shields.io/travis/hypatia-software-org/hypatia-engine.svg?style=flat-square)](https://travis-ci.org/hypatia-software-org/hypatia-engine)
+[![Code Climate](https://img.shields.io/codeclimate/github/hypatia-software-org/hypatia-engine.svg?style=flat-square)](https://codeclimate.com/github/hypatia-software-org/hypatia-engine)
 [![PyPI Popularity](https://img.shields.io/pypi/dm/hypatia_engine.svg?style=flat-square)](https://pypi.python.org/pypi/hypatia_engine/)
-[![Bountysource](https://img.shields.io/bountysource/team/hypatia-engine/activity.svg?style=flat-square)](https://www.bountysource.com/teams/hypatia-software-org)
+[![Bountysource](https://img.shields.io/bountysource/team/hypatia-software-org/activity.svg?style=flat-square)](https://www.bountysource.com/teams/hypatia-software-org)
 [![Donate with Paypal](https://img.shields.io/badge/paypal-donate-ff69b4.svg?style=flat-square)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZU5EVKVY2DX2S)
 
 Make 2D action adventure games. For programmers and nonprogrammers alike.
