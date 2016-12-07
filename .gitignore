@@ -75,3 +75,6 @@ hypatia.wiki/
 *.swl
 .*.py.*
 pycallgraph.png
+
+# Sublime Text
+*.sublime-workspace

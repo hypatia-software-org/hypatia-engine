@@ -1,7 +1,0 @@
-This directory contains:
-
-  * engine demo game.py
-  * engine demo resources (these are the resouces for the unit tests, too)
-
-In the engine demo,  you use the arrow keys to move around and spacebar to talk to NPCs.
-

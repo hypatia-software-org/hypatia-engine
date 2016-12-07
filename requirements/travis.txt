@@ -1,5 +1,0 @@
-# This only installs the testing software that devs would use
--r testing.txt
-
-# this is for travis to report coverage to coveralls.io
-python-coveralls

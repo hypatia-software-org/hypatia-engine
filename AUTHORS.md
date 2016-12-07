@@ -1,25 +1,13 @@
-# The authors of Hypatia
+# The authors of Hypatia Engine
 
-Lillian Lynn Lemmer (lillian.lynn.lemmer@gmail.com): project mommy.
+* [**Alice Jenkinson**](https://github.com/txanatan):
 
-## Non-financial Contributors
+  Project lead.
 
-People who have submitted patches, reported bugs, helped answer questions, and general made Hypatia that much better:
+* [**Lily Seabreeze**](https://github.com/lily-seabreeze):
 
-  * Eric James Michael Ritz (ejmr@plutono.com): scripts, programming, documentation, and more!
-  * Alice Jenkinson: website manager, programming, scripts
+  Previous project lead. We wouldn't be here without her!
 
-## Financial Contributors
+## Contributors
 
-Funders/donators from: Patreon, Paypal, GratiPay, BountySource.
-
-  * Jerich McAfee
-  * Jobias
-  * Don Bright
-  * Brian Callahan
-
-For more info, see:
-
-  * My Patreon profile: https://www.patreon.com/lilylemmer
-  * My GratiPay profile: https://gratipay.com/~lillian-lemmer/
-  * Hypatia team on BountySource: https://www.bountysource.com/teams/hypatia
+* [**Eric James Michael Ritz**](https://github.com/ejmr)
