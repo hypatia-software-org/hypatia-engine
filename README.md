@@ -1,6 +1,6 @@
 ![Hypatia Engine](media/logos/logotype-blacktext-transparentbg.png)
 
-# Hypatia Engine 0.4.0-dev (alpha)
+# Hypatia Engine 0.4.0-alpha
 
 Make 2D action adventure games. For programmers and nonprogrammers alike.
 
