@@ -23,3 +23,14 @@ class MockPopulatedResourcePack(ResourcePack):
                 }
             }
         }
+
+class MockDisplay:
+    def get_size(self):
+        return (800, 600)
+
+class MockGame:
+    def __init__(self):
+        self.display = MockDisplay()
+        self.gameconfig = {
+            "camera_resolution": (1, 1),
+        }
