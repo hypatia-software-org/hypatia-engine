@@ -19,7 +19,7 @@ class Camera(pygame.Surface):
 
         scaled = pygame.transform.scale(source, self.target_res)
 
-        self.blit(source, (0, 0))
+        self.blit(scaled, (0, 0))
 
     def move(self, pos_tuple):
         assert len(pos_tuple) == 2
