@@ -103,7 +103,7 @@ class TestResourcePack:
 
 class TestFilesystemResourcePack:
     def test_load_from_fs(self):
-        dir_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'artifacts')
+        dir_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'testgame', 'resources')
         f = FilesystemResourcePack(dir_path)
 
         assert f.content['content']['maps']['type'] == 'dir'

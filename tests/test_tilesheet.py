@@ -21,10 +21,10 @@ class TestTilesheet:
             tilesheet = Tilesheet(pygame.Surface((3, 3)), 2, 2)
 
     def test_from_resource_pack(self):
-        dir_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'artifacts')
+        dir_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'testgame', 'resources')
         resourcepack = FilesystemResourcePack(dir_path)
 
-        tilesheet = Tilesheet.from_resource_pack(resourcepack, "/tilesheets/test")
+        tilesheet = Tilesheet.from_resource_pack(resourcepack, "test")
 
         assert tilesheet.tile_width == 1
         assert tilesheet.tile_height == 1
@@ -32,19 +32,19 @@ class TestTilesheet:
         assert tilesheet.tile_count_y == 2
 
     def test_get_tile_position(self):
-        dir_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'artifacts')
+        dir_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'testgame', 'resources')
         resourcepack = FilesystemResourcePack(dir_path)
 
-        tilesheet = Tilesheet.from_resource_pack(resourcepack, "/tilesheets/test")
+        tilesheet = Tilesheet.from_resource_pack(resourcepack, "test")
 
         assert tilesheet.get_tile_position(1) == (1, 0)
         assert tilesheet.get_tile_position(3) == (1, 1)
 
     def test_get_tile_subsurface(self):
-        dir_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'artifacts')
+        dir_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'testgame', 'resources')
         resourcepack = FilesystemResourcePack(dir_path)
 
-        tilesheet = Tilesheet.from_resource_pack(resourcepack, "/tilesheets/test")
+        tilesheet = Tilesheet.from_resource_pack(resourcepack, "test")
 
         test_surface = pygame.Surface((1, 1))
         test_surface.fill((0, 0, 0))
