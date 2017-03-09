@@ -2,12 +2,14 @@ import os
 import json
 import pygame
 
+from hypatia.tile import Tile, TileFlags
 
 class Tilesheet:
-    def __init__(self, surface, tile_width, tile_height):
+    def __init__(self, surface, tile_width, tile_height, tile_flags):
         self.surface = surface
         self.tile_width = tile_width
         self.tile_height = tile_height
+        self.tile_flags = tile_flags
 
         surfacewidth = self.surface.get_width()
         if surfacewidth % self.tile_width != 0:
@@ -24,15 +26,25 @@ class Tilesheet:
         self.tile_count_y = surfaceheight / self.tile_height
 
     @classmethod
-    def from_resource_pack(cls, resourcepack, path):
-        imagefile = resourcepack.open(os.path.join(path, "tilesheet.png"))
+    def from_resource_pack(cls, resourcepack, tilesheet_name):
+        imagefile = resourcepack.open(os.path.join("/tilesheets", tilesheet_name, "tilesheet.png"))
         surface = pygame.image.load(imagefile)
 
-        metadata = json.load(resourcepack.open(os.path.join(path, "tilesheet.json")))
+        metadata = json.load(resourcepack.open(os.path.join("/tilesheets", tilesheet_name, "tilesheet.json")))
 
         (tile_width, tile_height) = [int(a) for a in metadata['tile_size'].split("x")]
+        tile_flags = metadata["flags"] if "flags" in metadata else {}
 
-        return cls(surface, tile_width, tile_height)
+        return cls(surface, tile_width, tile_height, tile_flags)
+
+    def get_tile(self, tile_id):
+        flags = TileFlags.NONE
+        if tile_id in self.tile_flags:
+            for flag in self.tile_flags[tile_id]:
+                flags = flags | TileFlags[flag]
+
+        tile = Tile(self, tile_id, flags)
+        return tile
 
     def get_tile_subsurface(self, tile_id):
         rect = pygame.Rect(self.get_tile_position(tile_id), (self.tile_width, self.tile_height))
