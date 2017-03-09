@@ -5,7 +5,7 @@ import pygame
 from hypatia.tile import Tile, TileFlags
 
 class Tilesheet:
-    def __init__(self, surface, tile_width, tile_height, tile_flags):
+    def __init__(self, surface, tile_width, tile_height, tile_flags={}):
         self.surface = surface
         self.tile_width = tile_width
         self.tile_height = tile_height
