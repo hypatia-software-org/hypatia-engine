@@ -78,7 +78,7 @@ class Tilemap:
 
                     tile.update()
 
-                    layer_surface.blit(tile, pos)
+                    layer_surface.blit(tile.image, pos)
 
             layer_surfaces.append(layer_surface)
 

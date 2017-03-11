@@ -28,7 +28,7 @@ class TestTile:
 
         test_surface = pygame.Surface((1, 1), pygame.SRCALPHA)
 
-        assert compare_surfaces(tile, test_surface)
+        assert compare_surfaces(tile.image, test_surface)
 
     def test_tile_blit(self):
         tilesheet_surface = pygame.Surface((2, 2))
@@ -46,4 +46,4 @@ class TestTile:
         test_surface = pygame.Surface((1, 1), pygame.SRCALPHA)
         test_surface.fill((0, 255, 0))
 
-        assert compare_surfaces(tile, test_surface)
+        assert compare_surfaces(tile.image, test_surface)

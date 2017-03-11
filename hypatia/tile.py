@@ -8,19 +8,22 @@ class TileFlags(IntEnum):
     SOLID = 1
     DESTRUCTIBLE = 2
 
-class Tile(pygame.Surface):
+class Tile(pygame.sprite.Sprite):
     def __init__(self, tilesheet, tile_id, flags):
-        
+        super().__init__()
+
         self.tilesheet = tilesheet
         self.tile_id = tile_id
         self.tile_flags = flags
 
-        super().__init__((tilesheet.tile_width, tilesheet.tile_height), pygame.SRCALPHA)
+        self.image = pygame.Surface((tilesheet.tile_width, tilesheet.tile_height), pygame.SRCALPHA)
+        self.rect = self.image.get_rect()
 
     def update(self):
         # allow blank tiles
         if self.tile_id != -1:
-            self.blit(self.tilesheet.get_tile_subsurface(self.tile_id), (0, 0))
+            self.image = self.tilesheet.get_tile_subsurface(self.tile_id)
+            self.rect = self.image.get_rect()
 
     def is_solid(self):
         return self.tile_flags & TileFlags.SOLID == TileFlags.SOLID
