@@ -1,6 +1,6 @@
 import pygame
 
-from hypatia.utils import compare_surfaces
+from hypatia.utils import compare_surfaces, keyname_to_keysym, keysym_to_keyname
 
 class TestCompareSurfaces:
     def test_compare_same_surface(self):
@@ -35,3 +35,11 @@ class TestCompareSurfaces:
         surface_two.fill((255, 255, 255))
 
         assert compare_surfaces(surface_one, surface_two) == False
+
+class TestKeysymToKeyname:
+    def test_keysym_to_keyname(self):
+        assert keysym_to_keyname(pygame.K_UP) == "K_UP"
+
+class TestKeynameToKeysym:
+    def test_keyname_to_keysym(self):
+        assert keyname_to_keysym("K_UP") == pygame.K_UP
