@@ -27,4 +27,23 @@ class Camera(pygame.Surface):
         self._position = pos_tuple
         self.update()
 
+    def center_on(self, focal_rect):
+        new_view_rect = pygame.Rect(self._position, self.camera_res)
+        new_view_rect.center = focal_rect.center
+
+        if new_view_rect.left < 0:
+            new_view_rect.left = 0
+
+        if new_view_rect.top < 0:
+            new_view_rect.top = 0
+        
+        if new_view_rect.bottom > self.source_res[1]:
+            new_view_rect.bottom = self.source_res[1]
+        
+        if new_view_rect.right > self.source_res[0]:
+            new_view_rect.right = self.source_res[0]
+
+        self._position = new_view_rect.topleft
+        self.update()
+
 

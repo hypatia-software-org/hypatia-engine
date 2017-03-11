@@ -42,4 +42,23 @@ class TestCamera:
         rect_two = pygame.Rect(1, 0, 1, 1)
         assert compare_surfaces(test_surface.subsurface(rect_two), c)
 
+    def test_camera_center_on(self):
+        test_surface = pygame.Surface((3, 3))
+        test_surface.fill((0, 0, 0))
+        test_surface.fill((255, 0, 0), pygame.Rect(1, 1, 1, 1))
+
+        c = Camera((3, 3), (1, 1), (1, 1))
+        c.fill((0, 0, 0))
+
+        c.source_surface.blit(test_surface, (0, 0))
+
+        # test that the camera is on the black portion of the surface
+        assert compare_surfaces(test_surface.subsurface(pygame.Rect(0, 0, 1, 1)), c)
+
+        # move the camera to center on the surface
+        focal_rect = test_surface.get_rect()
+        c.center_on(focal_rect)
+
+        # test that the camera now sees red
+        assert compare_surfaces(test_surface.subsurface(pygame.Rect(1, 1, 1, 1)), c)
         
