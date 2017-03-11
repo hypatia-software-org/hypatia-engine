@@ -1,0 +1,6 @@
+{
+    "name": "hypatia_demo",
+    "friendly_name": "Hypatia Demo Game",
+    "starting_tilemap": "default",
+    "camera_resolution": [256, 256]
+}
