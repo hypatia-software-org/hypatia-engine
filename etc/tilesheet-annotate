@@ -1,0 +1,58 @@
+#!/usr/bin/env python
+"""Scale a tilesheet up and annotate it with tile ID numbers.
+
+Usage:
+    tilesheet-annotate <input> <tilewidth> <tileheight> <output> [options]
+
+Options:
+    --scale SCALEFACTOR        Scale up the outputted tilesheet by SCALEFACTOR [default: 1]
+    --font FONT                Use the selected font to write the annotations [default: Monospace]
+    --font-size FONTSIZE       Use the selected font size to write the annotations [default: 12]
+    --version                  Print version information and exit.
+    --help                     Print this help message and exit.
+"""
+
+import docopt
+import pygame
+
+
+__version__ = "0.1.0"
+
+def main():
+    args = docopt.docopt(__doc__, version="tilesheet-annotate %s" % __version__)
+
+    pygame.init()
+
+    font = pygame.font.SysFont(args["--font"], int(args["--font-size"]))
+
+    unscaled_source = pygame.image.load(args['<input>'])
+    sf = float(args["--scale"])
+    newsize = (int(unscaled_source.get_width() * sf), int(unscaled_source.get_height() * sf))
+    source = pygame.transform.scale(unscaled_source, newsize)
+
+    tile_count_x = int(unscaled_source.get_width() / int(args['<tilewidth>']))
+    tile_count_y = int(unscaled_source.get_height() / int(args['<tileheight>']))
+
+    tile_width = int(args["<tilewidth>"]) * sf
+    tile_height = int(args["<tileheight>"]) * sf
+
+    for rownum in range(0, tile_count_y):
+        for colnum in range(0, tile_count_x):
+            tileid = (rownum * tile_count_x) + colnum
+            pos = (colnum * tile_width, rownum * tile_height)
+            subsurface = source.subsurface(pygame.Rect(pos, (tile_width, tile_height)))
+
+            if tileid > tile_count_x - 1:
+                subsurface.fill((255, 0, 0), pygame.Rect(0, 0, tile_width, 1))
+            if tileid % tile_count_x != 0:
+                subsurface.fill((255, 0, 0), pygame.Rect(0, 0, 1, tile_height))
+
+            text = font.render("%d" % tileid, True, (255, 0, 0))
+            text_xpos = ((subsurface.get_width() / 2) - (text.get_width() / 2))
+            text_ypos = ((subsurface.get_height() / 2) - (text.get_height() / 2))
+            subsurface.blit(text, (text_xpos, text_ypos))
+
+    pygame.image.save(source, args["<output>"])
+
+if __name__ == "__main__":
+    main()
