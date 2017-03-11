@@ -24,6 +24,10 @@ class MockPopulatedResourcePack(ResourcePack):
             }
         }
 
+class MockClock:
+    def get_time(self):
+        return 1
+
 class MockDisplay:
     def get_size(self):
         return (800, 600)
@@ -31,6 +35,7 @@ class MockDisplay:
 class MockGame:
     def __init__(self):
         self.display = MockDisplay()
+        self.clock = MockClock()
         self.gameconfig = {
             "camera_resolution": (1, 1),
         }

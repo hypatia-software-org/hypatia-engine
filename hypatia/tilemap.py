@@ -61,7 +61,7 @@ class Tilemap:
 
         return cls(layers)
 
-    def _render_layer_tiles_to_surfaces(self):
+    def _render_layer_tiles_to_surfaces(self, timedelta):
         """Renders self.layer_tiles to an array of surfaces and returns 
         that array.
         """
@@ -76,7 +76,7 @@ class Tilemap:
                         row_idx * tile.tilesheet.tile_height
                     )
 
-                    tile.update()
+                    tile.update(timedelta)
 
                     layer_surface.blit(tile.image, pos)
 
@@ -84,7 +84,7 @@ class Tilemap:
 
         return layer_surfaces
 
-    def update(self):
+    def update(self, timedelta):
         if len(self.layer_tiles) is 0:
             self.layer_tiles = []
 
@@ -103,7 +103,7 @@ class Tilemap:
                 self.layer_tiles.append(layer_tiles)
 
         output_surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
-        layer_surfaces = self._render_layer_tiles_to_surfaces()
+        layer_surfaces = self._render_layer_tiles_to_surfaces(timedelta)
 
         for layer_idx, layer_surface in enumerate(layer_surfaces):
             output_surface.blit(layer_surface, (0, 0))

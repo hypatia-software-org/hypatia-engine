@@ -18,8 +18,10 @@ class TilemapScene(Scene):
     def update(self):
         self.create_surface()
 
+        td = self.game.clock.get_time()
+
         self.camera.source_surface.fill((0, 0, 0))
-        self.camera.source_surface.blit(self.tilemap.update(), (0, 0))
+        self.camera.source_surface.blit(self.tilemap.update(td), (0, 0))
         self.camera.update()
 
         self.surface.blit(self.camera, (0, 0))

@@ -24,7 +24,7 @@ class TestTile:
     def test_blank_tile_is_transparent(self):
         tilesheet = Tilesheet(pygame.Surface((2, 2)), 1, 1)
         tile = Tile(tilesheet, -1, TileFlags.NONE)
-        tile.update()
+        tile.update(0)
 
         test_surface = pygame.Surface((1, 1), pygame.SRCALPHA)
 
@@ -41,7 +41,7 @@ class TestTile:
 
         tilesheet = Tilesheet(tilesheet_surface, 1, 1)
         tile = Tile(tilesheet, 1, TileFlags.NONE)
-        tile.update()
+        tile.update(0)
 
         test_surface = pygame.Surface((1, 1), pygame.SRCALPHA)
         test_surface.fill((0, 255, 0))

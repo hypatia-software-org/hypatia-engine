@@ -48,7 +48,7 @@ class TestTilemap:
         ]
 
         tilemap = Tilemap(layer_data)
-        output_surface = tilemap.update()
+        output_surface = tilemap.update(0)
 
         # the outputted tilemap should be identical to the tilesheet image itself
         assert compare_surfaces(output_surface, tilesheet.surface)
@@ -58,7 +58,7 @@ class TestTilemap:
         resourcepack = FilesystemResourcePack(dir_path)
 
         tilemap = Tilemap.from_resource_pack(resourcepack, "testmap")
-        output_surface = tilemap.update()
+        output_surface = tilemap.update(0)
 
         test_surface = pygame.Surface((10, 10))
         test_surface.fill((0, 0, 0))

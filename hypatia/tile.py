@@ -19,7 +19,7 @@ class Tile(pygame.sprite.Sprite):
         self.image = pygame.Surface((tilesheet.tile_width, tilesheet.tile_height), pygame.SRCALPHA)
         self.rect = self.image.get_rect()
 
-    def update(self):
+    def update(self, timedelta):
         # allow blank tiles
         if self.tile_id != -1:
             self.image = self.tilesheet.get_tile_subsurface(self.tile_id)
