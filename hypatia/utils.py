@@ -14,3 +14,7 @@ def compare_surfaces(a, b):
                 return False
 
     return True
+
+def pillow_image_to_pygame_surface(image):
+    image_as_bytes = image.convert("RGBA").tobytes()
+    return pygame.image.fromstring(image_as_bytes, image.size, "RGBA")
