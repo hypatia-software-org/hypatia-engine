@@ -71,3 +71,39 @@ class TestAnimatedSprite:
         test_surface_two.fill((0, 255, 0))
 
         assert compare_surfaces(animsprite.image, test_surface_two)
+    
+    def test_loading_from_resource_pack_gif(self):
+        dir_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'testgame', 'resources')
+        fs = FilesystemResourcePack(dir_path)
+
+        animsprite = AnimatedSprite.from_resource_pack_gif(fs, "test", "normal")
+
+        test_surface_one = pygame.Surface((1, 1))
+        test_surface_one.fill((255, 0, 0))
+
+        assert compare_surfaces(animsprite.image, test_surface_one)
+
+        animsprite.update(100)
+
+        test_surface_two = pygame.Surface((1, 1))
+        test_surface_two.fill((0, 255, 0))
+
+        assert compare_surfaces(animsprite.image, test_surface_two)
+
+    def test_loading_from_resource_pack_png(self):
+        dir_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'testgame', 'resources')
+        fs = FilesystemResourcePack(dir_path)
+
+        animsprite = AnimatedSprite.from_resource_pack_png(fs, "test_png", "normal")
+
+        test_surface_one = pygame.Surface((1, 1))
+        test_surface_one.fill((255, 0, 0))
+
+        assert compare_surfaces(animsprite.image, test_surface_one)
+
+        animsprite.update(100)
+
+        test_surface_two = pygame.Surface((1, 1))
+        test_surface_two.fill((0, 255, 0))
+
+        assert compare_surfaces(animsprite.image, test_surface_two)

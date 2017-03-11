@@ -1,4 +1,5 @@
 import os
+import json
 import pygame
 
 from hypatia.utils import pillow_image_to_pygame_surface
@@ -51,6 +52,32 @@ class AnimatedSprite(pygame.sprite.Sprite):
     @staticmethod
     def get_total_duration(frames):
         return sum([frame.duration for frame in frames])
+
+    @classmethod
+    def from_resource_pack_png(cls, resourcepack, name, action):
+        basepath = os.path.join("/sprites/", name)
+        metadata = json.load(resourcepack.open(os.path.join(basepath, action + os.extsep + "json")))
+
+        digit_format = metadata["digit_format"]
+
+        frames = []
+        duration_count = 0
+        for idx, frame_duration in enumerate(metadata['frame_durations']):
+            filename = action + (digit_format % idx) + os.extsep + "png"
+            path = os.path.join(basepath, filename)
+
+            surface = pygame.image.load(resourcepack.open(path))
+
+            frame = Frame(surface, duration_count, frame_duration)
+            frames.append(frame)
+
+            duration_count += frame_duration
+
+        return cls(frames)
+
+    @classmethod
+    def from_resource_pack_gif(cls, resourcepack, name, action):
+        return cls.from_gif(resourcepack.open(os.path.join("/sprites/", name, action + os.extsep + "gif")))
 
     @classmethod
     def from_gif(cls, fileobj):
