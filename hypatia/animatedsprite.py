@@ -40,6 +40,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
 
         if self.animation_position >= self.total_duration:
             self.animation_position = self.animation_position % self.total_duration
+            self.active_frame_idx = 0
 
         # get the actual current frame
         while self.animation_position >= self.frames[self.active_frame_idx].end_time:
