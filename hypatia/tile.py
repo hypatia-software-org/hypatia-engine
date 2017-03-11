@@ -30,8 +30,6 @@ class Tile(pygame.sprite.Sprite):
                 frames.append(Frame(surface, duration, tileduration))
                 duration += tileduration
 
-            print(repr(frames))
-
             self.animatedsprite = AnimatedSprite(frames)
 
     def update(self, timedelta):
