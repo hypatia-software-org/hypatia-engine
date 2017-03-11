@@ -29,7 +29,7 @@ class TestTilesheet:
         assert tilesheet.tile_width == 1
         assert tilesheet.tile_height == 1
         assert tilesheet.tile_count_x == 2
-        assert tilesheet.tile_count_y == 2
+        assert tilesheet.tile_count_y == 3
 
     def test_get_tile_position(self):
         dir_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'testgame', 'resources')

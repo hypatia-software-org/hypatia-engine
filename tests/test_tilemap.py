@@ -50,8 +50,12 @@ class TestTilemap:
         tilemap = Tilemap(layer_data)
         output_surface = tilemap.update(0)
 
-        # the outputted tilemap should be identical to the tilesheet image itself
-        assert compare_surfaces(output_surface, tilesheet.surface)
+        test_surface = pygame.Surface((2, 2))
+        test_surface.fill((255, 0, 0), pygame.Rect(1, 0, 1, 1))
+        test_surface.fill((0, 255, 0), pygame.Rect(0, 1, 1, 1))
+        test_surface.fill((0, 0, 255), pygame.Rect(1, 1, 1, 1))
+
+        assert compare_surfaces(output_surface, test_surface)
 
     def test_rendering_multiple_layers(self):
         dir_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'testgame', 'resources')
@@ -64,5 +68,6 @@ class TestTilemap:
         test_surface.fill((0, 0, 0))
         test_surface.fill((255, 0, 0), pygame.Rect(3, 3, 4, 4))
         test_surface.fill((0, 255, 0), pygame.Rect(4, 4, 2, 2))
+        test_surface.fill((0, 127, 127), pygame.Rect(0, 0, 1, 1))
 
         assert compare_surfaces(output_surface, test_surface)

@@ -5,11 +5,11 @@ import pygame
 from hypatia.tile import Tile, TileFlags
 
 class Tilesheet:
-    def __init__(self, surface, tile_width, tile_height, tile_flags={}):
+    def __init__(self, surface, tile_width, tile_height, tile_metadata={}):
         self.surface = surface
         self.tile_width = tile_width
         self.tile_height = tile_height
-        self.tile_flags = tile_flags
+        self.tile_metadata = tile_metadata
 
         surfacewidth = self.surface.get_width()
         if surfacewidth % self.tile_width != 0:
@@ -33,17 +33,21 @@ class Tilesheet:
         metadata = json.load(resourcepack.open(os.path.join("/tilesheets", tilesheet_name, "tilesheet.json")))
 
         (tile_width, tile_height) = [int(a) for a in metadata['tile_size'].split("x")]
-        tile_flags = metadata["flags"] if "flags" in metadata else {}
+        tile_metadata = metadata["tile_metadata"] if "tile_metadata" in metadata else {}
 
-        return cls(surface, tile_width, tile_height, tile_flags)
+        return cls(surface, tile_width, tile_height, tile_metadata)
 
     def get_tile(self, tile_id):
-        flags = TileFlags.NONE
-        if tile_id in self.tile_flags:
-            for flag in self.tile_flags[tile_id]:
-                flags = flags | TileFlags[flag]
+        tile_id_str = "%d" % tile_id
+        tileflags = TileFlags.NONE
+        if tile_id_str in self.tile_metadata:
+            flags = self.tile_metadata[tile_id_str]["flags"] if "flags" in self.tile_metadata[tile_id_str] else []
+            for flag in flags:
+                tileflags = tileflags | TileFlags[flag]
 
-        tile = Tile(self, tile_id, flags)
+        data = self.tile_metadata[tile_id_str] if tile_id_str in self.tile_metadata else {}
+
+        tile = Tile(self, tile_id, tileflags, data)
         return tile
 
     def get_tile_subsurface(self, tile_id):

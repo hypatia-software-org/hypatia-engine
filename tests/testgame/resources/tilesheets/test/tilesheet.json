@@ -1,3 +1,12 @@
 {
-    "tile_size": "1x1"
+    "tile_size": "1x1",
+    "tile_metadata": {
+        "4": {
+            "flags": ["ANIMATED"],
+            "animation": [
+                [4, 1000],
+                [5, 1000]
+            ]
+        }
+    }
 }
