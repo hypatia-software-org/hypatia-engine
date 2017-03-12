@@ -5,6 +5,7 @@ Usage:
     hypatia new-game <path> [options]
 
 Options:
+    --sdl2       Enable pygame_sdl2.
     --version    Display Hypatia version and exit.
     --help       Display this help notice and exit.
 
@@ -14,13 +15,17 @@ import os
 import docopt
 
 from hypatia import __version__
-from hypatia.game import Game
 
 
 def main():
     args = docopt.docopt(__doc__, version=f"Hypatia Engine {__version__}")
 
+    if args["--sdl2"]:
+        import pygame_sdl2
+        pygame_sdl2.import_as_pygame()
+
     if args['run']:
+        from hypatia.game import Game
         game = Game(args['<path>'])
         game.run()
 
