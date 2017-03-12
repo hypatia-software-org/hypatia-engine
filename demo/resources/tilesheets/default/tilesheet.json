@@ -1,8 +1,98 @@
 {
-    "tile_size": "16x16",
+    "tile_size": [16, 16],
     "tile_metadata": {
+        "176": {
+            "flags": ["SOLID"]
+        },
+        "177": {
+            "flags": ["SOLID"]
+        },
+        "178": {
+            "flags": ["SOLID"]
+        },
+        "179": {
+            "flags": ["SOLID"]
+        },
+        "180": {
+            "flags": ["SOLID"]
+        },
+        "181": {
+            "flags": ["SOLID"]
+        },
+        "182": {
+            "flags": ["SOLID"]
+        },
+        "183": {
+            "flags": ["SOLID"]
+        },
+        "184": {
+            "flags": ["SOLID"]
+        },
+        "186": {
+            "flags": ["SOLID"]
+        },
+        "201": {
+            "flags": ["SOLID"]
+        },
+        "209": {
+            "flags": ["SOLID"]
+        },
+        "211": {
+            "flags": ["SOLID"]
+        },
+        "226": {
+            "flags": ["SOLID"]
+        },
+        "234": {
+            "flags": ["SOLID"]
+        },
+        "251": {
+            "flags": ["SOLID"]
+        },
+        "252": {
+            "flags": ["SOLID"]
+        },
+        "253": {
+            "flags": ["SOLID"]
+        },
+        "254": {
+            "flags": ["SOLID"]
+        },
+        "256": {
+            "flags": ["SOLID"]
+        },
+        "257": {
+            "flags": ["SOLID"]
+        },
+        "258": {
+            "flags": ["SOLID"]
+        },
+        "259": {
+            "flags": ["SOLID"]
+        },
+        "286": {
+            "flags": ["SOLID"]
+        },
+        "287": {
+            "flags": ["SOLID"]
+        },
+        "288": {
+            "flags": ["SOLID"]
+        },
+        "301": {
+            "flags": ["SOLID"]
+        },
+        "302": {
+            "flags": ["SOLID"]
+        },
+        "303": {
+            "flags": ["SOLID"]
+        },
+        "304": {
+            "flags": ["SOLID"]
+        },
         "305": {
-            "flags": ["ANIMATED"],
+            "flags": ["SOLID", "ANIMATED"],
             "animation": [
                 [303, 1000],
                 [304, 1000]

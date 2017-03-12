@@ -1,3 +1,5 @@
+import pygame
+
 from hypatia.resources import ResourcePack
 
 
@@ -32,10 +34,21 @@ class MockDisplay:
     def get_size(self):
         return (800, 600)
 
+    def get_width(self):
+        return 800
+
+    def get_height(self):
+        return 600
+
+
 class MockGame:
     def __init__(self):
         self.display = MockDisplay()
         self.clock = MockClock()
+
+        pygame.font.init()
+        self.font = pygame.font.Font(None, 24)
+
         self.gameconfig = {
-            "camera_resolution": (1, 1),
+            "camera_resolution": (2, 2),
         }

@@ -32,7 +32,7 @@ class Tilesheet:
 
         metadata = json.load(resourcepack.open(os.path.join("/tilesheets", tilesheet_name, "tilesheet.json")))
 
-        (tile_width, tile_height) = [int(a) for a in metadata['tile_size'].split("x")]
+        (tile_width, tile_height) = [int(a) for a in metadata['tile_size']]
         tile_metadata = metadata["tile_metadata"] if "tile_metadata" in metadata else {}
 
         return cls(surface, tile_width, tile_height, tile_metadata)

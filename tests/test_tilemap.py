@@ -4,7 +4,7 @@ import pygame
 from hypatia.utils import compare_surfaces
 from hypatia.resources.filesystem import FilesystemResourcePack
 from hypatia.tilesheet import Tilesheet
-from hypatia.tilemap import Tilemap
+from hypatia.tilemap import Tilemap, TilemapTileFlags
 
 class TestTilemap:
     def test_creation_from_passed_data(self):
@@ -20,7 +20,12 @@ class TestTilemap:
             ]
         ]
 
-        tilemap = Tilemap(layer_data)
+        player_data = {
+            "layer": 0,
+            "start_pos": [0, 0]
+        }
+
+        tilemap = Tilemap(layer_data, player_data)
 
         assert tilemap.width == 2
         assert tilemap.height == 2
@@ -47,8 +52,16 @@ class TestTilemap:
             ]
         ]
 
-        tilemap = Tilemap(layer_data)
-        output_surface = tilemap.update(0)
+        player_data = {
+            "layer": 0,
+            "start_pos": [0, 0]
+        }
+
+        tilemap = Tilemap(layer_data, player_data)
+        output_surface = pygame.Surface((2, 2))
+        output_surfaces = tilemap.update(0)
+        for i in output_surfaces:
+            output_surface.blit(i, (0, 0))
 
         test_surface = pygame.Surface((2, 2))
         test_surface.fill((255, 0, 0), pygame.Rect(1, 0, 1, 1))
@@ -62,7 +75,10 @@ class TestTilemap:
         resourcepack = FilesystemResourcePack(dir_path)
 
         tilemap = Tilemap.from_resource_pack(resourcepack, "testmap")
-        output_surface = tilemap.update(0)
+        output_surface = pygame.Surface((10, 10))
+        output_surfaces = tilemap.update(0)
+        for i in output_surfaces:
+            output_surface.blit(i, (0, 0))
 
         test_surface = pygame.Surface((10, 10))
         test_surface.fill((0, 0, 0))
@@ -71,3 +87,21 @@ class TestTilemap:
         test_surface.fill((0, 127, 127), pygame.Rect(0, 0, 1, 1))
 
         assert compare_surfaces(output_surface, test_surface)
+
+    def test_tilemap_tile_flags(self):
+        dir_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'testgame', 'resources')
+        resourcepack = FilesystemResourcePack(dir_path)
+
+        tilemap = Tilemap.from_resource_pack(resourcepack, "testmap")
+        tilemap.update(0)
+
+        assert tilemap.layer_tiles[0][1][1]["flags"] & TilemapTileFlags.STATIC_NPC == TilemapTileFlags.STATIC_NPC
+
+    def test_tilemap_tile_metadata(self):
+        dir_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'testgame', 'resources')
+        resourcepack = FilesystemResourcePack(dir_path)
+
+        tilemap = Tilemap.from_resource_pack(resourcepack, "testmap")
+        tilemap.update(0)
+
+        assert "lines_to_say" in tilemap.layer_tiles[0][1][1]["metadata"] 

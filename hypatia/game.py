@@ -63,7 +63,14 @@ class Game:
 
     def run(self):
         pygame.init()
-        self.font = pygame.font.Font(None, 24)
+
+        if self.gameconfig["font_face"] != "default":
+            font_obj = self.resourcepack.open(os.path.join("/fonts", self.gameconfig["font_face"]))
+        else:
+            font_obj = None
+
+        self.font = pygame.font.Font(font_obj, int(self.gameconfig['font_size']))
+
         self.running = True
 
         if self.userconfig['display']['fullscreen']:
@@ -71,8 +78,7 @@ class Game:
         else:
             self.display = pygame.display.set_mode(self.userconfig['display']['window_size'])
 
-        tilemap = Tilemap.from_resource_pack(self.resourcepack, self.gameconfig['starting_tilemap'])
-        self.scene_push(TilemapScene, tilemap)
+        self.scene_push(TilemapScene, self.resourcepack, self.gameconfig['starting_tilemap'], self.gameconfig["player_character"])
 
         while self.running:
             self.display.fill((0, 0, 0))

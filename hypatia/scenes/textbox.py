@@ -24,13 +24,16 @@ class TextBoxScene(Scene):
         except KeyError:
             pass
 
+        except AttributeError:
+            pass
+
         width = self.game.display.get_width() - 20 - 20
         line = self.lines[self.current_line]
         lines = wrap_line(self.game.font, width, line)
         
         height = sum([self.game.font.size(line)[1] for line in lines]) + ((len(lines) - 1) * 10)
 
-        ypos = self.game.display.get_height() - height - 10
+        ypos = self.game.display.get_height() - height - 20
         rect = pygame.Rect(10, ypos, width + 20, height)
         self.surface.fill((0, 0, 0), rect)
 

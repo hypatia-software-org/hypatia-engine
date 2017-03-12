@@ -81,6 +81,13 @@ class ResourcePack:
             else:
                 raise FileNotFound(ROOT + PATHSEP.join(collected))
 
+    def exists(self, path):
+        try:
+            self._parse_tree_for_entry(path)
+            return True
+        except FileNotFound: 
+            return False
+
     def _update_file_contents(self, path, contents):
         path = self.normalize(path)
         entry = self._parse_tree_for_entry(path)
