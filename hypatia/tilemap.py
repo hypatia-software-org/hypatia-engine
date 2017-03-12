@@ -8,7 +8,9 @@ from hypatia.tilesheet import Tilesheet
 
 class TilemapTileFlags(IntEnum):
     NONE = 0
-    STATIC_NPC = 1
+    OBJECT = 1
+    STATIC_NPC = 2
+    TELEPORTER = 4
 
 class Tilemap:
     def __init__(self, layers, player_data):
@@ -56,7 +58,7 @@ class Tilemap:
 
                     tilesheet = tilesheets[tilesheet_idx]
 
-                    tilepos_str = f"{row_idx:d},{column_idx:d}"
+                    tilepos_str = f"{column_idx:d},{row_idx:d}"
                     tileflags = TilemapTileFlags.NONE
                     tile_metadata = {}
                     if "tile_metadata" in raw_data and tilepos_str in raw_data["tile_metadata"]:
@@ -149,7 +151,7 @@ class Tilemap:
                         }
 
                         if "tile_flags" in tile_data:
-                            if (tile_data["tile_flags"] & TilemapTileFlags.STATIC_NPC) == TilemapTileFlags.STATIC_NPC:
+                            if (tile_data["tile_flags"] & TilemapTileFlags.OBJECT) == TilemapTileFlags.OBJECT:
                                 our_tile_data["actual_tile"] = tile
                                 from hypatia.character import TileNPCCharacter
                                 character = TileNPCCharacter(our_tile_data)

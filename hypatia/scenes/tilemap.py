@@ -9,8 +9,11 @@ from hypatia.scenes.textbox import TextBoxScene
 
 
 class TilemapScene(Scene):
-    def __init__(self, game, resourcepack, mapname, playername):
+    def __init__(self, game, resourcepack, mapname, playername, start_pos=None):
         super().__init__(game)
+
+        self.resourcepack = resourcepack
+        self.player_name = playername
 
         self.tilemap = Tilemap.from_resource_pack(resourcepack, mapname)
 
@@ -22,9 +25,13 @@ class TilemapScene(Scene):
 
         self.player = Character.from_resource_pack(resourcepack, playername)
 
-        player_x = self.tilemap.player_data["start_pos"][0] * self.tilemap.layer_data[0][0][0]["tilesheet"].tile_width
-        player_y = self.tilemap.player_data["start_pos"][1] * self.tilemap.layer_data[0][0][0]["tilesheet"].tile_height
-        self.player_pos = [player_x, player_y]
+        if start_pos is None:
+            start_pos = self.tilemap.player_data["start_pos"]
+
+        self.player_pos = [
+            start_pos[0] * self.tilemap.layer_data[0][0][0]["tilesheet"].tile_width,
+            start_pos[1] * self.tilemap.layer_data[0][0][0]["tilesheet"].tile_height
+        ]
 
         self.player_movement_speed = [0, 0]
         self.direction_facing = "north"
@@ -92,8 +99,9 @@ class TilemapScene(Scene):
         if self.direction_facing == "north":
             if tile_y == 0:
                 return
-            
+
             tile = self.tilemap.layer_tiles[0][tile_y - 1][tile_x]
+
         elif self.direction_facing == "south":
             if tile_y + 1 == len(self.tilemap.layer_tiles[0]):
                 return
@@ -116,6 +124,12 @@ class TilemapScene(Scene):
             output = tile["tile"].interact()
             if "say" in output:
                 self.game.scene_push(TextBoxScene, output["say"])
+
+            elif "teleport" in output:
+                mapname = output["teleport"]["map"]
+                startpos = output["teleport"]["start_pos"]
+
+                self.game.scene_push(self.__class__, self.resourcepack, mapname, self.player_name, start_pos=startpos)
 
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:

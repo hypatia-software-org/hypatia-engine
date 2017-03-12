@@ -36,7 +36,7 @@
     ],
     "tile_metadata": {
         "1,1": {
-            "flags": ["STATIC_NPC"],
+            "flags": ["OBJECT", "STATIC_NPC"],
             "lines_to_say": [
                 "test"
             ]

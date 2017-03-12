@@ -64,5 +64,15 @@ class TileNPCCharacter(Character):
     def interact(self):
         if (self.tile_data["flags"] & TilemapTileFlags.STATIC_NPC) == TilemapTileFlags.STATIC_NPC: 
             return {
-                "say": self.tile_data["metadata"]["lines_to_say"]
+                "say": self.tile_data["metadata"]["lines_to_say"],
             }
+
+        elif (self.tile_data["flags"] & TilemapTileFlags.TELEPORTER) == TilemapTileFlags.TELEPORTER:
+            return {
+                "teleport": {
+                    "map": self.tile_data["metadata"]["teleport_map"],
+                    "start_pos": self.tile_data["metadata"]["teleport_pos"] if "teleport_pos" in self.tile_data["metadata"] else None,
+                }
+            }
+
+        return {}
