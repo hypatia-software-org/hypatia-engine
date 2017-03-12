@@ -1,10 +1,12 @@
 import os
 import json
 import pygame
+import traceback
 
 from hypatia.default_config import default_game_config, default_user_config
 from hypatia.resources.filesystem import FilesystemResourcePack
 from hypatia.tilemap import Tilemap
+from hypatia.scenes.traceback import TracebackScene
 from hypatia.scenes.tilemap import TilemapScene
 
 
@@ -84,7 +86,16 @@ class Game:
             self.display.fill((0, 0, 0))
 
             # update current scene
-            self.scene_stack[-1].update()
+            try:
+                self.scene_stack[-1].update()
+            except Exception as ex:
+                if isinstance(self.scene_stack[-1], TracebackScene):
+                    raise
+
+                tb = traceback.format_exc()
+                self.scene_push(TracebackScene, ex, tb)
+                continue
+
             self.display.blit(self.scene_stack[-1].surface, (0, 0))
 
             # handle events
@@ -92,7 +103,15 @@ class Game:
                 if ev.type == pygame.QUIT:
                     self.running = False
 
-                self.scene_stack[-1].handle_event(ev)
+                try:
+                    self.scene_stack[-1].handle_event(ev)
+                except Exception as ex:
+                    if isinstance(self.scene_stack[-1], TracebackScene):
+                        raise
+
+                    tb = traceback.format_exc()
+                    self.scene_push(TracebackScene, ex, tb)
+                    continue
 
             # display FPS if it's asked for
             if 'fpsdisplay' in self.userconfig['display'] and self.userconfig['display']['fpsdisplay'] is True:
