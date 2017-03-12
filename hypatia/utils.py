@@ -1,5 +1,8 @@
 import pygame
 
+from PIL import Image, ImageFilter
+
+
 def compare_surfaces(a, b):
     """\
     Compare the two given surfaces, returning True if they are identical.
@@ -31,3 +34,44 @@ def keysym_to_keyname(keysym):
             return i
     
     return None
+
+def wrap_line(font, target_width, line):
+    lines = []
+    currentline = []
+    words = line.split()
+
+    if font.size(line)[0] <= target_width:
+        return [line]
+
+    i = 0
+
+    while True:
+        length = 0
+
+        while length <= target_width:
+            if len(words) is 0:
+                break
+
+            word = words.pop(0)
+            currentline.append(word)
+            length = font.size(" ".join(currentline))[0]
+
+        if len(currentline) is 0:
+            break
+
+        lines.append(" ".join(currentline))
+        currentline = []
+
+    return lines
+
+def blur_surface(surface, radius=6):
+    size = surface.get_size()
+    data = pygame.image.tostring(surface, "RGBA")
+
+    pil_image = Image.frombytes("RGBA", size, data)
+    pil_blurred = pil_image.filter(ImageFilter.GaussianBlur(radius=radius))
+    pil_data = pil_blurred.tobytes("raw", "RGBA")
+
+    pygame_blurred = pygame.image.fromstring(pil_data, size, "RGBA")
+
+    return pygame_blurred
