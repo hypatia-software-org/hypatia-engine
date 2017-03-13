@@ -1,7 +1,9 @@
 import os
+import sys
 import json
 import pygame
 import traceback
+import importlib.util
 
 from hypatia.default_config import default_game_config, default_user_config
 from hypatia.resources.filesystem import FilesystemResourcePack
@@ -46,6 +48,8 @@ class Game:
             with open(user_config_path, 'w') as fh:
                 json.dump(self.userconfig, fh, sort_keys=True, indent=4)
 
+        self.import_modules_from_game_dir()
+
         self.resourcepack = FilesystemResourcePack(os.path.join(path, "resources"))
 
         self.clock = pygame.time.Clock()
@@ -62,6 +66,53 @@ class Game:
     def scene_replace(self, scenecls, *args, **kwargs):
         self.scene_stack = []
         self.scene_push(scenecls, *args, **kwargs)
+
+    def import_modules_from_game_dir(self):
+        basepath = os.path.join(self.path, "lib")
+        for root, dirs, files in os.walk(basepath):
+            path = root[len(basepath):]
+            if path.startswith("/"):
+                path = path[1:]
+
+            module_path_ary = [self.gamename]
+            for i in path.split(os.sep):
+                if i is not "":
+                    module_path_ary.append(i)
+
+            files_sorted = files
+            if "__init__.py" in files:
+                index = files.index("__init__.py")
+                files_sorted.pop(index)
+                files_sorted.insert(0, "__init__.py")
+
+            for filename in files_sorted:
+                new_module_path_ary = []
+
+                if not filename.endswith(".py"):
+                    continue
+
+                if filename == "__init__.py":
+                    new_module_path_ary = module_path_ary
+                    module_path = ".".join(new_module_path_ary)
+                else:
+                    module_name = os.path.splitext(filename)[0]
+                    new_module_path_ary = module_path_ary + [module_name]
+                    module_path = ".".join(new_module_path_ary)
+
+                # load the module
+                abspath = os.path.join(os.path.abspath(root), filename)
+                spec = importlib.util.spec_from_file_location(module_path, abspath)
+                mod = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(mod)
+
+                # add the module to sys.modules so it's importable by other pieces of code
+                sys.modules[module_path] = mod
+
+                # if this module has a parent, add an attr to it with the new module
+                if len(new_module_path_ary) > 1:
+                    parent = sys.modules[".".join(new_module_path_ary[:-1])]
+                    setattr(parent, module_name, mod)
+
 
     def run(self):
         pygame.init()
