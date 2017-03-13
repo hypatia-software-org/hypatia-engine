@@ -14,6 +14,12 @@ class TestResourcePack:
 
         assert ResourcePack.normalize(teststr) == result
 
+    def test_path_joining(self):
+        assert ResourcePack.join("a", "b", "c") == "a/b/c"
+
+    def test_path_joining_with_list(self):
+        assert ResourcePack.join(["a", "b", "c"]) == "a/b/c"
+
     def test_parse_tree_for_entry_root_file(self):
         f = MockPopulatedResourcePack()
         out = f._parse_tree_for_entry("/testfile")

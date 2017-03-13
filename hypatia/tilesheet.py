@@ -27,10 +27,10 @@ class Tilesheet:
 
     @classmethod
     def from_resource_pack(cls, resourcepack, tilesheet_name):
-        imagefile = resourcepack.open(os.path.join("/tilesheets", tilesheet_name, "tilesheet.png"))
+        imagefile = resourcepack.open(resourcepack.join("/tilesheets", tilesheet_name, "tilesheet.png"))
         surface = pygame.image.load(imagefile)
 
-        metadata = json.load(resourcepack.open(os.path.join("/tilesheets", tilesheet_name, "tilesheet.json")))
+        metadata = json.load(resourcepack.open(resourcepack.join("/tilesheets", tilesheet_name, "tilesheet.json")))
 
         (tile_width, tile_height) = [int(a) for a in metadata['tile_size']]
         tile_metadata = metadata["tile_metadata"] if "tile_metadata" in metadata else {}

@@ -118,7 +118,7 @@ class Game:
         pygame.init()
 
         if self.gameconfig["font_face"] != "default":
-            font_obj = self.resourcepack.open(os.path.join("/fonts", self.gameconfig["font_face"]))
+            font_obj = self.resourcepack.open(self.resourcepack.join("/fonts", self.gameconfig["font_face"]))
         else:
             font_obj = None
 

@@ -34,7 +34,7 @@ class Tilemap:
 
     @classmethod
     def from_resource_pack(cls, resourcepack, mapname):
-        raw_data = json.load(resourcepack.open(os.path.join("/maps", mapname + os.extsep + "json")))
+        raw_data = json.load(resourcepack.open(resourcepack.join("/maps", mapname + os.extsep + "json")))
 
         layers = []
         tilesheets = []

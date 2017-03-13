@@ -20,12 +20,12 @@ class Character(pygame.sprite.Sprite):
 
     @classmethod
     def from_resource_pack(cls, resourcepack, name):
-        basepath = os.path.join("/sprites", name)
+        basepath = resourcepack.join("/sprites", name)
         sprites = {}
 
         for type in cls.SPRITE_TYPES:
             try:
-                if resourcepack.exists(os.path.join(basepath, type + os.extsep + "gif")):
+                if resourcepack.exists(resourcepack.join(basepath, type + os.extsep + "gif")):
                     sprite = AnimatedSprite.from_resource_pack_gif(resourcepack, name, type)
                 else:
                     sprite = AnimatedSprite.from_resource_pack_png(resourcepack, name, type)

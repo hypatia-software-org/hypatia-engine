@@ -10,8 +10,19 @@ class ResourcePack:
         self.content = {"type": "dir", "content": {}}
         self._modified_since_last_save = []
     
-    @staticmethod
-    def normalize(path):
+    @classmethod
+    def join(cls, *path_fragments):
+        """\
+        Join the given path fragments together, returning a normalized path.
+        """
+
+        if len(path_fragments) is 1 and isinstance(path_fragments[0], list):
+            path_fragments = path_fragments[0]
+
+        return cls.normalize(PATHSEP.join(path_fragments))
+
+    @classmethod
+    def normalize(cls, path):
         """\
         Normalize a path, removing extraneous path separators and references
         to the current directory, as well as correctly handling '..'.
