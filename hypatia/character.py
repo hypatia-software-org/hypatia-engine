@@ -75,4 +75,19 @@ class TileNPCCharacter(Character):
                 }
             }
 
-        return {}
+        elif (self.tile_data["flags"] & TilemapTileFlags.CUSTOM_CODE) == TilemapTileFlags.CUSTOM_CODE:
+            modpath, funcname = self.tile_data["metadata"]["function"].split(":")
+
+            mod = __import__(modpath)
+
+            for i in modpath.split(".")[1:]:
+                mod = getattr(mod, i, None)
+                if mod is None:
+                    return None
+
+            if not hasattr(mod, funcname):
+                return None
+
+            return getattr(mod, funcname)()
+
+        return None

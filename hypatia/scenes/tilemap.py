@@ -122,6 +122,9 @@ class TilemapScene(Scene):
 
         if hasattr(tile["tile"], "interact"):
             output = tile["tile"].interact()
+            if output is None:
+                return
+
             if "say" in output:
                 self.game.scene_push(TextBoxScene, output["say"])
 

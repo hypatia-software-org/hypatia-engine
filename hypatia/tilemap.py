@@ -11,6 +11,7 @@ class TilemapTileFlags(IntEnum):
     OBJECT = 1
     STATIC_NPC = 2
     TELEPORTER = 4
+    CUSTOM_CODE = 8
 
 class Tilemap:
     def __init__(self, layers, player_data):

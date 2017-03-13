@@ -1,7 +1,7 @@
 {
     "name": "hypatia_demo",
     "friendly_name": "Hypatia Demo Game",
-    "starting_tilemap": "default",
+    "starting_tilemap": "testworld",
     "player_character": "player",
     "camera_resolution": [256, 256],
     "font_face": "mononoki.ttf",
