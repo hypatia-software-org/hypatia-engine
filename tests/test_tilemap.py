@@ -13,19 +13,25 @@ class TestTilemap:
 
         tilesheet = Tilesheet.from_resource_pack(resourcepack, "test")
 
-        layer_data = [
-            [
-                [{"tilesheet": tilesheet, "tile_id": 0}, {"tilesheet": tilesheet, "tile_id": 1}],
-                [{"tilesheet": tilesheet, "tile_id": 2}, {"tilesheet": tilesheet, "tile_id": 3}],
-            ]
-        ]
-
-        player_data = {
-            "layer": 0,
-            "start_pos": [0, 0]
+        data = {
+            "player": {
+                "layer": 0,
+                "start_pos": [0, 0],
+            },
+            "layers": [
+                [
+                    ["0:0", "0:1"],
+                    ["0:2", "0:3"],
+                ],
+            ],
+            "tilesheets": [
+                {
+                    "name": "test",
+                },
+            ],
         }
 
-        tilemap = Tilemap(layer_data, player_data)
+        tilemap = Tilemap(data, [tilesheet])
 
         assert tilemap.width == 2
         assert tilemap.height == 2
@@ -45,19 +51,27 @@ class TestTilemap:
 
         tilesheet = Tilesheet.from_resource_pack(resourcepack, "test")
 
-        layer_data = [
-            [
-                [{"tilesheet": tilesheet, "tile_id": 0}, {"tilesheet": tilesheet, "tile_id": 1}],
-                [{"tilesheet": tilesheet, "tile_id": 2}, {"tilesheet": tilesheet, "tile_id": 3}],
-            ]
-        ]
 
-        player_data = {
-            "layer": 0,
-            "start_pos": [0, 0]
+        data = {
+            "player": {
+                "layer": 0,
+                "start_pos": [0, 0],
+            },
+            "layers": [
+                [
+                    ["0:0", "0:1"],
+                    ["0:2", "0:3"],
+                ],
+            ],
+            "tilesheets": [
+                {
+                    "name": "test",
+                },
+            ],
         }
 
-        tilemap = Tilemap(layer_data, player_data)
+        tilemap = Tilemap(data, [tilesheet])
+
         output_surface = pygame.Surface((2, 2))
         output_surfaces = tilemap.update(0)
         for i in output_surfaces:
@@ -95,7 +109,7 @@ class TestTilemap:
         tilemap = Tilemap.from_resource_pack(resourcepack, "testmap")
         tilemap.update(0)
 
-        assert tilemap.layer_tiles[0][1][1]["flags"] & TilemapTileFlags.STATIC_NPC == TilemapTileFlags.STATIC_NPC
+        assert tilemap.tile_data[0][1][1]["flags"] & TilemapTileFlags.STATIC_NPC == TilemapTileFlags.STATIC_NPC
 
     def test_tilemap_tile_metadata(self):
         dir_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'testgame', 'resources')
@@ -104,4 +118,4 @@ class TestTilemap:
         tilemap = Tilemap.from_resource_pack(resourcepack, "testmap")
         tilemap.update(0)
 
-        assert "lines_to_say" in tilemap.layer_tiles[0][1][1]["metadata"] 
+        assert "lines_to_say" in tilemap.tile_data[0][1][1]["metadata"] 

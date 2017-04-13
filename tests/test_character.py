@@ -14,7 +14,7 @@ class TestTileNPCCharacter:
         tilemap = Tilemap.from_resource_pack(resourcepack, "testmap")
         tilemap.update(0)
 
-        data = tilemap.layer_tiles[0][1][1]["tile"].interact()
+        data = tilemap.tile_data[0][1][1]["tile"].interact()
 
         assert "say" in data
         assert "test" in data["say"]
