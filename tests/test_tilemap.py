@@ -119,3 +119,42 @@ class TestTilemap:
         tilemap.update(0)
 
         assert "lines_to_say" in tilemap.tile_data[0][1][1]["metadata"] 
+
+    def test_dump_to_obj(self):
+        dir_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'testgame', 'resources')
+        resourcepack = FilesystemResourcePack(dir_path)
+
+        tilesheet = Tilesheet.from_resource_pack(resourcepack, "test")
+
+        data = {
+            "player": {
+                "layer": 0,
+                "start_pos": [0, 0],
+            },
+            "layers": [
+                [
+                    ["0:0", "0:1"],
+                    ["0:2", "0:3"],
+                ],
+            ],
+            "tilesheets": [
+                {
+                    "name": "test",
+                },
+            ],
+            "tile_metadata":{
+                "0,0": {
+                    "flags": ["OBJECT", "STATIC_NPC"],
+                    "lines_to_say": [
+                        "Test!"
+                    ]
+                }
+            }
+        }
+
+        tilemap = Tilemap(data, [tilesheet])
+        output = tilemap.dump_to_obj()
+
+        assert output["layers"][0][0] == ["0:0", "0:1"]
+        assert output["tilesheets"][0] == {"name": "test"}
+        assert "STATIC_NPC" in output["tile_metadata"]["0,0"]["flags"]
