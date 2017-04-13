@@ -62,12 +62,12 @@ class TileNPCCharacter(Character):
         return self.tile_data["actual_tile"].is_animated()
 
     def interact(self):
-        if (self.tile_data["flags"] & TilemapTileFlags.STATIC_NPC) == TilemapTileFlags.STATIC_NPC: 
+        if TilemapTileFlags.STATIC_NPC in self.tile_data["flags"]: 
             return {
                 "say": self.tile_data["metadata"]["lines_to_say"],
             }
 
-        elif (self.tile_data["flags"] & TilemapTileFlags.TELEPORTER) == TilemapTileFlags.TELEPORTER:
+        elif TilemapTileFlags.TELEPORTER in self.tile_data["flags"]:
             return {
                 "teleport": {
                     "map": self.tile_data["metadata"]["teleport_map"],
@@ -75,7 +75,7 @@ class TileNPCCharacter(Character):
                 }
             }
 
-        elif (self.tile_data["flags"] & TilemapTileFlags.CUSTOM_CODE) == TilemapTileFlags.CUSTOM_CODE:
+        elif TilemapTileFlags.CUSTOM_CODE in self.tile_data["flags"]:
             modpath, funcname = self.tile_data["metadata"]["function"].split(":")
 
             mod = __import__(modpath)

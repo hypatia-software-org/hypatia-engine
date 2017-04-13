@@ -1,10 +1,10 @@
 import pygame
 
-from enum import IntEnum
+from enum import IntFlag
 from hypatia.animatedsprite import Frame, AnimatedSprite
 
 
-class TileFlags(IntEnum):
+class TileFlags(IntFlag):
     NONE = 0
     SOLID = 1
     DESTRUCTIBLE = 2
@@ -45,11 +45,11 @@ class Tile(pygame.sprite.Sprite):
             self.rect = self.image.get_rect()
 
     def is_solid(self):
-        return self.tile_flags & TileFlags.SOLID == TileFlags.SOLID
+        return TileFlags.SOLID in self.tile_flags
 
     def is_destructible(self):
-        return self.tile_flags & TileFlags.DESTRUCTIBLE == TileFlags.DESTRUCTIBLE
+        return TileFlags.DESTRUCTIBLE in self.tile_flags
 
     def is_animated(self):
-        return self.tile_flags & TileFlags.ANIMATED == TileFlags.ANIMATED
+        return TileFlags.ANIMATED in self.tile_flags
 
