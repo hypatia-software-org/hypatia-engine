@@ -29,8 +29,8 @@ class TilemapScene(Scene):
             start_pos = self.tilemap.player_data["start_pos"]
 
         self.player_pos = [
-            start_pos[0] * self.tilemap.layer_data[0][0][0]["tilesheet"].tile_width,
-            start_pos[1] * self.tilemap.layer_data[0][0][0]["tilesheet"].tile_height
+            start_pos[0] * self.tilemap.tile_width,
+            start_pos[1] * self.tilemap.tile_height
         ]
 
         self.player_movement_speed = [0, 0]
@@ -100,25 +100,25 @@ class TilemapScene(Scene):
             if tile_y == 0:
                 return
 
-            tile = self.tilemap.layer_tiles[0][tile_y - 1][tile_x]
+            tile = self.tilemap.tile_data[0][tile_y - 1][tile_x]
 
         elif self.direction_facing == "south":
-            if tile_y + 1 == len(self.tilemap.layer_tiles[0]):
+            if tile_y + 1 == len(self.tilemap.tile_data[0]):
                 return
 
-            tile = self.tilemap.layer_tiles[0][tile_y + 1][tile_x]
+            tile = self.tilemap.tile_data[0][tile_y + 1][tile_x]
 
         elif self.direction_facing == "west":
             if tile_x == 0:
                 return
 
-            tile = self.tilemap.layer_tiles[0][tile_y][tile_x - 1]
+            tile = self.tilemap.tile_data[0][tile_y][tile_x - 1]
 
         elif self.direction_facing == "east":
-            if tile_x + 1 == len(self.tilemap.layer_tiles[0][0]):
+            if tile_x + 1 == len(self.tilemap.tile_data[0][0]):
                 return
 
-            tile = self.tilemap.layer_tiles[0][tile_y][tile_x + 1]
+            tile = self.tilemap.tile_data[0][tile_y][tile_x + 1]
 
         if hasattr(tile["tile"], "interact"):
             output = tile["tile"].interact()
