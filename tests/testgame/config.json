@@ -4,5 +4,6 @@
     "user_config_path": "/tmp/hypatia-test-config.json",
     "starting_tilemap": "testmap",
     "player_character": "test",
-    "camera_resolution": [6, 6]
+    "camera_resolution": [6, 6],
+    "movement_speed": 1
 }

@@ -5,5 +5,6 @@
     "player_character": "player",
     "camera_resolution": [256, 256],
     "font_face": "mononoki.ttf",
-    "font_size": 18
+    "font_size": 18,
+    "movement_speed": 32
 }

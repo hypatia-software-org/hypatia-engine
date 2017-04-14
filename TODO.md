@@ -21,7 +21,7 @@
 - [x] Importing of project code (in `lib/` directory)
 - [x] In-game error handling
   - [ ] Add buttons from UI library
-- [ ] Make movement not tied to frame rate
+- [x] Make movement not tied to frame rate
 - [ ] NPCs 
   - [x] Saying static lines
   - [x] Teleportation

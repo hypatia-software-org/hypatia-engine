@@ -33,6 +33,7 @@ class TilemapScene(Scene):
             start_pos[1] * self.tilemap.tile_height
         ]
 
+        self.movement_speed = self.game.gameconfig["movement_speed"]
         self.player_movement_speed = [0, 0]
         self.direction_facing = "north"
 
@@ -43,17 +44,19 @@ class TilemapScene(Scene):
         td = self.game.clock.get_time()
         self.player.update(td)
 
+        seconds = td / 1000.0
+
         old_player_pos = self.player_pos.copy()
 
         if self.player_movement_speed[0] > 0:
-            self.player_pos[0] += 1
+            self.player_pos[0] += self.movement_speed * seconds
         elif self.player_movement_speed[0] < 0:
-            self.player_pos[0] -= 1
+            self.player_pos[0] -= self.movement_speed * seconds
 
         if self.player_movement_speed[1] > 0:
-            self.player_pos[1] += 1
+            self.player_pos[1] += self.movement_speed * seconds
         elif self.player_movement_speed[1] < 0:
-            self.player_pos[1] -= 1
+            self.player_pos[1] -= self.movement_speed * seconds
 
         if self.check_hitting_anything():
             self.player_pos = old_player_pos
