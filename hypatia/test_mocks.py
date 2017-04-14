@@ -51,4 +51,5 @@ class MockGame:
 
         self.gameconfig = {
             "camera_resolution": (2, 2),
+            "movement_speed": 1000,
         }
