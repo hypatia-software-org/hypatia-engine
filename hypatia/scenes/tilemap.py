@@ -34,6 +34,38 @@ class TilemapScene(class_get("Scene")):
         self.player_movement_speed = [0, 0]
         self.direction_facing = "north"
 
+        self.npcs = []
+        if "npcs" in self.tilemap.raw_tile_data:
+            for npc_idx, npc_map_data in enumerate(self.tilemap.raw_tile_data["npcs"]):
+                npc_data_to_pass = {
+                    "start_pos": [
+                        npc_map_data["start_pos"][0] * self.tilemap.tile_width,
+                        npc_map_data["start_pos"][1] * self.tilemap.tile_height,
+                    ],
+                }
+
+                if "movement" in npc_map_data:
+                    npc_data_to_pass["movement"] = {
+                        "rect": [
+                            npc_map_data["movement"]["rect"][0] * self.tilemap.tile_width,
+                            npc_map_data["movement"]["rect"][1] * self.tilemap.tile_height,
+                            npc_map_data["movement"]["rect"][2] * self.tilemap.tile_width,
+                            npc_map_data["movement"]["rect"][3] * self.tilemap.tile_height,
+                        ],
+                        "move_every": npc_map_data["movement"]["move_every"] * 1000,
+                        "move_for": npc_map_data["movement"]["move_for"] * 1000,
+                        "move_speed": self.movement_speed,
+                    }
+
+                npc = class_get("NPCCharacter").from_resource_pack(resourcepack, npc_map_data["name"], npc_data_to_pass)
+
+                npcdata = {
+                    "npc": npc,
+                    "layer": npc_map_data["layer"],
+                }
+
+                self.npcs.append(npcdata)
+
     def update(self):
         self.create_surface()
         self.camera.source_surface.fill((0, 0, 0))
@@ -61,6 +93,10 @@ class TilemapScene(class_get("Scene")):
         layers = self.tilemap.update(td)
 
         layers[int(self.tilemap.player_data["layer"])].blit(self.player.image, self.player_pos)
+
+        for npc_idx, npc_data in enumerate(self.npcs):
+            npc_data["npc"].update(td)
+            layers[int(npc_data["layer"])].blit(npc_data["npc"].image, npc_data["npc"].current_pos)
 
         for layer in layers:
             self.camera.source_surface.blit(layer, (0, 0))

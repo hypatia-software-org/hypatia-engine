@@ -64,5 +64,17 @@
             "flags": ["OBJECT", "CUSTOM_CODE"],
             "function": "hypatia_demo.test_interaction:test_interaction"
         }
-    }
+    },
+    "npcs": [
+        {
+            "start_pos": [2, 13],
+            "movement": {
+                "rect": [2, 13, 3, 4],
+                "move_every": 5,
+                "move_for": 0.5
+            },
+            "name": "test",
+            "layer": 2
+        }
+    ]
 }

@@ -1,0 +1,5 @@
+{
+    "sprite": "player",
+    "action": "say_lines",
+    "lines_to_say": "I'm an example NPC!"
+}
