@@ -1,5 +1,8 @@
 import pygame
 
+from hypatia import class_get, class_default
+
+@class_default
 class Camera(pygame.Surface):
     def __init__(self, source_res, camera_res, target_res):
         self.source_res = source_res

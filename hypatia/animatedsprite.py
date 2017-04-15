@@ -2,10 +2,11 @@ import os
 import json
 import pygame
 
+from hypatia import class_default, class_get
 from hypatia.utils import pillow_image_to_pygame_surface
 from PIL import Image 
 
-
+@class_default
 class Frame:
     def __init__(self, surface, start_time, duration):
         """Create a frame.
@@ -21,7 +22,7 @@ class Frame:
         self.duration = duration 
         self.end_time = self.start_time + self.duration 
 
-
+@class_default
 class AnimatedSprite(pygame.sprite.Sprite):
     def __init__(self, frames):
         super().__init__()
@@ -69,7 +70,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
 
             surface = pygame.image.load(resourcepack.open(path))
 
-            frame = Frame(surface, duration_count, frame_duration)
+            frame = class_get("Frame")(surface, duration_count, frame_duration)
             frames.append(frame)
 
             duration_count += frame_duration
@@ -98,7 +99,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
                 frame_surface = pillow_image_to_pygame_surface(gif)
 
                 # create a Frame with the given surface
-                frame = Frame(frame_surface, time_pos, duration)
+                frame = class_get("Frame")(frame_surface, time_pos, duration)
                 frames.append(frame)
 
                 # update our current position in time

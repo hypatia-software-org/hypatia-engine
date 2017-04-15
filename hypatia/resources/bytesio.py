@@ -1,6 +1,8 @@
 import io
 
+from hypatia import class_default
 
+@class_default
 class BytesIO(io.BytesIO):
     def __init__(self, respack, path, initial_bytes):
         super().__init__(initial_bytes)

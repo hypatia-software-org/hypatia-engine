@@ -1,29 +1,26 @@
 import pygame
 
-from hypatia.scenes import Scene
-from hypatia.camera import Camera
-from hypatia.tilemap import Tilemap
-from hypatia.character import Character
+from hypatia import class_get, class_default
 from hypatia.utils import keyname_to_keysym
-from hypatia.scenes.textbox import TextBoxScene
 
 
-class TilemapScene(Scene):
+@class_default
+class TilemapScene(class_get("Scene")):
     def __init__(self, game, resourcepack, mapname, playername, start_pos=None):
         super().__init__(game)
 
         self.resourcepack = resourcepack
         self.player_name = playername
 
-        self.tilemap = Tilemap.from_resource_pack(resourcepack, mapname)
+        self.tilemap = class_get("Tilemap").from_resource_pack(resourcepack, mapname)
 
-        self.camera = Camera(
+        self.camera = class_get("Camera")(
             (self.tilemap.width, self.tilemap.height),
             self.game.gameconfig["camera_resolution"],
             self.game.display.get_size()
         )
 
-        self.player = Character.from_resource_pack(resourcepack, playername)
+        self.player = class_get("Character").from_resource_pack(resourcepack, playername)
 
         if start_pos is None:
             start_pos = self.tilemap.player_data["start_pos"]
@@ -129,7 +126,7 @@ class TilemapScene(Scene):
                 return
 
             if "say" in output:
-                self.game.scene_push(TextBoxScene, output["say"])
+                self.game.scene_push(class_get("TextBoxScene"), output["say"])
 
             elif "teleport" in output:
                 mapname = output["teleport"]["map"]

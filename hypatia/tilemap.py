@@ -3,9 +3,10 @@ import json
 import pygame
 
 from enum import IntFlag
-from hypatia.tilesheet import Tilesheet
 
+from hypatia import class_get, class_default
 
+@class_default
 class TilemapTileFlags(IntFlag):
     NONE = 0
     OBJECT = 1
@@ -26,6 +27,7 @@ class TilemapTileFlags(IntFlag):
 
         return out
 
+@class_default
 class Tilemap:
     def __init__(self, tilemap_obj, tilesheets):
         self.raw_tile_data = tilemap_obj
@@ -60,7 +62,7 @@ class Tilemap:
 
         tilesheets = []
         for tilesheet_data in raw_data["tilesheets"]:
-            tilesheet = Tilesheet.from_resource_pack(resourcepack, tilesheet_data["name"])
+            tilesheet = class_get("Tilesheet").from_resource_pack(resourcepack, tilesheet_data["name"])
             tilesheets.append(tilesheet)
 
         return cls(raw_data, tilesheets)

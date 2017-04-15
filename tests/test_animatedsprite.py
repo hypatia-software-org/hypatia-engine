@@ -2,6 +2,7 @@ import os
 import pygame
 import pytest
 
+from hypatia import _import_all
 from hypatia.utils import compare_surfaces
 from hypatia.resources.filesystem import FilesystemResourcePack
 from hypatia.animatedsprite import Frame, AnimatedSprite
@@ -9,6 +10,8 @@ from hypatia.animatedsprite import Frame, AnimatedSprite
 
 class TestFrame:
     def test_frame(self):
+        _import_all()
+
         test_surface = pygame.Surface((1, 1))
         f = Frame(test_surface, 10, 10)
 
@@ -18,6 +21,8 @@ class TestFrame:
 
 class TestAnimatedSprite:
     def test_update_one_frame(self):
+        _import_all()
+
         test_surface = pygame.Surface((1, 1))
         test_surface.fill((255, 0, 0))
 
@@ -35,6 +40,8 @@ class TestAnimatedSprite:
         assert compare_surfaces(animsprite.image, test_surface)
 
     def test_update_multiple_frames(self):
+        _import_all()
+
         test_surface_one = pygame.Surface((1, 1))
         test_surface_one.fill((255, 0, 0))
         test_surface_two = pygame.Surface((1, 1))
@@ -55,6 +62,8 @@ class TestAnimatedSprite:
         assert compare_surfaces(animsprite.image, test_surface_two)
 
     def test_loading_from_gif(self):
+        _import_all()
+
         dir_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'testgame', 'resources')
         fs = FilesystemResourcePack(dir_path)
 
@@ -73,6 +82,8 @@ class TestAnimatedSprite:
         assert compare_surfaces(animsprite.image, test_surface_two)
     
     def test_loading_from_resource_pack_gif(self):
+        _import_all()
+
         dir_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'testgame', 'resources')
         fs = FilesystemResourcePack(dir_path)
 
@@ -91,6 +102,8 @@ class TestAnimatedSprite:
         assert compare_surfaces(animsprite.image, test_surface_two)
 
     def test_loading_from_resource_pack_png(self):
+        _import_all()
+
         dir_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'testgame', 'resources')
         fs = FilesystemResourcePack(dir_path)
 

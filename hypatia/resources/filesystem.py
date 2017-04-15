@@ -1,9 +1,9 @@
 import os
 
-from hypatia.resources import ResourcePack
+from hypatia import class_default, class_get
 
-
-class FilesystemResourcePack(ResourcePack):
+@class_default
+class FilesystemResourcePack(class_get("ResourcePack")):
     def __init__(self, path):
         super().__init__()
 

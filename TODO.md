@@ -27,7 +27,7 @@
   - [x] Teleportation
   - [x] Running custom code on interaction
   - [ ] Random character movement within given bounds
-- [ ] Allow games to override in-built classes with their own
+- [x] Allow games to override in-built classes with their own
 - [ ] Inventory system
 - [ ] UI description language
   - [ ] Buttons emit signals which are connected to with a `signal_connect("signal_name", callback)`

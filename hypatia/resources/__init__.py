@@ -1,10 +1,10 @@
-from hypatia.resources.exceptions import *
-from hypatia.resources.bytesio import BytesIO
+from hypatia import class_get, class_default
 
 
 PATHSEP = "/"
 ROOT = "/"
 
+@class_default
 class ResourcePack:
     def __init__(self):
         self.content = {"type": "dir", "content": {}}
@@ -85,18 +85,18 @@ class ResourcePack:
 
                 elif entry['type'] == 'file':
                     if len(parts) is not 0:
-                        raise NotADirectory(ROOT + PATHSEP.join(collected))
+                        raise class_get("NotADirectory")(ROOT + PATHSEP.join(collected))
 
                     return entry
 
             else:
-                raise FileNotFound(ROOT + PATHSEP.join(collected))
+                raise class_get("FileNotFound")(ROOT + PATHSEP.join(collected))
 
     def exists(self, path):
         try:
             self._parse_tree_for_entry(path)
             return True
-        except FileNotFound: 
+        except class_get("FileNotFound"):
             return False
 
     def _update_file_contents(self, path, contents):
@@ -104,7 +104,7 @@ class ResourcePack:
         entry = self._parse_tree_for_entry(path)
 
         if entry['type'] == 'dir':
-            raise NotAFile(path)
+            raise class_get("NotAFile")(path)
 
         entry['content'] = contents
         self._modified_since_last_save.append(path)
@@ -114,9 +114,9 @@ class ResourcePack:
         entry = self._parse_tree_for_entry(path)
 
         if entry['type'] == 'dir':
-            raise NotAFile(path)
+            raise class_get("NotAFile")(path)
 
-        file = BytesIO(self, path, entry['content'])
+        file = class_get("BytesIO")(self, path, entry['content'])
 
         return file
 
@@ -143,12 +143,12 @@ class ResourcePack:
 
         # sanity check
         if prevdir['type'] != 'dir':
-            raise NotADirectory(parent)
+            raise class_get("NotADirectory")(parent)
 
         # check the new directory doesn't already exist
 
         if newdir in prevdir['content']:
-            raise FileExists(path)
+            raise class_get("FileExists")(path)
 
         prevdir['content'][newdir] = {
             'type': 'dir',

@@ -2,8 +2,9 @@ import os
 import json
 import pygame
 
-from hypatia.tile import Tile, TileFlags
+from hypatia import class_get, class_default
 
+@class_default
 class Tilesheet:
     def __init__(self, surface, tile_width, tile_height, tile_metadata={}):
         self.surface = surface
@@ -39,15 +40,15 @@ class Tilesheet:
 
     def get_tile(self, tile_id):
         tile_id_str = "%d" % tile_id
-        tileflags = TileFlags.NONE
+        tileflags = class_get("TileFlags").NONE
         if tile_id_str in self.tile_metadata:
             flags = self.tile_metadata[tile_id_str]["flags"] if "flags" in self.tile_metadata[tile_id_str] else []
             for flag in flags:
-                tileflags = tileflags | TileFlags[flag]
+                tileflags = tileflags | class_get("TileFlags")[flag]
 
         data = self.tile_metadata[tile_id_str] if tile_id_str in self.tile_metadata else {}
 
-        tile = Tile(self, tile_id, tileflags, data)
+        tile = class_get("Tile")(self, tile_id, tileflags, data)
         return tile
 
     def get_tile_subsurface(self, tile_id):

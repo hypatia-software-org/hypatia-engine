@@ -1,15 +1,30 @@
 import pygame
 
 from enum import IntFlag
-from hypatia.animatedsprite import Frame, AnimatedSprite
 
+from hypatia import class_get, class_default
 
+@class_default
 class TileFlags(IntFlag):
     NONE = 0
     SOLID = 1
     DESTRUCTIBLE = 2
     ANIMATED = 4
 
+    @classmethod
+    def flags_to_str_array(cls, flags):
+        out = []
+
+        for flag in cls:
+            if flag is cls.NONE:
+                continue
+
+            if flag in flags:
+                out.append(flag.name)
+
+        return out
+
+@class_default
 class Tile(pygame.sprite.Sprite):
     def __init__(self, tilesheet, tile_id, flags, metadata={}):
         super().__init__()
@@ -27,10 +42,10 @@ class Tile(pygame.sprite.Sprite):
             duration = 0
             for idx, (tileid, tileduration) in enumerate(metadata["animation"]):
                 surface = self.tilesheet.get_tile_subsurface(tileid)
-                frames.append(Frame(surface, duration, tileduration))
+                frames.append(class_get("Frame")(surface, duration, tileduration))
                 duration += tileduration
 
-            self.animatedsprite = AnimatedSprite(frames)
+            self.animatedsprite = class_get("AnimatedSprite")(frames)
 
     def update(self, timedelta):
         # allow blank tiles
@@ -45,11 +60,11 @@ class Tile(pygame.sprite.Sprite):
             self.rect = self.image.get_rect()
 
     def is_solid(self):
-        return TileFlags.SOLID in self.tile_flags
+        return class_get("TileFlags").SOLID in self.tile_flags
 
     def is_destructible(self):
-        return TileFlags.DESTRUCTIBLE in self.tile_flags
+        return class_get("TileFlags").DESTRUCTIBLE in self.tile_flags
 
     def is_animated(self):
-        return TileFlags.ANIMATED in self.tile_flags
+        return class_get("TileFlags").ANIMATED in self.tile_flags
 

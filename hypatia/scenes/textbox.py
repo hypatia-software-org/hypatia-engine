@@ -1,10 +1,10 @@
 import pygame
 
-from hypatia.scenes import Scene
+from hypatia import class_get, class_default
 from hypatia.utils import keyname_to_keysym, wrap_line, blur_surface
 
-
-class TextBoxScene(Scene):
+@class_default
+class TextBoxScene(class_get("Scene")):
     def __init__(self, game, lines):
         super().__init__(game)
 

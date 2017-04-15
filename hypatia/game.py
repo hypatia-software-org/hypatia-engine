@@ -5,21 +5,20 @@ import pygame
 import traceback
 import importlib.util
 
+from hypatia import class_get, class_default
 from hypatia.default_config import default_game_config, default_user_config
-from hypatia.resources.filesystem import FilesystemResourcePack
-from hypatia.tilemap import Tilemap
-from hypatia.scenes.traceback import TracebackScene
-from hypatia.scenes.tilemap import TilemapScene
 
-
+@class_default
 class Game:
-    def __init__(self, path):
+    def __init__(self, path, patch_builtins=True):
         self.path = path
         with open(os.path.join(path, "config.json"), 'r') as fh:
             self.gameconfig = json.load(fh)
 
         self.gamename = self.gameconfig['name']
         self.gamefriendlyname = self.gameconfig['friendly_name']
+
+        self.import_modules_from_game_dir()
 
         if 'user_config_path' in self.gameconfig:
             user_config_path = self.gameconfig['user_config_path']
@@ -48,9 +47,7 @@ class Game:
             with open(user_config_path, 'w') as fh:
                 json.dump(self.userconfig, fh, sort_keys=True, indent=4)
 
-        self.import_modules_from_game_dir()
-
-        self.resourcepack = FilesystemResourcePack(os.path.join(path, "resources"))
+        self.resourcepack = class_get("FilesystemResourcePack")(os.path.join(path, "resources"))
 
         self.clock = pygame.time.Clock()
 
@@ -131,7 +128,7 @@ class Game:
         else:
             self.display = pygame.display.set_mode(self.userconfig['display']['window_size'])
 
-        self.scene_push(TilemapScene, self.resourcepack, self.gameconfig['starting_tilemap'], self.gameconfig["player_character"])
+        self.scene_push(class_get("TilemapScene"), self.resourcepack, self.gameconfig['starting_tilemap'], self.gameconfig["player_character"])
 
         while self.running:
             self.display.fill((0, 0, 0))
@@ -140,11 +137,12 @@ class Game:
             try:
                 self.scene_stack[-1].update()
             except Exception as ex:
-                if isinstance(self.scene_stack[-1], TracebackScene):
+                if isinstance(self.scene_stack[-1], class_get("TracebackScene")):
                     raise
 
                 tb = traceback.format_exc()
-                self.scene_push(TracebackScene, ex, tb)
+                self.scene_push(class_get("TracebackScene"), ex, tb)
+                print(tb)
                 continue
 
             self.display.blit(self.scene_stack[-1].surface, (0, 0))
@@ -157,11 +155,12 @@ class Game:
                 try:
                     self.scene_stack[-1].handle_event(ev)
                 except Exception as ex:
-                    if isinstance(self.scene_stack[-1], TracebackScene):
+                    if isinstance(self.scene_stack[-1], class_get("TracebackScene")):
                         raise
 
                     tb = traceback.format_exc()
-                    self.scene_push(TracebackScene, ex, tb)
+                    self.scene_push(class_get("TracebackScene"), ex, tb)
+                    print(tb)
                     continue
 
             # display FPS if it's asked for

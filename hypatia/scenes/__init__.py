@@ -1,5 +1,9 @@
 import pygame
 
+from hypatia import class_default
+
+
+@class_default
 class Scene:
     def __init__(self, game):
         self.game = game

@@ -2,9 +2,9 @@ import os
 import json
 import pygame
 
-from hypatia.animatedsprite import AnimatedSprite
-from hypatia.tilemap import TilemapTileFlags
+from hypatia import class_default, class_get
 
+@class_default
 class Character(pygame.sprite.Sprite):
     SPRITE_TYPES = [
         "normal",
@@ -26,9 +26,9 @@ class Character(pygame.sprite.Sprite):
         for type in cls.SPRITE_TYPES:
             try:
                 if resourcepack.exists(resourcepack.join(basepath, type + os.extsep + "gif")):
-                    sprite = AnimatedSprite.from_resource_pack_gif(resourcepack, name, type)
+                    sprite = class_get("AnimatedSprite").from_resource_pack_gif(resourcepack, name, type)
                 else:
-                    sprite = AnimatedSprite.from_resource_pack_png(resourcepack, name, type)
+                    sprite = class_get("AnimatedSprite").from_resource_pack_png(resourcepack, name, type)
 
                 sprites[type] = sprite
             except:
@@ -44,7 +44,12 @@ class Character(pygame.sprite.Sprite):
     def interact(self):
         return {}
 
-class TileNPCCharacter(Character):
+    def __repr__(self):
+        sprite_names = ",".join([a for a in self.sprites.keys()])
+        return f"<{self.__class__.__name__} sprites=({sprite_names})>"
+
+@class_default
+class TileNPCCharacter(class_get("Character")):
     def __init__(self, tile_data):
         self.tile_data = tile_data
         self.tilesheet = self.tile_data["actual_tile"].tilesheet
@@ -62,12 +67,12 @@ class TileNPCCharacter(Character):
         return self.tile_data["actual_tile"].is_animated()
 
     def interact(self):
-        if TilemapTileFlags.STATIC_NPC in self.tile_data["flags"]: 
+        if class_get("TilemapTileFlags").STATIC_NPC in self.tile_data["flags"]: 
             return {
                 "say": self.tile_data["metadata"]["lines_to_say"],
             }
 
-        elif TilemapTileFlags.TELEPORTER in self.tile_data["flags"]:
+        elif class_get("TilemapTileFlags").TELEPORTER in self.tile_data["flags"]:
             return {
                 "teleport": {
                     "map": self.tile_data["metadata"]["teleport_map"],
@@ -75,7 +80,7 @@ class TileNPCCharacter(Character):
                 }
             }
 
-        elif TilemapTileFlags.CUSTOM_CODE in self.tile_data["flags"]:
+        elif class_get("TilemapTileFlags").CUSTOM_CODE in self.tile_data["flags"]:
             modpath, funcname = self.tile_data["metadata"]["function"].split(":")
 
             mod = __import__(modpath)

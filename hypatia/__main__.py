@@ -14,10 +14,12 @@ Options:
 import os
 import docopt
 
-from hypatia import __version__
+from hypatia import __version__, _import_all
 
 
 def main():
+    _import_all()
+
     args = docopt.docopt(__doc__, version=f"Hypatia Engine {__version__}")
 
     if args["--sdl2"]:

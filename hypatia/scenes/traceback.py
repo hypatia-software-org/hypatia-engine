@@ -1,11 +1,10 @@
 import pygame
 
-from hypatia.scenes import Scene
-from hypatia.camera import Camera
+from hypatia import class_get, class_default
 from hypatia.utils import wrap_line
 
-
-class TracebackScene(Scene):
+@class_default
+class TracebackScene(class_get("Scene")):
     def __init__(self, game, exception, traceback):
         super().__init__(game)
 
@@ -34,7 +33,7 @@ class TracebackScene(Scene):
             self.game.display.get_height() - self.msg_height
         )
 
-        self.camera = Camera(camera_size, target_size, target_size)
+        self.camera = class_get("Camera")(camera_size, target_size, target_size)
         self.camera.source_surface.fill((127, 26, 26))
 
         ypos = 10
