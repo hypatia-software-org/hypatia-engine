@@ -2,11 +2,28 @@
 	"folders":
 	[
 		{
-			"path": ".."
+			"path": "..",
+			"file_exclude_patterns": [
+				"*.pyc"
+			],
+			"folder_exclude_patterns": [
+				".cache",
+				".eggs",
+				"*.egg-info",
+				"__pycache__"
+			]
 		}
 	],
 	"settings": {
 		"tab_size": 4,
 		"translate_tabs_to_spaces": true
-	}
+	},
+	"build_systems": [
+		{
+			"name": "Run tests",
+			"working_dir": "${project_path}/..",
+			"cmd": ["py.test", "-v"],
+			"selector": "source.python"
+		}
+	]
 }
