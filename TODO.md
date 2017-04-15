@@ -26,7 +26,9 @@
   - [x] Saying static lines
   - [x] Teleportation
   - [x] Running custom code on interaction
-  - [ ] Random character movement within given bounds
+  - [x] Random character movement within given bounds
+  - [ ] Add NPC current position to the collision rect checking
+  - [ ] Allow the player to interact with NPCs
 - [x] Allow games to override in-built classes with their own
 - [ ] Inventory system
 - [ ] UI description language
