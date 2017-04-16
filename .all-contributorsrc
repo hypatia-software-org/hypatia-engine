@@ -1,0 +1,40 @@
+{
+  "projectName": "hypatia-engine",
+  "projectOwner": "hypatia-software-org",
+  "files": [
+    "CONTRIBUTORS.md",
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "hypatia-software-org",
+      "name": "Hypatia Software Organization",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/13816503?v=3",
+      "profile": "http://hypatiasoftware.org",
+      "contributions": [
+        "financial"
+      ]
+    },
+    {
+      "login": "txanatan",
+      "name": "Alice Jenkinson",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/2987759?v=3",
+      "profile": "https://nea.nz",
+      "contributions": [
+        "code",
+        "doc",
+        "test"
+      ]
+    },
+    {
+      "login": "lily-seabreeze",
+      "name": "Lillian",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/7135753?v=3",
+      "profile": "http://lily.seabreeze.pro",
+      "contributions": [
+        "code"
+      ]
+    }
+  ]
+}

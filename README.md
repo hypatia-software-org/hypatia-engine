@@ -20,3 +20,6 @@ Trans women have access to mentorships, funding, team chat,
 and more! For more information please see the
 [Hypatia Software Organization website](http://hypatiasoftware.org).
 
+## Contributors
+
+See [CONTRIBUTORS.md](/CONTRIBUTORS.md) for a list of contributors.
