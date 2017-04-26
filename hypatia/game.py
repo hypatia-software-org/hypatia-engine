@@ -137,7 +137,7 @@ class Game:
             try:
                 self.scene_stack[-1].update()
             except Exception as ex:
-                if isinstance(self.scene_stack[-1], class_get("TracebackScene")):
+                if len(self.scene_stack) > 0 and isinstance(self.scene_stack[-1], class_get("TracebackScene")):
                     raise
 
                 tb = traceback.format_exc()
@@ -155,7 +155,7 @@ class Game:
                 try:
                     self.scene_stack[-1].handle_event(ev)
                 except Exception as ex:
-                    if isinstance(self.scene_stack[-1], class_get("TracebackScene")):
+                    if len(self.scene_stack) > 0 and isinstance(self.scene_stack[-1], class_get("TracebackScene")):
                         raise
 
                     tb = traceback.format_exc()

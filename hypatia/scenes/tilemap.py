@@ -157,7 +157,7 @@ class TilemapScene(class_get("Scene")):
             tile = self.tilemap.tile_data[0][tile_y][tile_x + 1]
 
         if hasattr(tile["tile"], "interact"):
-            output = tile["tile"].interact()
+            output = tile["tile"].interact(self.game)
             if output is None:
                 return
 

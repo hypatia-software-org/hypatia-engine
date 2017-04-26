@@ -27,6 +27,9 @@ class TextBoxScene(class_get("Scene")):
         except AttributeError:
             pass
 
+        except IndexError:
+            pass
+
         width = self.game.display.get_width() - 20 - 20
         line = self.lines[self.current_line]
         lines = wrap_line(self.game.font, width, line)

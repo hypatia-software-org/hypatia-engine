@@ -22,6 +22,7 @@
 - [x] In-game error handling
   - [ ] Add buttons from UI library
 - [x] Make movement not tied to frame rate
+- [ ] Add an unpoppable state at the bottom of the stack that displays an error message so that there is always at least 1 scene on the stack
 - [ ] NPCs 
   - [x] Saying static lines
   - [x] Teleportation

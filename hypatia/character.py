@@ -42,7 +42,7 @@ class Character(pygame.sprite.Sprite):
         self.image = self.sprites[self.active_sprite].image
         self.rect = self.sprites[self.active_sprite].rect
 
-    def interact(self):
+    def interact(self, game):
         return {}
 
     def __repr__(self):
@@ -207,7 +207,7 @@ class NPCCharacter(class_get("Character")):
         else:
             return [0, 0]
 
-    def interact(self):
+    def interact(self, game):
         if self.npc_data["action"] == "say_lines":
             return {
                 "say": self.npc_data["lines_to_say"],
@@ -233,7 +233,7 @@ class TileNPCCharacter(class_get("Character")):
     def is_animated(self):
         return self.tile_data["actual_tile"].is_animated()
 
-    def interact(self):
+    def interact(self, game):
         if class_get("TilemapTileFlags").STATIC_NPC in self.tile_data["flags"]: 
             return {
                 "say": self.tile_data["metadata"]["lines_to_say"],
@@ -260,6 +260,6 @@ class TileNPCCharacter(class_get("Character")):
             if not hasattr(mod, funcname):
                 return None
 
-            return getattr(mod, funcname)()
+            return getattr(mod, funcname)(game)
 
         return None
