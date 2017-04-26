@@ -53,6 +53,7 @@ class Game:
 
         self.running = False
         self.scene_stack = []
+        self.unpoppable_scene = None
 
     def scene_push(self, scenecls, *args, **kwargs):
         self.scene_stack.append(scenecls(self, *args, **kwargs))
@@ -128,6 +129,9 @@ class Game:
         else:
             self.display = pygame.display.set_mode(self.userconfig['display']['window_size'])
 
+        if self.unpoppable_scene is None:
+            self.unpoppable_scene = class_get("BottomLevelScene")(self)
+
         self.scene_push(class_get("TilemapScene"), self.resourcepack, self.gameconfig['starting_tilemap'], self.gameconfig["player_character"])
 
         while self.running:
@@ -135,7 +139,11 @@ class Game:
 
             # update current scene
             try:
+                if len(self.scene_stack) < 1:
+                    self.scene_stack.append(self.unpoppable_scene)
+
                 self.scene_stack[-1].update()
+
             except Exception as ex:
                 if len(self.scene_stack) > 0 and isinstance(self.scene_stack[-1], class_get("TracebackScene")):
                     raise
@@ -153,7 +161,11 @@ class Game:
                     self.running = False
 
                 try:
+                    if len(self.scene_stack) < 1:
+                        self.scene_stack.append(self.unpoppable_scene)
+
                     self.scene_stack[-1].handle_event(ev)
+
                 except Exception as ex:
                     if len(self.scene_stack) > 0 and isinstance(self.scene_stack[-1], class_get("TracebackScene")):
                         raise

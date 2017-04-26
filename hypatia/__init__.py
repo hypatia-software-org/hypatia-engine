@@ -22,6 +22,7 @@ def _import_all():
     import hypatia.scenes.textbox
     import hypatia.scenes.tilemap
     import hypatia.scenes.traceback
+    import hypatia.scenes.bottomlevel
 
     import hypatia.resources
     import hypatia.resources.bytesio
