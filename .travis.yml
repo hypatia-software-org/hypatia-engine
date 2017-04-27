@@ -11,4 +11,4 @@ install:
   - "python setup.py develop"
 
 script:
-  - "py.test -v"
+  - "py.test -v tests/"
